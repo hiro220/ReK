@@ -14,15 +14,16 @@ class Main(pygame.sprite.Sprite):
         """pygame、ウィンドウなどの初期化処理"""
         pygame.init()
         self.group = pygame.sprite.RenderUpdates()
-        #self.bullets = pygame.sprite.Group()
-        PlayerMachine.containers = self.group
-        CpuMachine.containers = self.group
+        self.players = pygame.sprite.Group()
+        self.cpus = pygame.sprite.Group()
+        PlayerMachine.containers = self.group, self.players
+        CpuMachine.containers = self.group, self.cpus
         Bullet.containers = self.group
         self.screen = pygame.display.set_mode((960, 600))
-        self.player = PlayerMachine(100, 300)
+        self.player = PlayerMachine(100, 300, self.cpus)
         self.clock = pygame.time.Clock()
         self.bullets = []
-        self.cpumachines = [CpuMachine(900, 300), CpuMachine(900, 400), CpuMachine(900, 100)]
+        self.cpumachines = [CpuMachine(900, 300, self.players), CpuMachine(900, 400, self.players), CpuMachine(900, 100, self.players)]
 
     def do(self):
         # メインループ
@@ -39,12 +40,6 @@ class Main(pygame.sprite.Sprite):
         # 1フレームごとの処理
         self.player.move(600, 960)
         self.group.update()
-        for bullet in self.bullets:
-            for machine in self.cpumachines:
-                if machine.isHit(bullet.getHitJudge()):
-                    self.group.remove(machine)
-                    self.group.remove(bullet)
-
         for event in pygame.event.get():
             if event.type == QUIT:
                 return True

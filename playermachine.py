@@ -6,14 +6,11 @@ from pygame.locals import *
 
 class PlayerMachine(Machine):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, cpus):
         img = pygame.image.load("img/player.png").convert_alpha()
         self.image = img
-        super().__init__(1, x, y, img)
+        super().__init__(1, x, y, img, cpus)
         self.dx, self.dy = 7, 7
-
-    def show(self, screen):
-        super().show(screen)
 
     def move(self, height, width):
         key = pygame.key.get_pressed()
