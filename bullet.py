@@ -18,6 +18,9 @@ class Bullet(pygame.sprite.Sprite):
         self.update = self.move         # updateで呼ばれるメソッドをmoveに設定する。
 
     def move(self):
-        self.rect.move_ip(self.dx, self.dy)                             # 弾を移動させる
-        if pygame.sprite.spritecollide(self, self.machines, True):      # グループmachinesに当たったなら、当たったスプライトをグループから削除
-            self.kill()                                                 # このスプライトを所属するすべてのグループから削除
+        self.rect.move_ip(self.dx, self.dy)     # 弾を移動させる
+        collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+        if collide_list:                        # リストがあるか
+            self.kill()                         # このスプライトを所属するすべてのグループから削除
+            for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                machine.hit(1)
