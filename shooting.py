@@ -45,6 +45,10 @@ class Main(pygame.sprite.Sprite):
         # 1フレームごとの処理
         self.player.move(600, 960)  # 入力に応じてプレイヤーの機体を動かす
         self.group.update()         # groupに割り当てられたすべてのスプライトを更新する
+
+        if self.player.isGameOver():    # プレイヤーの機体が残っていない
+            return True
+
         for event in pygame.event.get():
             if event.type == QUIT:      # 「閉じるボタン」を押したとき
                 return True
