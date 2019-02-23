@@ -28,6 +28,14 @@ class Main(pygame.sprite.Sprite):
         cpu(900, 400, self.players)
         cpu(900, 100, self.players)
 
+        cpu2(1500, 300, self.players)      # cpuの機体を生成
+        cpu2(1500, 400, self.players)
+        cpu2(1500, 100, self.players)
+
+        cpu3(1000, 300, self.players)      # cpuの機体を生成
+        cpu3(1000, 400, self.players)
+        cpu3(1000, 100, self.players)
+
         self.clock = pygame.time.Clock()        # 時間管理用
 
     def do(self):
