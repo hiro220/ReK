@@ -5,7 +5,7 @@ import pygame
 from pygame.locals import *
 import sys
 from playermachine import PlayerMachine
-from cpumachine import CpuMachine
+from cpumachine import *
 from bullet import Bullet
 
 class Main(pygame.sprite.Sprite):
@@ -24,9 +24,17 @@ class Main(pygame.sprite.Sprite):
         self.screen = pygame.display.set_mode((960, 600))   # ウィンドウを960×600で作成する
         self.player = PlayerMachine(100, 300, self.cpus)    # プレイヤーのマシンを生成する
 
-        CpuMachine(900, 300, self.players)      # cpuの機体を生成
-        CpuMachine(900, 400, self.players)
-        CpuMachine(900, 100, self.players)
+        cpu(900, 300, self.players)      # cpuの機体を生成
+        cpu(900, 400, self.players)
+        cpu(900, 100, self.players)
+
+        cpu2(1500, 300, self.players)      # cpuの機体を生成
+        cpu2(1500, 400, self.players)
+        cpu2(1500, 100, self.players)
+
+        cpu3(1000, 300, self.players)      # cpuの機体を生成
+        cpu3(1000, 400, self.players)
+        cpu3(1000, 100, self.players)
 
         self.clock = pygame.time.Clock()        # 時間管理用
 
