@@ -11,6 +11,7 @@ from define import *
 class Stage:
 
     def __init__(self, screen):
+        self.screen = screen
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
@@ -21,7 +22,6 @@ class Stage:
         self.loop()
 
     def initGroup(self):
-        self.screen = screen
         self.group = pygame.sprite.RenderUpdates()  # 描画する機体や弾用のグループ
         self.players = pygame.sprite.Group()        # playerの機体用グループ
         self.cpus = pygame.sprite.Group()           # cpuの機体用グループ
