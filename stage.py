@@ -6,20 +6,12 @@ from pygame.locals import *
 from bullet import Bullet
 from playermachine import PlayerMachine
 from cpumachine import *
+from define import *
 
 class Stage:
 
     def __init__(self, screen):
-        self.screen = screen
-        self.group = pygame.sprite.RenderUpdates()  # 描画する機体や弾用のグループ
-        self.players = pygame.sprite.Group()        # playerの機体用グループ
-        self.cpus = pygame.sprite.Group()           # cpuの機体用グループ
-
-        PlayerMachine.containers = self.group, self.players     # プレイヤーマシンにグループを割り当てる
-        CpuMachine.containers = self.group, self.cpus           # cpuマシンにグループを割り当てる
-        Bullet.containers = self.group                          # 弾にグループを割り当てる
-
-        self.player = PlayerMachine(100, 300, self.cpus)    # プレイヤーのマシンを生成する
+        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
 
@@ -28,6 +20,15 @@ class Stage:
         CpuMachine(900, 100, self.players)
         self.loop()
 
+    def initGroup(self):
+        self.screen = screen
+        self.group = pygame.sprite.RenderUpdates()  # 描画する機体や弾用のグループ
+        self.players = pygame.sprite.Group()        # playerの機体用グループ
+        self.cpus = pygame.sprite.Group()           # cpuの機体用グループ
+
+        PlayerMachine.containers = self.group, self.players     # プレイヤーマシンにグループを割り当てる
+        CpuMachine.containers = self.group, self.cpus           # cpuマシンにグループを割り当てる
+        Bullet.containers = self.group                          # 弾にグループを割り当てる
 
     def loop(self):
         while True:
@@ -39,7 +40,7 @@ class Stage:
 
     def process(self):
         # 1フレームごとの処理
-        self.player.move(600, 960)  # 入力に応じてプレイヤーの機体を動かす
+        self.player.move(HEIGHT, WIDTH)  # 入力に応じてプレイヤーの機体を動かす
         self.group.update()         # groupに割り当てられたすべてのスプライトを更新する
         for event in pygame.event.get():
             if event.type == QUIT:      # 「閉じるボタン」を押したとき
