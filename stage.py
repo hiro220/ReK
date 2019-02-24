@@ -12,6 +12,7 @@ class Stage:
 
     def __init__(self, screen):
         self.screen = screen
+        self.initGroup()
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用

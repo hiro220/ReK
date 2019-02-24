@@ -12,7 +12,7 @@ class Main(pygame.sprite.Sprite):
         """pygame、ウィンドウなどの初期化処理"""
         pygame.init()   # pygameの初期化
 
-        self.screen = pygame.display.set_mode((HEIGHT, WIDTH))   # ウィンドウを960×600で作成する
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウを960×600で作成する
         
     def do(self):
         Stage(self.screen)
