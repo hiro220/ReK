@@ -38,6 +38,10 @@ class Main(pygame.sprite.Sprite):
 
         self.clock = pygame.time.Clock()        # 時間管理用
 
+        play_list = self.players.sprites()
+        #print(play_list[1])
+
+
     def do(self):
         # メインループ
         while True:
@@ -71,6 +75,8 @@ class Main(pygame.sprite.Sprite):
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         pygame.display.update()             # 画面を更新する
 
+
 if __name__=='__main__':
+
     game = Main()
     game.do()

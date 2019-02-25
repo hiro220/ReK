@@ -58,4 +58,10 @@ class cpu3(CpuMachine):
     def update(self):
         if 0 <= self.count <= 150:
             self.rect.move_ip(-2.5,0)
-            self.count += 1 
+            self.count += 1
+
+        x, y = self.rect.midright
+        x -= 90
+        if pygame.time.get_ticks() - self.gun_start >= 1200:
+            super().shoot2(x, y)
+            self.gun_start = pygame.time.get_ticks() 
