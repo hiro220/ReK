@@ -19,5 +19,6 @@ class Gun:
         Bullet(x, y, 10, 0, self.machines)      # 弾を生成する(BulletクラスはMainクラスでグループ化されているため、返却する必要はない)
 
     def shoot2(self, x, y):
+        play_list = self.machines.sprites()
         Bullet(x, y, -10, 0, self.machines)
         
