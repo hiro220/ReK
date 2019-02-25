@@ -34,6 +34,9 @@ class Machine(pygame.sprite.Sprite):
         """引数は弾の発射位置(x, y)"""
         if not self.gun.isBulletZero():     # 残弾数が0でないなら弾を発射する
             self.gun.shoot(x, y)
+    
+    def shoot2(self, x, y):
+        self.gun.shoot2(x, y)
 
     def hit(self, attack):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
