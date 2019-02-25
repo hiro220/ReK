@@ -28,4 +28,6 @@ class PlayerMachine(Machine):
         if key == K_x:              # ｘキーが押されたとき弾を発射
             x, y = self.rect.midright
             super().shoot(x, y)
-            
+    
+    def isGameOver(self):
+        return not self.alive()

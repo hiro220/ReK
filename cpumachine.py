@@ -9,6 +9,7 @@ class CpuMachine(Machine):
         
         super().__init__(hp, x, y, image, players)
         self.dx, self.dy = 5, 5
+        self.gun_start = pygame.time.get_ticks()
     
 class cpu(CpuMachine):
     def __init__(self, x, y, players):
@@ -20,6 +21,11 @@ class cpu(CpuMachine):
     
     def update(self):
         self.rect.move_ip(-2.5,0)
+        x, y = self.rect.midright
+        x -= 90
+        if pygame.time.get_ticks() - self.gun_start >= 600:
+            super().shoot2(x, y)
+            self.gun_start = pygame.time.get_ticks()
 
 class cpu2(CpuMachine):
     def __init__(self, x, y, players):

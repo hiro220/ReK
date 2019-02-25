@@ -17,3 +17,7 @@ class Gun:
     def shoot(self, x, y):
         """引数は弾の発射位置(x, y)"""
         Bullet(x, y, 10, 0, self.machines)      # 弾を生成する(BulletクラスはMainクラスでグループ化されているため、返却する必要はない)
+
+    def shoot2(self, x, y):
+        Bullet(x, y, -10, 0, self.machines)
+        
