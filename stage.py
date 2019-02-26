@@ -10,9 +10,19 @@ from define import *
 
 class Stage:
 
-    def __init__(self, screen):
-        self.screen = screen
+    def __init__(self, screen, size):
+        """screenは描画対象。sizeはステージの幅"""
+        self.image = pygame.image.load("img/star.jpg").convert_alpha()              # 背景画像
+        self.sub_image = pygame.image.load("img/star2.jpg").convert_alpha()         # 背景画像を左右反転させた、背景画像（自然につなげるため）
+        self.rect = self.image.get_rect()       # 画像のrect情報
+        self.screen = screen                    # 描画対象
+        self.size = size                        # ステージのサイズ
+        self.x = 0                              # 背景画像の左上の位置
+        self.width, _ = self.rect.midright      # 背景画像のサイズ、_は使わない部分の値
+        self.speed = 1                          # 背景の移動速度
+        
         self.initGroup()
+
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
@@ -41,6 +51,7 @@ class Stage:
 
     def process(self):
         # 1フレームごとの処理
+        self.moveStage()
         self.player.move(HEIGHT, WIDTH)  # 入力に応じてプレイヤーの機体を動かす
         self.group.update()         # groupに割り当てられたすべてのスプライトを更新する
         for event in pygame.event.get():
@@ -50,9 +61,18 @@ class Stage:
                 self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
         return False
 
+    def moveStage(self):
+        self.x += self.speed                # ステージの位置を移動させる
+        if self.x - 1 >= self.width:        # 画像が端までいったとき、背景画像と反転画像を入れ替えて、位置を初期化する
+            self.x = 0
+            tmp = self.image
+            self.image = self.sub_image
+            self.sub_image = tmp
+
     def draw(self):
         # 描画処理
-        # 画面を白に塗りつぶし
-        self.screen.fill((255, 255, 255))   # 画面を塗りつぶす
+        self.screen.blit(self.image, (-self.x, 0))                      # 背景画像の描画
+        self.screen.blit(self.sub_image, (-self.x+self.width, 0))       # 対になる背景画像を繋げて描画
+
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         pygame.display.update()             # 画面を更新する
