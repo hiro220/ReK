@@ -21,8 +21,7 @@ class cpu(CpuMachine):
     
     def update(self):
         self.rect.move_ip(-2.5,0)
-        x, y = self.rect.midright
-        x -= 90
+        x, y = self.rect.midleft
         if pygame.time.get_ticks() - self.gun_start >= 600:
             super().shoot2(x, y)
             self.gun_start = pygame.time.get_ticks()
