@@ -10,3 +10,6 @@ class CpuMachine(Machine):
         image = pygame.image.load("img/cpu.png").convert_alpha()
         super().__init__(1, x, y, image, players)
         self.dx, self.dy = 5, 5
+
+    def update(self):
+        self.move(-self.dx, 0)
