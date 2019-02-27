@@ -25,11 +25,9 @@ class Stage:
 
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
 
-        self.clock = pygame.time.Clock()        # 時間管理用
+        self.createCpu()
 
-        CpuMachine(900, 300, self.players)      # cpuの機体を生成
-        CpuMachine(900, 400, self.players)
-        CpuMachine(900, 100, self.players)
+        self.clock = pygame.time.Clock()        # 時間管理用
         self.loop()
 
     def initGroup(self):
@@ -46,8 +44,9 @@ class Stage:
             self.clock.tick(30)         # フレームレート(30fps)
             result = self.process()
             self.draw()
-            if result:
-                break
+            if not result == CONTINUE:
+                break            
+        return result
 
     def process(self):
         # 1フレームごとの処理
@@ -56,10 +55,10 @@ class Stage:
         self.group.update()         # groupに割り当てられたすべてのスプライトを更新する
         for event in pygame.event.get():
             if event.type == QUIT:      # 「閉じるボタン」を押したとき
-                return True
+                return EXIT
             if event.type == KEYDOWN:   # キー入力があった時
                 self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
-        return False
+        return CONTINUE
 
     def moveStage(self):
         self.x += self.speed                # ステージの位置を移動させる
@@ -76,3 +75,8 @@ class Stage:
 
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         pygame.display.update()             # 画面を更新する
+
+    def createCpu(self):
+        CpuMachine(900, 300, self.players)      # cpuの機体を生成
+        CpuMachine(900, 400, self.players)
+        CpuMachine(900, 100, self.players)
