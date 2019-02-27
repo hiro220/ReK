@@ -10,22 +10,21 @@ from define import *
 
 class Stage:
 
-    def __init__(self, screen, size):
-        """screenは描画対象。sizeはステージの幅"""
+    def __init__(self, screen, filename):
+        """screenは描画対象。filenameはステージ内容を記述したテキストファイル"""
         self.image = pygame.image.load("img/star.jpg").convert_alpha()              # 背景画像
         self.sub_image = pygame.image.load("img/star2.jpg").convert_alpha()         # 背景画像を左右反転させた、背景画像（自然につなげるため）
         self.rect = self.image.get_rect()       # 画像のrect情報
         self.screen = screen                    # 描画対象
-        self.size = size                        # ステージのサイズ
         self.x = 0                              # 背景画像の左上の位置
         self.width, _ = self.rect.midright      # 背景画像のサイズ、_は使わない部分の値
         self.speed = 1                          # 背景の移動速度
         
         self.initGroup()
 
-        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
+        self.readStage(filename)
 
-        self.createCpu()
+        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
 
@@ -49,6 +48,7 @@ class Stage:
 
     def process(self):
         # 1フレームごとの処理
+        self.createCpu()
         self.moveStage()
         self.player.move(HEIGHT, WIDTH)  # 入力に応じてプレイヤーの機体を動かす
         self.group.update()         # groupに割り当てられたすべてのスプライトを更新する
@@ -60,7 +60,7 @@ class Stage:
         return CONTINUE
 
     def moveStage(self):
-        if self.x + WIDTH - 1 >= self.size:
+        if self.x - 1 >= self.size:
             return
         self.x += self.speed                # ステージの位置を移動させる
         if self.x - 1 >= self.width:        # 画像が端までいったとき、背景画像と反転画像を入れ替えて、位置を初期化する
@@ -77,7 +77,30 @@ class Stage:
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         pygame.display.update()             # 画面を更新する
 
+    def readStage(self, file):
+        with open(file, 'r', encoding="utf-8") as fp:
+            key = 0
+            self.dic = {}
+            for line in fp.readlines():
+                line = line.strip('\n').split()
+                if len(line) == 1:
+                    key = int(line[0])
+                    self.dic[key] = []
+                    continue
+                if len(line) == 2:
+                    if line[0] == 'size':
+                        self.size = int(line[1])
+                    else:
+                        self.dic[key].append([line[0], line[1]])
+
     def createCpu(self):
-        CpuMachine(900, 300, self.players)      # cpuの機体を生成
-        CpuMachine(900, 400, self.players)
-        CpuMachine(900, 100, self.players)
+        if self.x in self.dic:
+            x = self.x + WIDTH
+            for cpu in self.dic[self.x]:
+                name = cpu[0]
+                y = int(cpu[1])
+                self.createOneCpu(name, x, y)
+
+    def createOneCpu(self, name, x, y):
+        if name == CPU1:
+            CpuMachine(x, y, self.players)

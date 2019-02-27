@@ -15,7 +15,7 @@ class Main(pygame.sprite.Sprite):
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウを960×600で作成する
         
     def do(self):
-        stage = Stage(self.screen, 1200)
+        stage = Stage(self.screen, "stage/stage1.txt")
         result = stage.loop()
         if result == EXIT:
             pygame.quit()
