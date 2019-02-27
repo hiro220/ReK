@@ -28,7 +28,6 @@ class Stage:
         self.createCpu()
 
         self.clock = pygame.time.Clock()        # 時間管理用
-        self.loop()
 
     def initGroup(self):
         self.group = pygame.sprite.RenderUpdates()  # 描画する機体や弾用のグループ
@@ -61,6 +60,8 @@ class Stage:
         return CONTINUE
 
     def moveStage(self):
+        if self.x + WIDTH - 1 >= self.size:
+            return
         self.x += self.speed                # ステージの位置を移動させる
         if self.x - 1 >= self.width:        # 画像が端までいったとき、背景画像と反転画像を入れ替えて、位置を初期化する
             self.x = 0
