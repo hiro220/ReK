@@ -16,7 +16,7 @@ class Stage:
         self.sub_image = pygame.image.load("img/star2.jpg").convert_alpha()         # 背景画像を左右反転させた、背景画像（自然につなげるため）
         self.rect = self.image.get_rect()       # 画像のrect情報
         self.screen = screen                    # 描画対象
-        self.x = 0                              # 背景画像の左上の位置
+        self.x = self.keyx = 0                  # 背景画像の左上の位置、ステージの進行度
         self.width, _ = self.rect.midright      # 背景画像のサイズ、_は使わない部分の値
         self.speed = 1                          # 背景の移動速度
         
@@ -57,7 +57,7 @@ class Stage:
             print("GAMEOVER")
             return GAMEOVER
 
-        if not bool(self.cpus) and self.x == self.size:
+        if not bool(self.cpus) and self.keyx > self.size:
             print("GAMECLEAR")
             return GAMECLEAR                # グループcpusにあるすべてのcpuが破壊され、ステージ最後まで到達している
 
@@ -69,7 +69,8 @@ class Stage:
         return CONTINUE
 
     def moveStage(self):
-        if self.x - 1 >= self.size:         # 画面がステージサイズ分移動しているなら早期リターン
+        self.keyx += self.speed
+        if self.keyx > self.size:         # 画面がステージサイズ分移動しているなら早期リターン
             return
 
         self.x += self.speed                # ステージの位置を移動させる
@@ -107,9 +108,9 @@ class Stage:
 
     def createCpu(self):
         """現在のステージ位置にcpu(アイテム)があるならすべて生成する"""
-        if self.x in self.dic:                  # 辞書にself.xの値がキーになっている要素があるか
-            x = self.x + WIDTH                  # あるとき、生成位置xを設定する
-            for cpu in self.dic[self.x]:        # キーself.xにある要素を取り出す
+        if self.keyx in self.dic:               # 辞書にself.xの値がキーになっている要素があるか
+            x = WIDTH                           # あるとき、生成位置xを設定する
+            for cpu in self.dic[self.keyx]:        # キーself.xにある要素を取り出す
                 name = cpu[0]                   # 名前を設定
                 y = cpu[1]                      # y座標を設定
                 self.createOneCpu(name, x, y)   # 一つだけ生成
