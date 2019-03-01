@@ -52,6 +52,15 @@ class Stage:
         self.moveStage()                    # ステージを動かす
         self.player.move(HEIGHT, WIDTH)     # 入力に応じてプレイヤーの機体を動かす
         self.group.update()                 # groupに割り当てられたすべてのスプライトを更新する
+
+        if self.player.isGameOver():        # プレイヤーの機体が破壊されたとき
+            print("GAMEOVER")
+            return GAMEOVER
+
+        if not bool(self.cpus) and self.x == self.size:
+            print("GAMECLEAR")
+            return GAMECLEAR                # グループcpusにあるすべてのcpuが破壊され、ステージ最後まで到達している
+
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
                 return EXIT
@@ -108,4 +117,11 @@ class Stage:
     def createOneCpu(self, name, x, y):
         """nameで指定されるcpu(アイテム)を(x, y)に生成。なお、nameはdefine.pyに定義された定数から選択"""
         if name == CPU1:
-            CpuMachine(x, y, self.players)
+            cpu(x, y, self.players)
+            return
+        if name == CPU2:
+            cpu2(x, y, self.players)
+            return
+        if name == CPU3:
+            cpu3(x, y, self.players)
+            return
