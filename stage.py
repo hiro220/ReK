@@ -25,7 +25,8 @@ class Stage:
 
         self.readStage(filename)                # ステージ情報を読み込む
 
-        self.crateRange()                       #範囲を設定する
+        self.creatRange()                       #範囲を設定する
+        self.creatRange2()                      #範囲を設定する
 
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
 
@@ -35,12 +36,15 @@ class Stage:
         self.group = pygame.sprite.RenderUpdates()  # 描画する機体や弾用のグループ
         self.players = pygame.sprite.Group()        # playerの機体用グループ
         self.cpus = pygame.sprite.Group()           # cpuの機体用グループ
+        self.bullets = pygame.sprite.Group()        # bulletのグループ
         self.ranges = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
+        self.ranges2 = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
 
         PlayerMachine.containers = self.group, self.players     # プレイヤーマシンにグループを割り当てる
         CpuMachine.containers = self.group, self.cpus           # cpuマシンにグループを割り当てる
-        Bullet.containers = self.group                          # 弾にグループを割り当てる
+        Bullet.containers = self.group, self.bullets            # 弾にグループを割り当てる
         Range.containers = self.ranges                          # 範囲にグループを割り当てる
+        Range2.containers = self.ranges2                        # 範囲にグループを割り当てる
 
     def loop(self):
         while True:
@@ -58,7 +62,8 @@ class Stage:
         self.player.move(HEIGHT, WIDTH)     # 入力に応じてプレイヤーの機体を動かす
         self.group.update()                 # groupに割り当てられたすべてのスプライトを更新する
 
-        pygame.sprite.groupcollide(self.group, self.ranges, True, False) # 画面外にできとグループから削除される
+        pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にできとグループから削除される
+        pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にできとグループから削除される
 
         if self.player.isGameOver():        # プレイヤーの機体が破壊されたとき
             print("GAMEOVER")
@@ -134,8 +139,15 @@ class Stage:
             cpu3(x, y, self.players)
             return
     
-    def crateRange(self):
+    def creatRange(self):
         """ここでは範囲外を判定するための範囲を作成する"""
         Range(-10,0,10,600)
         Range(0,-10,960,10)
         Range(0,600,960,10)
+    
+    def creatRange2(self):
+        """ここでは範囲外を判定するための範囲を作成する"""
+        Range2(-10,0,700,600)
+        Range2(0,-10,960,10)
+        Range2(0,600,960,10)
+        Range2(960,0,10,600)
