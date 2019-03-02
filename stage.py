@@ -7,6 +7,7 @@ from bullet import Bullet
 from playermachine import PlayerMachine
 from cpumachine import *
 from define import *
+from out_range import *
 
 class Stage:
 
@@ -24,6 +25,8 @@ class Stage:
 
         self.readStage(filename)                # ステージ情報を読み込む
 
+        self.crateRange()                       #範囲を設定する
+
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
@@ -32,10 +35,12 @@ class Stage:
         self.group = pygame.sprite.RenderUpdates()  # 描画する機体や弾用のグループ
         self.players = pygame.sprite.Group()        # playerの機体用グループ
         self.cpus = pygame.sprite.Group()           # cpuの機体用グループ
+        self.ranges = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
 
         PlayerMachine.containers = self.group, self.players     # プレイヤーマシンにグループを割り当てる
         CpuMachine.containers = self.group, self.cpus           # cpuマシンにグループを割り当てる
         Bullet.containers = self.group                          # 弾にグループを割り当てる
+        Range.containers = self.ranges                          # 範囲にグループを割り当てる
 
     def loop(self):
         while True:
@@ -52,6 +57,8 @@ class Stage:
         self.moveStage()                    # ステージを動かす
         self.player.move(HEIGHT, WIDTH)     # 入力に応じてプレイヤーの機体を動かす
         self.group.update()                 # groupに割り当てられたすべてのスプライトを更新する
+
+        pygame.sprite.groupcollide(self.group, self.ranges, True, False) # 画面外にできとグループから削除される
 
         if self.player.isGameOver():        # プレイヤーの機体が破壊されたとき
             print("GAMEOVER")
@@ -110,7 +117,7 @@ class Stage:
         """現在のステージ位置にcpu(アイテム)があるならすべて生成する"""
         if self.keyx in self.dic:               # 辞書にself.xの値がキーになっている要素があるか
             x = WIDTH                           # あるとき、生成位置xを設定する
-            for cpu in self.dic[self.keyx]:        # キーself.xにある要素を取り出す
+            for cpu in self.dic[self.keyx]:     # キーself.xにある要素を取り出す
                 name = cpu[0]                   # 名前を設定
                 y = cpu[1]                      # y座標を設定
                 self.createOneCpu(name, x, y)   # 一つだけ生成
@@ -126,3 +133,9 @@ class Stage:
         if name == CPU3:
             cpu3(x, y, self.players)
             return
+    
+    def crateRange(self):
+        """ここでは範囲外を判定するための範囲を作成する"""
+        Range(-10,0,10,600)
+        Range(0,-10,960,10)
+        Range(0,600,960,10)

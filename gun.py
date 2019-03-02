@@ -25,7 +25,7 @@ class Gun:
     def shoot2(self, x, y):
         play_list = self.machines.sprites()
         for play in play_list:   
-            distance = math.sqrt((play.rect.centerx-self.rect.centerx)**2+(play.rect.centery-self.rect.centery)**2)
+            distance = math.sqrt((play.rect.centerx-x)**2+(play.rect.centery-y)**2)
             angle = distance / 10
-            Bullet(x, y, (play.rect.centerx-self.rect.centerx)/angle,(play.rect.centery-self.rect.centery)/angle, self.machines)
+            Bullet(x, y, (play.rect.centerx-x)/angle,(play.rect.centery-y)/angle, self.machines)
         
