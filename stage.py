@@ -147,7 +147,7 @@ class Stage:
     
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range2(-10,0,10,HEIGHT)
-        Range2(0,-10,WIDTH,10)
-        Range2(0,HEIGHT,WIDTH,10)
-        Range2(WIDTH,0,10,HEIGHT)
+        Range2(-20,0,10,HEIGHT)
+        Range2(-10,-20,WIDTH+20,10)
+        Range2(-10,HEIGHT+10,WIDTH+20,10)
+        Range2(WIDTH+10,0,10,HEIGHT)

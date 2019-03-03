@@ -3,7 +3,7 @@
 
 import pygame
 from pygame.locals import *
-from gun import Gun
+from gun import *
 
 class Hp:
     def __init__(self, hp):
@@ -25,6 +25,9 @@ class Machine(pygame.sprite.Sprite):
         self.rect = img.get_rect()  # 画像からrectを取得する
         self.rect.move_ip(x, y)     # 初期位置に移動させる
         self.gun = Gun(machines)    # Gunクラスのインスタンスを生成する
+        self.gun2 = Gun2(machines)
+        self.gun3 = Gun3(machines)
+        self.gun4 = Gun4(machines)
 
     def move(self, dx, dy):
         """機体を(dx, dy)だけ移動させる"""
@@ -36,7 +39,13 @@ class Machine(pygame.sprite.Sprite):
             self.gun.shoot(x, y)
     
     def shoot2(self, x, y):
-        self.gun.shoot2(x, y)
+        self.gun2.shoot(x, y)
+    
+    def shoot3(self, x, y):
+        self.gun3.shoot(x, y)
+    
+    def shoot4(self, x, y):
+        self.gun4.shoot(x, y)
 
     def hit(self, attack):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
