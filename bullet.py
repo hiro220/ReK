@@ -39,10 +39,12 @@ class Bullet2(Bullet):
 
     def move(self):
         self.rect.move_ip(self.dx, self.dy)
-        if self.rect.bottom >= 600 or self.rect.top <= 0:
+        if self.rect.bottom >= 600 or self.rect.top <= 0 and self.count <= 5:
             self.dy *= -1
-        elif self.rect.right >= 960 or self.rect.left <= 0:
+            self.count += 1
+        elif self.rect.right >= 960 or self.rect.left <= 0 and self.count <= 5:
             self.dx *= -1
+            self.count += 1
         
         collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
         if collide_list:                        # リストがあるか
