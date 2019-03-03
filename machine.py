@@ -14,7 +14,6 @@ class Hp:
         self.hp -= attack
         return self.hp <= 0
 
-
 class Machine(pygame.sprite.Sprite):
 
     def __init__(self, hp, x, y, img, machines):

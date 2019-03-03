@@ -3,6 +3,8 @@
 from machine import Machine
 import pygame
 
+
+#comment
 class CpuMachine(Machine):
     def __init__(self, hp, x, y, image, players):
         """引数は、初期位置(x, y)、弾の当たり判定対象となるプレイヤーの機体グループ"""

@@ -43,6 +43,7 @@ class Gun2(Gun):
             angle = distance / 10
             Bullet(x, y, (play.rect.centerx-x)/angle,(play.rect.centery-y)/angle, self.machines)
 
+
 class Gun3(Gun):
 
     def __init__(self, machines, max=-1):
@@ -74,3 +75,4 @@ class Gun4(Gun):
 
     def shoot(self, x, y):
         Bullet2(x, y, -10, 0, self.machines)
+
