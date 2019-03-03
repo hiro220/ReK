@@ -27,7 +27,7 @@ class Item(pygame.sprite.Sprite):
 class Recovery(Item):
 
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/player.png").convert_alpha()
+        image = pygame.image.load("img/recovery.png").convert_alpha()
         super().__init__(x, y, image, machine)
 
     def effect(self, player):
