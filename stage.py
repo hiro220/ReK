@@ -6,6 +6,7 @@ from pygame.locals import *
 from bullet import Bullet
 from playermachine import PlayerMachine
 from cpumachine import *
+from item import *
 from define import *
 
 class Stage:
@@ -36,6 +37,7 @@ class Stage:
         PlayerMachine.containers = self.group, self.players     # プレイヤーマシンにグループを割り当てる
         CpuMachine.containers = self.group, self.cpus           # cpuマシンにグループを割り当てる
         Bullet.containers = self.group                          # 弾にグループを割り当てる
+        Item.containers = self.group
 
     def loop(self):
         while True:
@@ -126,3 +128,5 @@ class Stage:
         if name == CPU3:
             cpu3(x, y, self.players)
             return
+        if name == RECOVERY:
+            Recovery(x, y, self.players)
