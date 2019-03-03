@@ -14,12 +14,6 @@ class Hp:
         self.hp -= attack
         return self.hp <= 0
 
-    def recover(self, num):
-        self.hp += num
-        if self.hp > self.maxhp:
-            self.hp = self.maxhp
-
-
 class Machine(pygame.sprite.Sprite):
 
     def __init__(self, hp, x, y, img, machines):
@@ -47,6 +41,3 @@ class Machine(pygame.sprite.Sprite):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
         if self.hp.damage(attack):
             self.kill()
-
-    def recover(self, num):
-        self.hp.recover(num)
