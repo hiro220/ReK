@@ -19,14 +19,14 @@ class Main(pygame.sprite.Sprite):
         
     def do(self):
         while True:
-            init_screen = Initial_Screen()
-            init_num = init_screen.draw(self.screen)
+            init_screen = Initial_Screen()              #初期画面の描画              
+            init_num = init_screen.draw(self.screen)    
 
-            if init_num == START_GAME:
-                menu = Menu(self.screen)
+            if init_num == START_GAME:      #選択したモードがSTART GAMEならメニュー画面に移動
+                menu = Menu(self.screen)    #メニュー画面の描画
                 stage_num = menu.draw()
                 
-                if stage_num == 1:
+                if stage_num == 1:                                   #選択したステージでゲームを開始
                     stage = Stage(self.screen, "stage/stage1.txt")
                     result = stage.loop()
                     if result == EXIT:
@@ -44,7 +44,7 @@ class Main(pygame.sprite.Sprite):
                     if result == EXIT:
                         pygame.quit()
                         sys.exit()                    
-            elif init_num == Help:
+            elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 print("help menu")
 
 if __name__=='__main__':
