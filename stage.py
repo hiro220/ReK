@@ -141,13 +141,13 @@ class Stage:
     
     def creatRange(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range(-10,0,10,600)
-        Range(0,-10,960,10)
-        Range(0,600,960,10)
+        Range(-100,-100,10,HEIGHT+50)
+        #Range(0,-10,WIDTH,10)
+        #Range(0,HEIGHT,WIDTH,10)
     
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range2(-10,0,10,600)
-        Range2(0,-10,960,10)
-        Range2(0,600,960,10)
-        Range2(960,0,10,600)
+        Range2(-10,0,10,HEIGHT)
+        Range2(0,-10,WIDTH,10)
+        Range2(0,HEIGHT,WIDTH,10)
+        Range2(WIDTH,0,10,HEIGHT)
