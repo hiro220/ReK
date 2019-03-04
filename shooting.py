@@ -8,7 +8,6 @@ from stage import *
 from initial_screen import *
 from menu import *
 
-
 class Main(pygame.sprite.Sprite):
 
     def __init__(self):
@@ -47,6 +46,7 @@ class Main(pygame.sprite.Sprite):
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 print("help menu")
 
+                
 if __name__=='__main__':
 
     game = Main()
