@@ -19,7 +19,6 @@ class Hp:
         if self.hp > self.maxhp:
             self.hp = self.maxhp
 
-
 class Machine(pygame.sprite.Sprite):
 
     def __init__(self, hp, x, y, img, machines):
