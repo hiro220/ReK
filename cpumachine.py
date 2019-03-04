@@ -25,7 +25,7 @@ class cpu(CpuMachine):
         self.rect.move_ip(-2.5,0)
         x, y = self.rect.midleft
         if pygame.time.get_ticks() - self.gun_start >= 600:
-            #super().shoot3(x, y)
+            #super().Opposite_shoot(x, y)
             self.gun_start = pygame.time.get_ticks()
 
 class cpu2(CpuMachine):
@@ -49,7 +49,7 @@ class cpu2(CpuMachine):
 
         x, y = self.rect.midleft
         if pygame.time.get_ticks() - self.gun_start >= 1200:
-            super().shoot4(x, y)
+            super().Reflection_shoot(x, y)
             self.gun_start = pygame.time.get_ticks() 
 
 class cpu3(CpuMachine):
@@ -68,5 +68,5 @@ class cpu3(CpuMachine):
 
         x, y = self.rect.midleft
         if pygame.time.get_ticks() - self.gun_start >= 1200:
-            #super().shoot2(x, y)
+            #super().Tracking_shoot(x, y)
             self.gun_start = pygame.time.get_ticks() 

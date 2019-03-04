@@ -23,7 +23,7 @@ class Gun:
         Bullet(x, y, 10, 0, self.machines)      # 弾を生成する(BulletクラスはMainクラスでグループ化されているため、返却する必要はない)
     
     
-class Gun2(Gun):
+class Tracking_Gun(Gun):
 
     def __init__(self, machines, max=-1):
         """引数は、発射する弾の当たり判定対象となる機体グループ。発射できる弾の上限値max(初期値は無限を意味する-1)"""
@@ -44,7 +44,7 @@ class Gun2(Gun):
             Bullet(x, y, (play.rect.centerx-x)/angle,(play.rect.centery-y)/angle, self.machines)
 
 
-class Gun3(Gun):
+class Opposite_Gun(Gun):
 
     def __init__(self, machines, max=-1):
         """引数は、発射する弾の当たり判定対象となる機体グループ。発射できる弾の上限値max(初期値は無限を意味する-1)"""
@@ -60,7 +60,7 @@ class Gun3(Gun):
     def shoot(self, x, y):
         Bullet(x, y, -10, 0, self.machines)
         
-class Gun4(Gun):
+class Reflection_Gun(Gun):
 
     def __init__(self, machines, max=-1):
         """引数は、発射する弾の当たり判定対象となる機体グループ。発射できる弾の上限値max(初期値は無限を意味する-1)"""
@@ -74,5 +74,5 @@ class Gun4(Gun):
         return self.num == 0
 
     def shoot(self, x, y):
-        Bullet2(x, y, -10, 0, self.machines)
+        Reflection_Bullet(x, y, -10, 0, self.machines)
 

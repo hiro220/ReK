@@ -25,7 +25,7 @@ class Bullet(pygame.sprite.Sprite):
             for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
                 machine.hit(1)
 
-class Bullet2(Bullet):
+class Reflection_Bullet(Bullet):
     def __init__(self, x, y, dx, dy, machines):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.image = pygame.image.load("img/bullet1.png").convert_alpha()   # 相対パスで画像を読み込む
