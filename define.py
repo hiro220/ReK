@@ -7,8 +7,8 @@ WIDTH = 960
 HEIGHT = 600
 
 # 初期画面におけるモード選択
-START_GAME = 0
-Help = 1
+START_GAME = 0          #START GAMEを選択した時
+Help = 1                #Helpを選択した時
 
 # 各ステージにおけるプレイヤー機体の初期位置
 PLAYER_X = 100
