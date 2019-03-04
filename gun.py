@@ -31,11 +31,6 @@ class Tracking_Gun(Gun):
         self.machines = machines
         self.rect = Rect(0,0,960,600)
 
-    def isBulletZero(self):
-        """銃弾数が0ならTrue
-        そうでないならFalseを返す"""
-        return self.num == 0
-
     def shoot(self, x, y):
         play_list = self.machines.sprites()
         for play in play_list:   
@@ -52,11 +47,6 @@ class Opposite_Gun(Gun):
         self.machines = machines
         self.rect = Rect(0,0,960,600)
 
-    def isBulletZero(self):
-        """銃弾数が0ならTrue
-        そうでないならFalseを返す"""
-        return self.num == 0
-
     def shoot(self, x, y):
         Bullet(x, y, -10, 0, self.machines)
         
@@ -67,11 +57,6 @@ class Reflection_Gun(Gun):
         self.max = self.num = max       # インスタンス変数max, numに引数の値をセットする
         self.machines = machines
         self.rect = Rect(0,0,960,600)
-
-    def isBulletZero(self):
-        """銃弾数が0ならTrue
-        そうでないならFalseを返す"""
-        return self.num == 0
 
     def shoot(self, x, y):
         Reflection_Bullet(x, y, -10, 0, self.machines)
