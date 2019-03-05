@@ -1,5 +1,6 @@
 size    600
 0
+SHIELD  150
 CPU1    100
 CPU1    300
 CPU1    500
