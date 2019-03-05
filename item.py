@@ -21,10 +21,11 @@ class Item(pygame.sprite.Sprite):
         if self.checkMachine(collide_list):                            # アイテムを取得した機体があるなら
             self.kill()
             for machine in collide_list:
-                if machine.isMachine():
+                if machine.isMachine():             # 当たったのが機体か。シールドなどのアイテムには効果がないから。
                     self.effect(machine)            # アイテムを取得した機体に対して、アイテムに応じた効果を与える
 
     def checkMachine(self, collide_list):
+        """引数collide_listのリスト中に機体があればTrueが返る。ない場合はFalse"""
         if collide_list:
             for x in collide_list:
                 if x.isMachine():
@@ -45,22 +46,23 @@ class Shield(pygame.sprite.Sprite):
     def __init__(self, firmness, machine):
         pygame.sprite.Sprite.__init__(self, machine.containers)
         self.image = pygame.image.load("img/shield.png").convert_alpha()
-        self.hp = Hp(firmness)
-        self.rect = self.image.get_rect()
-        self.machine = machine
-        self.update()
+        self.hp = Hp(firmness)                      # 引数で指定した堅さをhpとして保持
+        self.rect = self.image.get_rect()           # 画像からrectを生成
+        self.machine = machine                      # このシールドが守る機体の情報を保持
+        self.update()                               # 更新する
 
     def update(self):
-        rect = self.machine.rect
-        x1, y1 = self.rect.center
-        x2, y2 = rect.center
-        self.rect.move_ip(x2-x1,y2-y1)
+        rect = self.machine.rect                    # 機体のrectを取得
+        x1, y1 = self.rect.center                   # rectの中心を取得
+        x2, y2 = rect.center                        # このシールドのrectの中心を取得
+        self.rect.move_ip(x2-x1,y2-y1)              # 機体の移動分シールドを移動
 
     def hit(self, attack):
-        if self.hp.damage(attack):
+        if self.hp.damage(attack):                  # ダメージ計算
             self.kill()
 
     def isMachine(self):
+        # このクラスは機体ではない
         return False
 
 class ShieldItem(Item):
@@ -70,4 +72,4 @@ class ShieldItem(Item):
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
-        Shield(3, machine)
+        Shield(3, machine)          # 堅さ3のシールドを生成

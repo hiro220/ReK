@@ -15,6 +15,7 @@ class Hp:
         return self.hp <= 0
 
     def recover(self, num):
+        """引数numで指定した値だけ体力を回復する。ただし、体力の上限まで"""
         self.hp += num
         if self.hp > self.maxhp:
             self.hp = self.maxhp
@@ -48,7 +49,8 @@ class Machine(pygame.sprite.Sprite):
             self.kill()
 
     def isMachine(self):
+        # このクラスは機体
         return True
 
     def recover(self, num):
-        self.hp.recover(num)
+        self.hp.recover(num)        # 引数で指定した値だけ体力が回復する。
