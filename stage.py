@@ -130,3 +130,5 @@ class Stage:
             return
         if name == RECOVERY:
             Recovery(x, y, self.players)
+        if name == SHIELD:
+            ShieldItem(x, y, self.players)

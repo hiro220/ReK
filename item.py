@@ -2,6 +2,7 @@
 
 import pygame
 from pygame.locals import *
+from machine import Hp
 
 class Item(pygame.sprite.Sprite):
     """アイテム処理の基底となるクラス。継承するクラスは、メソッドeffect(self, machine)を定義する。
@@ -30,3 +31,32 @@ class Recovery(Item):
 
     def effect(self, machine):
         machine.recover(1)                          # 機体の体力を1回復する
+
+class Shield(pygame.sprite.Sprite):
+    """機体を守るシールド"""
+    def __init__(self, firmness, machine):
+        pygame.sprite.Sprite.__init__(self, machine.containers)
+        self.image = pygame.image.load("img/shield.png").convert_alpha()
+        self.hp = Hp(firmness*2)
+        self.rect = self.image.get_rect()
+        self.machine = machine
+        self.update()
+
+    def update(self):
+        rect = self.machine.rect
+        x1, y1 = self.rect.center
+        x2, y2 = rect.center
+        self.rect.move_ip(x2-x1,y2-y1)
+
+    def hit(self, attack):
+        if self.hp.damage(attack):
+            self.kill()
+
+class ShieldItem(Item):
+    """取得した機体の体力を1回復するアイテム"""
+    def __init__(self, x, y, machine):
+        image = pygame.image.load("img/item_shield.png").convert_alpha()
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        Shield(3, machine)
