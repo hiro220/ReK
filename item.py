@@ -18,10 +18,18 @@ class Item(pygame.sprite.Sprite):
     def update(self):
         self.rect.move_ip(self.speed, 0)            # 移動
         collide_list = pygame.sprite.spritecollide(self, self.machine, False)   # 当たり判定
-        if collide_list:                            # アイテムを取得した機体があるなら
+        if self.checkMachine(collide_list):                            # アイテムを取得した機体があるなら
             self.kill()
             for machine in collide_list:
-                self.effect(machine)                # アイテムを取得した機体に対して、アイテムに応じた効果を与える
+                if machine.isMachine():
+                    self.effect(machine)            # アイテムを取得した機体に対して、アイテムに応じた効果を与える
+
+    def checkMachine(self, collide_list):
+        if collide_list:
+            for x in collide_list:
+                if x.isMachine():
+                    return True
+        return False
 
 class Recovery(Item):
     """取得した機体の体力を1回復するアイテム"""
@@ -51,6 +59,9 @@ class Shield(pygame.sprite.Sprite):
     def hit(self, attack):
         if self.hp.damage(attack):
             self.kill()
+
+    def isMachine(self):
+        return False
 
 class ShieldItem(Item):
     """取得した機体の体力を1回復するアイテム"""

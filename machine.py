@@ -47,5 +47,8 @@ class Machine(pygame.sprite.Sprite):
         if self.hp.damage(attack):
             self.kill()
 
+    def isMachine(self):
+        return True
+
     def recover(self, num):
         self.hp.recover(num)
