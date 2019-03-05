@@ -28,4 +28,4 @@ class Gun:
             distance = math.sqrt((play.rect.centerx-x)**2+(play.rect.centery-y)**2)
             angle = distance / 10
             Bullet(x, y, (play.rect.centerx-x)/angle,(play.rect.centery-y)/angle, self.machines)
-        
+            break

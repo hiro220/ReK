@@ -45,7 +45,7 @@ class Shield(pygame.sprite.Sprite):
     def __init__(self, firmness, machine):
         pygame.sprite.Sprite.__init__(self, machine.containers)
         self.image = pygame.image.load("img/shield.png").convert_alpha()
-        self.hp = Hp(firmness*2)
+        self.hp = Hp(firmness)
         self.rect = self.image.get_rect()
         self.machine = machine
         self.update()
