@@ -121,13 +121,10 @@ class Stage:
         """nameで指定されるcpu(アイテム)を(x, y)に生成。なお、nameはdefine.pyに定義された定数から選択"""
         if name == CPU1:
             cpu(x, y, self.players)
-            return
         if name == CPU2:
             cpu2(x, y, self.players)
-            return
         if name == CPU3:
             cpu3(x, y, self.players)
-            return
         if name == RECOVERY:
             Recovery(x, y, self.players)
         if name == SHIELD:
