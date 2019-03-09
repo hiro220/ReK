@@ -6,6 +6,7 @@ from pygame.locals import *
 from bullet import Bullet
 from playermachine import PlayerMachine
 from cpumachine import *
+from item import *
 from define import *
 from out_range import *
 
@@ -42,6 +43,8 @@ class Stage:
 
         PlayerMachine.containers = self.group, self.players     # プレイヤーマシンにグループを割り当てる
         CpuMachine.containers = self.group, self.cpus           # cpuマシンにグループを割り当てる
+        Bullet.containers = self.group                          # 弾にグループを割り当てる
+        Item.containers = self.group
         Bullet.containers = self.group, self.bullets            # 弾にグループを割り当てる
         Range.containers = self.ranges                          # 範囲にグループを割り当てる
         Range2.containers = self.ranges2                        # 範囲にグループを割り当てる
@@ -131,12 +134,14 @@ class Stage:
         """nameで指定されるcpu(アイテム)を(x, y)に生成。なお、nameはdefine.pyに定義された定数から選択"""
         if name == CPU1:
             cpu(x, y, self.players)
-            return
         if name == CPU2:
             cpu2(x, y, self.players)
-            return
         if name == CPU3:
             cpu3(x, y, self.players)
+        if name == RECOVERY:
+            Recovery(x, y, self.players)
+        if name == SHIELD:
+            ShieldItem(x, y, self.players)
             return
     
     def creatRange(self):
