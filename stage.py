@@ -134,15 +134,16 @@ class Stage:
         """nameで指定されるcpu(アイテム)を(x, y)に生成。なお、nameはdefine.pyに定義された定数から選択"""
         if name == CPU1:
             cpu(x, y, self.players)
-        if name == CPU2:
+        elif name == CPU2:
             cpu2(x, y, self.players)
-        if name == CPU3:
+        elif name == CPU3:
             cpu3(x, y, self.players)
-        if name == RECOVERY:
+        elif name == RECOVERY:
             Recovery(x, y, self.players)
-        if name == SHIELD:
+        elif name == SHIELD:
             ShieldItem(x, y, self.players)
-            return
+        elif name == CPU_SHIELD:
+            ShieldItem(x, y, self.cpus)
     
     def creatRange(self):
         """ここでは範囲外を判定するための範囲を作成する"""
