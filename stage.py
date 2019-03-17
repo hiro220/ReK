@@ -74,7 +74,7 @@ class Stage:
 
         if self.rule():
             print("GAMECLEAR")
-            return GAMECLEAR                # グループcpusにあるすべてのcpuが破壊され、ステージ最後まで到達している
+            return GAMECLEAR                # ゲームクリア条件が満たされた
 
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
@@ -119,8 +119,8 @@ class Stage:
                 if len(line) == 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
                     if line[0] == 'size':               # 要素の一つ目がsizeのとき、二つ目の要素にステージサイズが記述されている
                         self.size = int(line[1])
-                    elif line[0] == 'rule':
-                        self.setRule(line[1])
+                    elif line[0] == 'rule':             # 要素の一つ目がruleのとき、二つ目の要素にルールを示す定数が記述されている
+                        self.setRule(line[1])           # ルールをセットする
                     else:                               # sizeでない場合はcpu(アイテム)なので、名前とy座標をリストにして辞書に追加
                         self.dic[key].append([line[0], int(line[1])])
 
@@ -161,10 +161,12 @@ class Stage:
         Range2(WIDTH+10,0,10,HEIGHT)
 
     def setRule(self, name):
+        """nameに指定したdefine.pyに定義のある定数に応じてルールの設定を行う。
+        辞書型リストのキーに定数、値に関数名を設定しておく。指定する関数は、引数なし、bool型の返却値を取る"""
         dic = {NORMAL:self.normalRule}
         if name in dic:
             self.rule = dic[name]
 
     def normalRule(self):
-        isCpuRemain = bool(self.cpus)
-        return not isCpuRemain and self.keyx > self.size
+        isCpuRemain = bool(self.cpus)                           # cpuが画面内に残っているか
+        return not isCpuRemain and self.keyx > self.size        # 上記条件かつ、ステージが最後に達しているか
