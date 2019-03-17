@@ -6,6 +6,10 @@
 WIDTH = 960
 HEIGHT = 600
 
+# 初期画面におけるモード選択
+START_GAME = 0          #START GAMEを選択した時
+Help = 1                #Helpを選択した時
+
 # 各ステージにおけるプレイヤー機体の初期位置
 PLAYER_X = 100
 PLAYER_Y = 300
@@ -20,3 +24,6 @@ GAMECLEAR = 3       # ステージをクリアしたとき
 CPU1 = "CPU1"
 CPU2 = "CPU2"
 CPU3 = "CPU3"
+
+RECOVERY = "RECOVERY"
+SHIELD = "SHIELD"
