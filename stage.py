@@ -119,6 +119,8 @@ class Stage:
                 if len(line) == 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
                     if line[0] == 'size':               # 要素の一つ目がsizeのとき、二つ目の要素にステージサイズが記述されている
                         self.size = int(line[1])
+                    elif line[0] == 'rule':
+                        self.setRule(line[1])
                     else:                               # sizeでない場合はcpu(アイテム)なので、名前とy座標をリストにして辞書に追加
                         self.dic[key].append([line[0], int(line[1])])
 
