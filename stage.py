@@ -72,7 +72,7 @@ class Stage:
             print("GAMEOVER")
             return GAMEOVER
 
-        if not bool(self.cpus) and self.keyx > self.size:
+        if self.rule():
             print("GAMECLEAR")
             return GAMECLEAR                # グループcpusにあるすべてのcpuが破壊され、ステージ最後まで到達している
 
@@ -109,6 +109,7 @@ class Stage:
         with open(file, 'r', encoding="utf-8") as fp:   # ファイルを読み取り専用で開く
             self.size = key = 0                         # 画面サイズと、辞書のkeyを0に初期化する
             self.dic = {}                               # 辞書を定義する
+            self.setRule(NORMAL)                        # ステージルールをNORMALに設定する。
             for line in fp.readlines():                 # ファイルを一行ごとに読み取り、変数lineに文字列として格納する
                 line = line.strip('\n').split()         # 改行コード'\n'を取り除き、タブ区切りでリストに分割する
                 if len(line) == 1:                      # リストの要素数が1のとき、keyとなるx座標が記述されている
@@ -156,3 +157,12 @@ class Stage:
         Range2(-10,-20,WIDTH+20,10)
         Range2(-10,HEIGHT+10,WIDTH+20,10)
         Range2(WIDTH+10,0,10,HEIGHT)
+
+    def setRule(self, name):
+        dic = {NORMAL:self.normalRule}
+        if name in dic:
+            self.rule = dic[name]
+
+    def normalRule(self):
+        isCpuRemain = bool(self.cpus)
+        return not isCpuRemain and self.keyx > self.size

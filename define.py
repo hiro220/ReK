@@ -27,3 +27,6 @@ CPU3 = "CPU3"
 
 RECOVERY = "RECOVERY"
 SHIELD = "SHIELD"
+
+"""ステージルールの設定"""
+NORMAL = "NORMAL"
