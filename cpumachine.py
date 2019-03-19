@@ -25,7 +25,7 @@ class cpu(CpuMachine):
         self.rect.move_ip(-2.5,0)
         x, y = self.rect.midleft
         if pygame.time.get_ticks() - self.gun_start >= 600:
-            super().shoot2(x, y)
+            super().Opposite_shoot(x, y)
             self.gun_start = pygame.time.get_ticks()
 
 class cpu2(CpuMachine):
@@ -47,6 +47,11 @@ class cpu2(CpuMachine):
             if self.count == 31:
                 self.count = 0
 
+        x, y = self.rect.midleft
+        if pygame.time.get_ticks() - self.gun_start >= 1200:
+            super().Reflection_shoot(x, y)
+            self.gun_start = pygame.time.get_ticks() 
+
 class cpu3(CpuMachine):
     def __init__(self, x, y, players):
         """引数は、初期位置(x, y)、弾の当たり判定対象となるプレイヤーの機体グループ"""
@@ -63,5 +68,5 @@ class cpu3(CpuMachine):
 
         x, y = self.rect.midleft
         if pygame.time.get_ticks() - self.gun_start >= 1200:
-            super().shoot2(x, y)
+            super().Tracking_shoot(x, y)
             self.gun_start = pygame.time.get_ticks() 
