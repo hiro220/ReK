@@ -68,9 +68,9 @@ class Stage:
         pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にできとグループから削除される
         pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にできとグループから削除される
 
-        if self.isGameOver():        # プレイヤーの機体が破壊されたとき
+        if self.isGameOver():
             print("GAMEOVER")
-            return GAMEOVER
+            return GAMEOVER                 # ゲームオーバー条件が満たされた
 
         if self.isClear():
             print("GAMECLEAR")
