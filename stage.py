@@ -68,11 +68,11 @@ class Stage:
         pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にできとグループから削除される
         pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にできとグループから削除される
 
-        if self.player.isGameOver():        # プレイヤーの機体が破壊されたとき
+        if self.isGameOver():        # プレイヤーの機体が破壊されたとき
             print("GAMEOVER")
             return GAMEOVER
 
-        if self.rule():
+        if self.isClear():
             print("GAMECLEAR")
             return GAMECLEAR                # ゲームクリア条件が満たされた
 
@@ -156,11 +156,19 @@ class Stage:
 
     def setRule(self, name):
         """nameに指定したdefine.pyに定義のある定数に応じてルールの設定を行う。
-        辞書型リストのキーに定数、値に関数名を設定しておく。指定する関数は、引数なし、bool型の返却値を取る"""
-        dic = {NORMAL:self.normalRule}
+        辞書型リストのキーに定数、値に関数名のリストを設定しておく。リストは[クリア条件, 失敗条件]に相当する関数を指定する。
+        指定する関数は、引数なし、bool型の返却値を取る"""
+        dic = {NORMAL:[self.normalRule, self.playerBreak]}
         if name in dic:
-            self.rule = dic[name]
+            ruleList = dic[name]
+            self.isClear = ruleList[0]
+            self.isGameOver = ruleList[1]
 
     def normalRule(self):
+        """ステージが画面端まで移動し、画面に残っている敵機をすべて破壊すればTrueが返る"""
         isCpuRemain = bool(self.cpus)                           # cpuが画面内に残っているか
         return not isCpuRemain and self.keyx > self.size        # 上記条件かつ、ステージが最後に達しているか
+
+    def playerBreak(self):
+        """プレイヤーの機体が破壊されるとTrueが返る"""
+        return self.player.isGameOver()
