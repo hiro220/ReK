@@ -1,4 +1,5 @@
 size    600
+rule    NORMAL
 0
 SHIELD  150
 CPU1    100
