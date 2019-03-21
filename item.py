@@ -73,3 +73,11 @@ class ShieldItem(Item):
 
     def effect(self, machine):
         Shield(3, machine)          # 堅さ3のシールドを生成
+
+class SpeedDownItem(Item):
+    def __init__(self, x, y, machine):
+        image = pygame.image.load("img/weight.png").convert_alpha()
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        machine.speedDown(100)

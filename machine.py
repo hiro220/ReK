@@ -33,6 +33,7 @@ class Machine(pygame.sprite.Sprite):
         self.gun2 = Tracking_Gun(machines)
         self.gun3 = Opposite_Gun(machines)
         self.gun4 = Reflection_Gun(machines)
+        self.dx = self.dy = 0
 
     def move(self, dx, dy):
         """機体を(dx, dy)だけ移動させる"""
@@ -63,3 +64,7 @@ class Machine(pygame.sprite.Sprite):
 
     def recover(self, num):
         self.hp.recover(num)        # 引数で指定した値だけ体力が回復する。
+
+    def speedDown(self, millisecond):
+        self.dx -= 1
+        self.dy -= 1

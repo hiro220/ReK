@@ -144,6 +144,8 @@ class Stage:
             ShieldItem(x, y, self.players)
         elif name == CPU_SHIELD:
             ShieldItem(x, y, self.cpus)
+        elif name == SPEEDDOWN:
+            SpeedDownItem(x, y, self.players)
     
     def creatRange(self):
         """ここでは範囲外を判定するための範囲を作成する"""
