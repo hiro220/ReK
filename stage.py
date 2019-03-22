@@ -10,6 +10,7 @@ from item import *
 from define import *
 from out_range import *
 from score import *
+import pygame.mixer
 
 class Stage:
 
@@ -73,10 +74,12 @@ class Stage:
 
         if self.player.isGameOver():        # プレイヤーの機体が破壊されたとき
             print("GAMEOVER")
+            pygame.mixer.music.stop()
             return GAMEOVER
 
         if not bool(self.cpus) and self.keyx > self.size:
             print("GAMECLEAR")
+            pygame.mixer.music.stop()
             return GAMECLEAR                # グループcpusにあるすべてのcpuが破壊され、ステージ最後まで到達している
 
         for event in pygame.event.get():
