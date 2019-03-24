@@ -136,7 +136,11 @@ class Stage:
     def createOneCpu(self, name, x, y):
         """nameで指定されるcpu(アイテム)を(x, y)に生成。なお、nameはdefine.pyに定義された定数から選択"""
         # 辞書の定義。キーに定数、値にクラス名を指定する。（キー:値）
-        dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, RECOVERY:Recovery, SHIELD:ShieldItem}        
+        dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, RECOVERY:Recovery, SHIELD:ShieldItem}
+        sub = name.split('_')
+        if sub[0] == 'CPU' and sub[1] in dic:
+            create = dic[sub[1]]
+            create(x, y, self.cpus)
         if name in dic:                             # 辞書にキーnameがあるか
             create = dic[name]                      # 変数createにクラス名を代入。
             create(x, y, self.players)              # 変数createに代入されているクラスを呼び出す。
