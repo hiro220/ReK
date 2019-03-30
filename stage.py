@@ -136,14 +136,23 @@ class Stage:
     def createOneCpu(self, name, x, y):
         """nameで指定されるcpu(アイテム)を(x, y)に生成。なお、nameはdefine.pyに定義された定数から選択"""
         # 辞書の定義。キーに定数、値にクラス名を指定する。（キー:値）
-        dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, RECOVERY:Recovery, SHIELD:ShieldItem}
+
+        # CPUの種類を指す辞書
+        cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3}
+        # アイテムの種類を指す辞書
+        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem}
         sub = name.split('_')
-        if sub[0] == 'CPU' and sub[1] in dic:
-            create = dic[sub[1]]
-            create(x, y, self.cpus)
-        if name in dic:                             # 辞書にキーnameがあるか
-            create = dic[name]                      # 変数createにクラス名を代入。
-            create(x, y, self.players)              # 変数createに代入されているクラスを呼び出す。
+
+        if sub[0] == 'CPU' and sub[1] in item_dic:      # CPU_〇〇という呼ばれ方をしたアイテムか
+            # CPU用のアイテム生成
+            cpu_item = item_dic[sub[1]]
+            cpu_item(x, y, self.cpus)
+        if name in cpu_dic:                             # 辞書にキーnameがあるか
+            create_cpu = cpu_dic[name]                      # 変数createにクラス名を代入。
+            create_cpu(x, y, self.players)              # 変数createに代入されているクラスを呼び出す。
+        if name in item_dic:
+            create_item = item_dic[name]
+            create_item(x, y, self.players)
     
     def creatRange(self):
         """ここでは範囲外を判定するための範囲を作成する"""
