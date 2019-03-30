@@ -32,7 +32,7 @@ class Main(pygame.sprite.Sprite):
                         pygame.quit()
                         sys.exit()
                 elif stage_num == 2:
-                    stage = Stage(self.screen, "stage/stage1.txt")
+                    stage = Stage(self.screen, "stage/stage2.txt")
                     result = stage.loop()
                     if result == EXIT:
                         pygame.quit()
