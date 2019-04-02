@@ -9,6 +9,7 @@ from cpumachine import *
 from item import *
 from define import *
 from out_range import *
+from timer import Timer
 
 class Stage:
 
@@ -40,6 +41,7 @@ class Stage:
         self.bullets = pygame.sprite.Group()        # bulletのグループ
         self.ranges = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
         self.ranges2 = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
+        self.timers = pygame.sprite.Group()
 
         PlayerMachine.containers = self.group, self.players     # プレイヤーマシンにグループを割り当てる
         CpuMachine.containers = self.group, self.cpus           # cpuマシンにグループを割り当てる
@@ -48,6 +50,7 @@ class Stage:
         Bullet.containers = self.group, self.bullets            # 弾にグループを割り当てる
         Range.containers = self.ranges                          # 範囲にグループを割り当てる
         Range2.containers = self.ranges2                        # 範囲にグループを割り当てる
+        Timer.containers = self.timers
 
     def loop(self):
         while True:
@@ -64,6 +67,7 @@ class Stage:
         self.moveStage()                    # ステージを動かす
         self.player.move(HEIGHT, WIDTH)     # 入力に応じてプレイヤーの機体を動かす
         self.group.update()                 # groupに割り当てられたすべてのスプライトを更新する
+        self.timers.update()
 
         pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にできとグループから削除される
         pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にできとグループから削除される
