@@ -7,7 +7,7 @@ class Timer(pygame.sprite.Sprite):
 
     def __init__(self, millisecond, process):
         """millisecondミリ秒経過後、processを実行する。
-        Timer(2500, sample(1, 2))のように使う。processには実行するときと同じように関数を記述する。
+        Timer(2500, sample)のように使う。processには関数名を記述する。
         """
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.process = process                                  # 関数processをインスタンス変数に
@@ -16,5 +16,5 @@ class Timer(pygame.sprite.Sprite):
 
     def update(self):
         if pygame.time.get_ticks() - self.init_time >= self.time:       # このインスタンスが生成されたときからの経過時間が設定した時間より長い
-            self.process                                        # processを実行
+            self.process()                                      # processを実行
             self.kill()                                         # このスプライトをグループから削除

@@ -82,4 +82,4 @@ class SpeedDownItem(Item):
 
     def effect(self, machine):
         machine.speedDown()
-        Timer(2000, machine.speedUp())
+        Timer(2000, machine.speedUp)
