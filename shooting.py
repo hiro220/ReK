@@ -7,6 +7,7 @@ import sys
 from stage import *
 from initial_screen import *
 from menu import *
+import pygame.mixer
 
 class Main(pygame.sprite.Sprite):
 
@@ -27,18 +28,24 @@ class Main(pygame.sprite.Sprite):
                 
                 if stage_num == 1:                                   #選択したステージでゲームを開始
                     stage = Stage(self.screen, "stage/stage1.txt")
+                    pygame.mixer.music.load("sound/sound1.mp3")     # 音楽ファイルの読み込み
+                    pygame.mixer.music.play(-1)                     # 音楽の再生回数(ループ再生)
                     result = stage.loop()
                     if result == EXIT:
                         pygame.quit()
                         sys.exit()
                 elif stage_num == 2:
                     stage = Stage(self.screen, "stage/stage2.txt")
+                    pygame.mixer.music.load("sound/sound1.mp3")     # 音楽ファイルの読み込み
+                    pygame.mixer.music.play(-1)                     # 音楽の再生回数(ループ再生)
                     result = stage.loop()
                     if result == EXIT:
                         pygame.quit()
                         sys.exit()
                 elif stage_num == 3:
                     stage = Stage(self.screen, "stage/stage1.txt")
+                    pygame.mixer.music.load("sound/sound1.mp3")     # 音楽ファイルの読み込み
+                    pygame.mixer.music.play(-1)                     # 音楽の再生回数(ループ再生)
                     result = stage.loop()
                     if result == EXIT:
                         pygame.quit()

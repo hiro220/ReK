@@ -9,6 +9,8 @@ from cpumachine import *
 from item import *
 from define import *
 from out_range import *
+from score import *
+import pygame.mixer
 
 class Stage:
 
@@ -32,6 +34,8 @@ class Stage:
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
+
+        self.score = Score(10, 10)
 
     def initGroup(self):
         self.group = pygame.sprite.RenderUpdates()  # 描画する機体や弾用のグループ
@@ -70,12 +74,12 @@ class Stage:
 
         if self.isGameOver():
             print("GAMEOVER")
+            pygame.mixer.music.stop()
             return GAMEOVER                 # ゲームオーバー条件が満たされた
-
         if self.isClear():
             print("GAMECLEAR")
+            pygame.mixer.music.stop()
             return GAMECLEAR                # ゲームクリア条件が満たされた
-
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
                 return EXIT
@@ -101,6 +105,7 @@ class Stage:
         self.screen.blit(self.sub_image, (-self.x+self.width, 0))       # 対になる背景画像を繋げて描画
 
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
+        self.score.draw(self.screen)
         pygame.display.update()             # 画面を更新する
 
     def readStage(self, file):
