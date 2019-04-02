@@ -3,6 +3,7 @@
 import pygame
 from pygame.locals import *
 from machine import Hp
+from timer import Timer
 
 class Item(pygame.sprite.Sprite):
     """アイテム処理の基底となるクラス。継承するクラスは、メソッドeffect(self, machine)を定義する。
@@ -80,4 +81,5 @@ class SpeedDownItem(Item):
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
-        machine.speedDown(100)
+        machine.speedDown()
+        Timer(2000, machine.speedUp())
