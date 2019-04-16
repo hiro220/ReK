@@ -29,7 +29,7 @@ class Machine(pygame.sprite.Sprite):
         self.image = img            # 引数の画像をインスタンス変数に保存する
         self.rect = img.get_rect()  # 画像からrectを取得する
         self.rect.move_ip(x, y)     # 初期位置に移動させる
-        self.gun = Gun(machines)    # Gunクラスのインスタンスを生成する
+        self.gun = Gun(machines, 10)    # Gunクラスのインスタンスを生成する
         self.gun2 = Tracking_Gun(machines)
         self.gun3 = Opposite_Gun(machines)
         self.gun4 = Reflection_Gun(machines)

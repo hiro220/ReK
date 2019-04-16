@@ -7,7 +7,7 @@ import math
 
 class Gun:
 
-    def __init__(self, machines, max=-1):
+    def __init__(self, machines, max):
         """引数は、発射する弾の当たり判定対象となる機体グループ。発射できる弾の上限値max(初期値は無限を意味する-1)"""
         self.max = self.num = max       # インスタンス変数max, numに引数の値をセットする
         self.machines = machines
