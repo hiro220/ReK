@@ -44,8 +44,10 @@ class Machine(pygame.sprite.Sprite):
         if not self.gun.isBulletZero():     # 残弾数が0でないなら弾を発射する
             self.gun.shoot(x, y)
             self.num = self.num - 1
-        else:
-            
+    
+    def reload(self):
+        if self.gun.isBulletZero():
+            self.num = 10
     
     def Tracking_shoot(self, x, y):
         self.gun2.shoot(x, y)
