@@ -22,7 +22,7 @@ class Hp:
 
 class Machine(pygame.sprite.Sprite):
 
-    def __init__(self, hp, x, y, img, machines, num):
+    def __init__(self, hp, x, y, img, machines):
         """引数は、機体の体力を表すhp、機体の初期位置(x, y)、描画する画像、発射する弾の当たり判定対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.hp = Hp(hp)
@@ -33,7 +33,6 @@ class Machine(pygame.sprite.Sprite):
         self.gun2 = Tracking_Gun(machines)
         self.gun3 = Opposite_Gun(machines)
         self.gun4 = Reflection_Gun(machines)
-        self.num = num
 
     def move(self, dx, dy):
         """機体を(dx, dy)だけ移動させる"""
@@ -43,7 +42,7 @@ class Machine(pygame.sprite.Sprite):
         """引数は弾の発射位置(x, y)"""
         if not self.gun.isBulletZero():     # 残弾数が0でないなら弾を発射する
             self.gun.shoot(x, y)
-            self.num = self.num - 1
+            self.num = self.gun - 1
     
     def reload(self):
         if self.gun.isBulletZero():
