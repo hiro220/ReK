@@ -22,9 +22,7 @@ class Gun:
         """引数は弾の発射位置(x, y)"""
         Bullet(x, y, 10, 0, self.machines)      # 弾を生成する(BulletクラスはMainクラスでグループ化されているため、返却する必要はない)
     
-    
 class Tracking_Gun(Gun):
-
     def shoot(self, x, y):
         play_list = self.machines.sprites()
         for play in play_list:   
@@ -33,12 +31,14 @@ class Tracking_Gun(Gun):
             Bullet(x, y, (play.rect.centerx-x)/angle,(play.rect.centery-y)/angle, self.machines)
 
 class Opposite_Gun(Gun):
-
     def shoot(self, x, y):
         Bullet(x, y, -10, 0, self.machines)
         
 class Reflection_Gun(Gun):
-
     def shoot(self, x, y):
         Reflection_Bullet(x, y, -10, 0, self.machines)
+
+class Shot_Gun(Gun):
+    def shoot(self, x, y):
+        
 
