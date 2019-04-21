@@ -16,7 +16,10 @@ class Gun:
     def isBulletZero(self):
         """銃弾数が0ならTrue
         そうでないならFalseを返す"""
-        return self.num == 0
+        if self.num == 0:
+            return True
+        else:
+            return False
 
     def shoot(self, x, y):
         """引数は弾の発射位置(x, y)"""
