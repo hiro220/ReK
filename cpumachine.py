@@ -70,3 +70,5 @@ class cpu3(CpuMachine):
         if pygame.time.get_ticks() - self.gun_start >= 1200:
             super().Tracking_shoot(x, y)
             self.gun_start = pygame.time.get_ticks() 
+
+    """test"""
