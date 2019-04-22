@@ -40,6 +40,9 @@ class Menu:
                     self.Key_Event(event)       #押されたキーによって異なる処理
                     if event.key == K_RETURN:
                         return self.stage_num
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
             
             self.screen.fill((0,0,0))
     
@@ -61,6 +64,3 @@ class Menu:
         elif event.key == K_LEFT:       #←矢印が押されたなら前のステージへ移動
             if self.stage_num != 1:
                     self.stage_num -= 1
-        elif event.key == QUIT:         #閉じるボタンが押されたならゲームを終了する
-            pygame.quit()
-            sys.exit()

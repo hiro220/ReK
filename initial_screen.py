@@ -30,6 +30,9 @@ class Initial_Screen:
                     self.Key_Event(event)       #押されたキーによって異なる処理
                     if event.key == K_RETURN:
                         return self.select_num
+                elif event.type == QUIT:         #閉じるボタンが押されたならゲームを終了する
+                    pygame.quit()
+                    sys.exit()
 
             screen.fill((0,0,0))       #画面を黒で塗りつぶす
 
@@ -50,6 +53,3 @@ class Initial_Screen:
                     self.select_num  = START_GAME
                 else:
                     self.select_num += 1
-            if event.key == QUIT:   #閉じるボタンが押されたならゲームを終了する
-                pygame.quit()
-                sys.exit()
