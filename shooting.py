@@ -24,29 +24,34 @@ class Main(pygame.sprite.Sprite):
             if init_num == START_GAME:      #選択したモードがSTART GAMEならメニュー画面に移動
                 menu = Menu(self.screen)    #メニュー画面の描画
                 stage_num = menu.draw()
+                self.Stage_draw(stage_num)
                 
-                if stage_num == 1:                                   #選択したステージでゲームを開始
-                    stage = Stage(self.screen, "stage/stage1.txt")
-                    result = stage.loop()
-                    if result == EXIT:
-                        pygame.quit()
-                        sys.exit()
-                elif stage_num == 2:
-                    stage = Stage(self.screen, "stage/stage1.txt")
-                    result = stage.loop()
-                    if result == EXIT:
-                        pygame.quit()
-                        sys.exit()
-                elif stage_num == 3:
-                    stage = Stage(self.screen, "stage/stage1.txt")
-                    result = stage.loop()
-                    if result == EXIT:
-                        pygame.quit()
-                        sys.exit()                    
+                           
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 print("help menu")
 
-                
+
+    def Stage_draw(self, stage_num):
+        if stage_num == 1:                                   #選択したステージでゲームを開始
+            stage = Stage(self.screen, "stage/stage1.txt")
+            result = stage.loop()
+            if result == EXIT:
+                pygame.quit()
+                sys.exit()
+        elif stage_num == 2:
+            stage = Stage(self.screen, "stage/stage1.txt")
+            result = stage.loop()
+            if result == EXIT:
+                pygame.quit()
+                sys.exit()
+        elif stage_num == 3:
+            stage = Stage(self.screen, "stage/stage1.txt")
+            result = stage.loop()
+            if result == EXIT:
+                pygame.quit()
+                sys.exit()         
+
+
 if __name__=='__main__':
 
     game = Main()
