@@ -72,3 +72,4 @@ class cpu3(CpuMachine):
             self.gun_start = pygame.time.get_ticks() 
 
     """test"""
+    """test2"""
