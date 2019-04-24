@@ -32,11 +32,12 @@ class Stage:
         self.creatRange()                       #範囲を設定する
         self.creatRange2()                      #範囲を設定する
 
-        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
+        self.score = Score(10, 10)
+        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20))    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
 
-        self.score = Score(10, 10)
+        
 
     def initGroup(self):
         self.group = pygame.sprite.RenderUpdates()  # 描画する機体や弾用のグループ
@@ -144,12 +145,12 @@ class Stage:
     def createOneCpu(self, name, x, y):
         """nameで指定されるcpu(アイテム)を(x, y)に生成。なお、nameはdefine.pyに定義された定数から選択"""
         if name == CPU1:
-            cpu(x, y, self.players)
-        elif name == CPU2:
-            cpu2(x, y, self.players)
-        elif name == CPU3:
-            cpu3(x, y, self.players)
-        elif name == RECOVERY:
+            cpu(x, y, self.players, self.score)
+        if name == CPU2:
+            cpu2(x, y, self.players, self.score)
+        if name == CPU3:
+            cpu3(x, y, self.players, self.score)
+        if name == RECOVERY:
             Recovery(x, y, self.players)
         elif name == SHIELD:
             ShieldItem(x, y, self.players)

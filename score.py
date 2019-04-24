@@ -4,9 +4,8 @@
 import pygame
 from pygame.locals import *
 import sys
-from stage import *
 
-class Score():
+class Score:
     def __init__(self, x, y):
         self.sysfont = pygame.font.SysFont(None, 20)
         self.score = 0
