@@ -31,11 +31,12 @@ class Stage:
         self.creatRange()                       #範囲を設定する
         self.creatRange2()                      #範囲を設定する
 
-        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus)    # プレイヤーのマシンを生成する
+        self.score = Score(10, 10)
+        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20))    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
 
-        self.score = Score(10, 10)
+        
 
     def initGroup(self):
         self.group = pygame.sprite.RenderUpdates()  # 描画する機体や弾用のグループ
@@ -154,7 +155,7 @@ class Stage:
             cpu_item(x, y, self.cpus)
         if name in cpu_dic:                             # 辞書にキーnameがあるか
             create_cpu = cpu_dic[name]                      # 変数createにクラス名を代入。
-            create_cpu(x, y, self.players)              # 変数createに代入されているクラスを呼び出す。
+            create_cpu(x, y, self.players, self.score)              # 変数createに代入されているクラスを呼び出す。
         if name in item_dic:
             create_item = item_dic[name]
             create_item(x, y, self.players)
