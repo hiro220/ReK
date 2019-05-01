@@ -22,7 +22,8 @@ class cpu(CpuMachine):
         self.dx, self.dy = 5, 5
     
     def update(self):
-        self.rect.move_ip(-2.5,0)
+        self.dx, self.dy = -2.5, 0
+        self.rect.move_ip(self.dx, self.dy)
         x, y = self.rect.midleft
         if pygame.time.get_ticks() - self.gun_start >= 600:
             super().Opposite_shoot(x, y)
@@ -39,10 +40,12 @@ class cpu2(CpuMachine):
     
     def update(self):
         if 0 <= self.count <= 14:
-            self.rect.move_ip(-2.5,3)
+            self.dx, self.dy = -2.5, 3
+            self.rect.move_ip(self.dx,self.dy)
             self.count += 1
         elif 15 <= self.count <= 30:
-            self.rect.move_ip(-2.5,-3)
+            self.dx, self.dy = -2.5, -3
+            self.rect.move_ip(self.dx, self.dy)
             self.count += 1
             if self.count == 31:
                 self.count = 0
@@ -63,7 +66,8 @@ class cpu3(CpuMachine):
 
     def update(self):
         if 0 <= self.count <= 150:
-            self.rect.move_ip(-2.5,0)
+            self.dx, self.dy = -2.5, 0
+            self.rect.move_ip(self.dx, self.dy)
             self.count += 1
 
         x, y = self.rect.midleft
