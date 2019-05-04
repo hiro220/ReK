@@ -27,3 +27,9 @@ CPU3 = "CPU3"
 
 RECOVERY = "RECOVERY"
 SHIELD = "SHIELD"
+
+"""ステージルールの設定"""
+
+# クリア条件:ステージの移動が止まるまで進み、画面内に残る敵機すべての撃破
+# 失敗条件:自機が撃破される
+NORMAL = "NORMAL"
