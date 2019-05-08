@@ -86,7 +86,7 @@ class SpeedDownItem(Item):
 
 class ScoreGetItem(Item):
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/recovery.png").convert_alpha()
+        image = pygame.image.load("img/scoreget.png").convert_alpha()
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
