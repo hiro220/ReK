@@ -74,8 +74,8 @@ class Stage:
         self.group.update()                 # groupに割り当てられたすべてのスプライトを更新する
         self.timers.update()
 
-        pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にできとグループから削除される
-        pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にできとグループから削除される
+        pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にでるとグループから削除される
+        pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
 
         if self.isGameOver():
             print("GAMEOVER")

@@ -8,6 +8,8 @@ class Timer(pygame.sprite.Sprite):
     def __init__(self, millisecond, process, *args):
         """millisecondミリ秒経過後、processを実行する。
         Timer(2500, sample)のように使う。processには関数名を記述する。
+        引数が必要な関数(def sample(a, b)みたいなの)を指定したとき、Timer(2500, sample, 10, 2)のように記述する。
+        このとき、sample(10, 2)で実行される。
         """
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.process = process                                  # 関数processをインスタンス変数に
