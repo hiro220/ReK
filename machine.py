@@ -33,6 +33,7 @@ class Machine(pygame.sprite.Sprite):
         self.gun2 = Tracking_Gun(machines)
         self.gun3 = Opposite_Gun(machines)
         self.gun4 = Reflection_Gun(machines)
+        self.machines = machines
         self.dx = self.dy = 0
         self.score = score
 
