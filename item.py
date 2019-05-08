@@ -81,5 +81,5 @@ class SpeedDownItem(Item):
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
-        machine.speedDown()             # 獲得した機体のスピードを下げる
-        Timer(3000, machine.speedUp)    # 一定時間経過後、スピードを上げる
+        machine.speedDown(1, 1)             # 獲得した機体のスピードを下げる
+        Timer(3000, machine.speedUp, 1, 1)    # 一定時間経過後、スピードを上げる
