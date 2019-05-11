@@ -35,7 +35,7 @@ class Main(pygame.sprite.Sprite):
                         pygame.quit()
                         sys.exit()
                 elif stage_num == 2:
-                    stage = Stage(self.screen, "stage/stage1.txt")
+                    stage = Stage(self.screen, "stage/stage2.txt")
                     pygame.mixer.music.load("sound/sound1.mp3")     # 音楽ファイルの読み込み
                     pygame.mixer.music.play(-1)                     # 音楽の再生回数(ループ再生)
                     result = stage.loop()

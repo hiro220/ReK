@@ -22,7 +22,7 @@ class Hp:
 
 class Machine(pygame.sprite.Sprite):
 
-    def __init__(self, hp, x, y, img, machines):
+    def __init__(self, hp, x, y, img, machines, score):
         """引数は、機体の体力を表すhp、機体の初期位置(x, y)、描画する画像、発射する弾の当たり判定対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.hp = Hp(hp)
@@ -30,10 +30,12 @@ class Machine(pygame.sprite.Sprite):
         self.rect = img.get_rect()  # 画像からrectを取得する
         self.rect.move_ip(x, y)     # 初期位置に移動させる
         self.gun = Gun(machines, 10)    # Gunクラスのインスタンスを生成する
-        self.gun2 = Tracking_Gun(machines,10)
-        self.gun3 = Opposite_Gun(machines,10)
-        self.gun4 = Reflection_Gun(machines,10)
-        
+        self.gun2 = Tracking_Gun(machines, 10)
+        self.gun3 = Opposite_Gun(machines, 10)
+        self.gun4 = Reflection_Gun(machines, 10)
+        self.dx = self.dy = 0
+        self.score = score
+
     def move(self, dx, dy):
         """機体を(dx, dy)だけ移動させる"""
         self.rect.move_ip(dx, dy)
@@ -58,6 +60,7 @@ class Machine(pygame.sprite.Sprite):
     def hit(self, attack):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
         if self.hp.damage(attack):
+            self.score.add_score(10)
             self.kill()
 
     def isMachine(self):
@@ -66,3 +69,11 @@ class Machine(pygame.sprite.Sprite):
 
     def recover(self, num):
         self.hp.recover(num)        # 引数で指定した値だけ体力が回復する。
+
+    def speedDown(self):
+        self.dx -= 1
+        self.dy -= 1
+
+    def speedUp(self):
+        self.dy += 1
+        self.dx += 1

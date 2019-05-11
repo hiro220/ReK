@@ -6,11 +6,11 @@ from pygame.locals import *
 
 class PlayerMachine(Machine):
 
-    def __init__(self, x, y, cpus):
+    def __init__(self, x, y, cpus, score):
         """引数は、初期位置(x, y)、弾の当たり判定対象となる敵機グループ"""
         image = pygame.image.load("img/player.png").convert_alpha()
-        super().__init__(2, x, y, image, cpus)
-        self.dx, self.dy = 7, 7  # 移動量
+        super().__init__(2, x, y, image, cpus, score)
+        self.dx, self.dy = 7, 7                         # 移動量
 
     def move(self, height, width):
         key = pygame.key.get_pressed()      # 押されたキーを受け取る
