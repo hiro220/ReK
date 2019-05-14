@@ -29,11 +29,12 @@ class Machine(pygame.sprite.Sprite):
         self.image = img            # 引数の画像をインスタンス変数に保存する
         self.rect = img.get_rect()  # 画像からrectを取得する
         self.rect.move_ip(x, y)     # 初期位置に移動させる
-        self.gun = Gun(machines)    # Gunクラスのインスタンスを生成する
-        self.gun2 = Tracking_Gun(machines)
-        self.gun3 = Opposite_Gun(machines)
-        self.gun4 = Reflection_Gun(machines)
+        self.gun = Gun(machines, 10)    # Gunクラスのインスタンスを生成する
+        self.gun2 = Tracking_Gun(machines, 10)
+        self.gun3 = Opposite_Gun(machines, 10)
+        self.gun4 = Reflection_Gun(machines, 10)
         self.machines = machines
+
         self.dx = self.dy = 0
         self.score = score
 
@@ -45,6 +46,9 @@ class Machine(pygame.sprite.Sprite):
         """引数は弾の発射位置(x, y)"""
         if not self.gun.isBulletZero():     # 残弾数が0でないなら弾を発射する
             self.gun.shoot(x, y)
+
+    def reload(self):
+        self.gun.reload()
     
     def Tracking_shoot(self, x, y):
         self.gun2.shoot(x, y)
