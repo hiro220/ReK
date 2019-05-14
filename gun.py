@@ -14,8 +14,7 @@ class Gun:
         self.rect = Rect(0,0,960,600)
         self.count = 0
         self.gun_start = pygame.time.get_ticks()
-        self.standard_parameter = -10.0
-        self.standard_angle = 0
+        
 
     def isBulletZero(self):
         """銃弾数が0ならTrue
@@ -43,16 +42,19 @@ class Tracking_Gun(Gun):
             angle = distance / 10
             Bullet(x, y, (play.rect.centerx-x)/angle,(play.rect.centery-y)/angle, self.machines)
             break
+        self.num -= 1
 
 class Opposite_Gun(Gun):
 
     def shoot(self, x, y):
         Bullet(x, y, -10, 0, self.machines)
+        self.num -= 1
         
 class Reflection_Gun(Gun):
 
     def shoot(self, x, y):
         Reflection_Bullet(x, y, -10, 0, self.machines)
+        self.num -= 1
 
 class Circle_Gun(Gun):
     
@@ -69,8 +71,14 @@ class Circle_Gun(Gun):
                 Bullet(x, y, bullet_list[0], bullet_list[1], self.machines)
             self.gun_start = pygame.time.get_ticks()
             self.count = 0
+        self.num -= 1
 
 class Twist_Gun(Gun):
+
+    def __init__(self, machines, max):
+        super().__init__(machines, max)
+        self.standard_parameter = -10.0
+        self.standard_angle = 0
     def shoot(self, x, y):
         
         dx = self.standard_parameter*math.cos(math.radians(self.standard_angle))
@@ -86,3 +94,4 @@ class Twist_Gun(Gun):
             self.standard_angle += 10
         if self.count == 1:
             self.standard_angle -= 10
+        self.num -= 1
