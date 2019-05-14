@@ -74,8 +74,8 @@ class Stage:
         self.group.update()                 # groupに割り当てられたすべてのスプライトを更新する
         self.timers.update()
 
-        pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にできとグループから削除される
-        pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にできとグループから削除される
+        pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にでるとグループから削除される
+        pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
 
         if self.isGameOver():
             print("GAMEOVER")
@@ -150,7 +150,7 @@ class Stage:
         # CPUの種類を指す辞書
         cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3}
         # アイテムの種類を指す辞書
-        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem}
+        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem}
         sub = name.split('_')
 
         if sub[0] == 'CPU' and sub[1] in item_dic:      # CPU_〇〇という呼ばれ方をしたアイテムか
