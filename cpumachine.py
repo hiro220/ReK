@@ -13,6 +13,26 @@ class CpuMachine(Machine):
         super().__init__(hp, x, y, image, players, score)
         self.dx, self.dy = 5, 5
         self.gun_start = pygame.time.get_ticks()
+
+#これはデバック用のCPUです。
+class cpu0(CpuMachine): 
+    def __init__(self, x, y, players, score):
+        """引数は、初期位置(x, y)、弾の当たり判定対象となるプレイヤーの機体グループ"""
+
+        image = pygame.image.load("img/cpu.png").convert_alpha()
+        super().__init__(1, x, y, image, players, score)
+        self.dx, self.dy = 5, 5
+        self.gun = Opposite_Gun(self.machines, 10)
+        self.count = 0
+    
+    def update(self):
+        if 0 <= self.count <= 150:
+            self.dx, self.dy = -2.5, 0
+            self.rect.move_ip(self.dx, self.dy)
+            self.count += 1
+        x, y = self.rect.midleft
+        super().shoot(x, y)
+
     
 class cpu(CpuMachine):
     def __init__(self, x, y, players, score):

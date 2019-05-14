@@ -24,6 +24,7 @@ GAMECLEAR = 3       # ステージをクリアしたとき
 CPU1 = "CPU1"
 CPU2 = "CPU2"
 CPU3 = "CPU3"
+CPU0 = "CPU0"
 
 RECOVERY = "RECOVERY"
 SHIELD = "SHIELD"
