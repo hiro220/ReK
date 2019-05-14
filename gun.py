@@ -4,6 +4,7 @@ from bullet import *
 import pygame
 from pygame.locals import *
 import math
+import random
 
 class Gun:
 
@@ -40,5 +41,8 @@ class Reflection_Gun(Gun):
 
 class Shot_Gun(Gun):
     def shoot(self, x, y):
+        list = []
+        Bullet(x, y, -10,0,self.machines)
+        Bullet(x, y, )
         
 
