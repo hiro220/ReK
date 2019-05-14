@@ -21,13 +21,13 @@ class cpu(CpuMachine):
         image = pygame.image.load("img/cpu.png").convert_alpha()
         super().__init__(1, x, y, image, players, score)
         self.dx, self.dy = 5, 5
-        self.gun = Circle_Gun(self.machines, 10)
+        self.gun = Twist_Gun(self.machines, 10)
     
     def update(self):
         self.dx, self.dy = -2.5, 0
         self.rect.move_ip(self.dx, self.dy)
         x, y = self.rect.midleft
-        if pygame.time.get_ticks() - self.gun_start >= 600:
+        if pygame.time.get_ticks() - self.gun_start >= 50:
             super().shoot(x, y)
             self.gun_start = pygame.time.get_ticks()
 

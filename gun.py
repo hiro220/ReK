@@ -14,6 +14,8 @@ class Gun:
         self.rect = Rect(0,0,960,600)
         self.count = 0
         self.gun_start = pygame.time.get_ticks()
+        self.standard_parameter = -10.0
+        self.standard_angle = 0
 
     def isBulletZero(self):
         """銃弾数が0ならTrue
@@ -70,18 +72,17 @@ class Circle_Gun(Gun):
 
 class Twist_Gun(Gun):
     def shoot(self, x, y):
-        standard_parameter = -5.0
-        standard_angle = 0
-        dx = standard_parameter*math.cos(standard_angle)
-        dy = standard_parameter*math.sin(standard_angle)
+        
+        dx = self.standard_parameter*math.cos(math.radians(self.standard_angle))
+        dy = self.standard_parameter*math.sin(math.radians(self.standard_angle))
         Bullet(x, y, dx, dy, self.machines)
-        if standard_angle >= 45:
+        if self.standard_angle >= 45:
             self.count = 1
 
-        if standard_angle <= -45:
+        if self.standard_angle <= -45:
             self.count = 0
 
         if self.count == 0:
-            standard_angle += 1
+            self.standard_angle += 10
         if self.count == 1:
-            standard_angle -= 1
+            self.standard_angle -= 10
