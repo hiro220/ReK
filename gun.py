@@ -12,6 +12,8 @@ class Gun:
         self.max = self.num = max       # インスタンス変数max, numに引数の値をセットする
         self.machines = machines
         self.rect = Rect(0,0,960,600)
+        self.count = 0
+        self.gun_start = pygame.time.get_ticks()
 
     def isBulletZero(self):
         """銃弾数が0ならTrue
@@ -49,3 +51,19 @@ class Reflection_Gun(Gun):
 
     def shoot(self, x, y):
         Reflection_Bullet(x, y, -10, 0, self.machines)
+
+class Circle_Gun(Gun):
+    
+    def shoot(self, x, y):
+        Bullet_list1 = [[-4.0,0],[-3.5,-3.5],[0,-4.0],[3.5,-3.5],[4.0,0],[3.5,3.5],[0,4.0],[-3.5,3.5]]
+        Bullet_list2 = [[1.9,-4.6],[4.6,-1.9],[4.6,1.9],[1.9,4.6],[-1.9,4.6],[-4.6,1.9],[-4.6,-1.9],[-1.9,-4.6]]
+        if pygame.time.get_ticks() - self.gun_start >= 1200 and self.count == 0:
+            for bullet_list in Bullet_list1:
+                Bullet(x, y, bullet_list[0],bullet_list[1], self.machines)
+            self.gun_start = pygame.time.get_ticks()
+            self.count = 1
+        if  pygame.time.get_ticks() - self.gun_start >= 1200 and self.count == 1:
+            for bullet_list in Bullet_list2:
+                Bullet(x, y, bullet_list[0], bullet_list[1], self.machines)
+            self.gun_start = pygame.time.get_ticks()
+            self.count = 0

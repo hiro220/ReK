@@ -33,6 +33,7 @@ class Machine(pygame.sprite.Sprite):
         self.gun2 = Tracking_Gun(machines, 10)
         self.gun3 = Opposite_Gun(machines, 10)
         self.gun4 = Reflection_Gun(machines, 10)
+        self.gun5 = Circle_Gun(machines, 10)
         self.machines = machines
 
         self.dx = self.dy = 0
@@ -58,6 +59,9 @@ class Machine(pygame.sprite.Sprite):
     
     def Reflection_shoot(self, x, y):
         self.gun4.shoot(x, y)
+
+    def Circle_shoot(self, x, y):
+        self.gun5.shoot(x, y)
 
     def hit(self, attack):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""

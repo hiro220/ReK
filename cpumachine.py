@@ -26,7 +26,7 @@ class cpu(CpuMachine):
         self.rect.move_ip(self.dx, self.dy)
         x, y = self.rect.midleft
         if pygame.time.get_ticks() - self.gun_start >= 600:
-            super().Opposite_shoot(x, y)
+            super().Circle_shoot(x, y)
             self.gun_start = pygame.time.get_ticks()
 
 class cpu2(CpuMachine):
