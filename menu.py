@@ -16,6 +16,7 @@ class Menu:
         Stage1_font = pygame.font.Font("freesansbold.ttf", 45)
         Stage2_font = pygame.font.Font("freesansbold.ttf", 45)
         Stage3_font = pygame.font.Font("freesansbold.ttf", 45)
+        back_font = pygame.font.Font("freesansbold.ttf", 55)
 
 
         self.StageSelect_text = StageSelect_font.render("Stage Select", True, (255,255,255)) 
@@ -24,6 +25,7 @@ class Menu:
         self.Stage1_text = Stage1_font.render("Stage1", True, (255,255,255))
         self.Stage2_text = Stage2_font.render("Stage2", True, (255,255,255))
         self.Stage3_text = Stage3_font.render("Stage3", True, (255,255,255))
+        self.back_text = back_font.render("Back", True, (255,255,255))
 
     def draw(self):
 
@@ -31,6 +33,7 @@ class Menu:
             self.screen.blit(self.StageSelect_text, [5, 5])
             self.screen.blit(self.RightArrow_text, [865, 220])
             self.screen.blit(self.LeftArrow_text, [5, 220])
+            self.screen.blit(self.back_text,[800, 5])
 
             if self.stage_num == 1:
                 self.screen.blit(self.Stage1_text, [110, 80])
