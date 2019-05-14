@@ -67,3 +67,21 @@ class Circle_Gun(Gun):
                 Bullet(x, y, bullet_list[0], bullet_list[1], self.machines)
             self.gun_start = pygame.time.get_ticks()
             self.count = 0
+
+class Twist_Gun(Gun):
+    def shoot(self, x, y):
+        standard_parameter = -5.0
+        standard_angle = 0
+        dx = standard_parameter*math.cos(standard_angle)
+        dy = standard_parameter*math.sin(standard_angle)
+        Bullet(x, y, dx, dy, self.machines)
+        if standard_angle >= 45:
+            self.count = 1
+
+        if standard_angle <= -45:
+            self.count = 0
+
+        if self.count == 0:
+            standard_angle += 1
+        if self.count == 1:
+            standard_angle -= 1

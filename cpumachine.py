@@ -2,6 +2,7 @@
 
 from machine import Machine
 import pygame
+from gun import *
 
 
 #comment
@@ -20,13 +21,14 @@ class cpu(CpuMachine):
         image = pygame.image.load("img/cpu.png").convert_alpha()
         super().__init__(1, x, y, image, players, score)
         self.dx, self.dy = 5, 5
+        self.gun = Circle_Gun(self.machines, 10)
     
     def update(self):
         self.dx, self.dy = -2.5, 0
         self.rect.move_ip(self.dx, self.dy)
         x, y = self.rect.midleft
         if pygame.time.get_ticks() - self.gun_start >= 600:
-            super().Circle_shoot(x, y)
+            super().shoot(x, y)
             self.gun_start = pygame.time.get_ticks()
 
 class cpu2(CpuMachine):
@@ -37,6 +39,7 @@ class cpu2(CpuMachine):
         super().__init__(1, x, y, image, players, score)
         self.dx, self.dy = 5, 5
         self.count = 0
+        self.gun = Reflection_Gun(self.machines, 10)
     
     def update(self):
         if 0 <= self.count <= 14:
@@ -52,7 +55,7 @@ class cpu2(CpuMachine):
 
         x, y = self.rect.midleft
         if pygame.time.get_ticks() - self.gun_start >= 1200:
-            super().Reflection_shoot(x, y)
+            super().shoot(x, y)
             self.gun_start = pygame.time.get_ticks() 
 
 class cpu3(CpuMachine):
@@ -63,6 +66,7 @@ class cpu3(CpuMachine):
         super().__init__(1, x, y, image, players, score)
         self.dx, self.dy = 5, 5
         self.count = 0
+        self.gun = Tracking_Gun(self.machines, 10)
 
     def update(self):
         if 0 <= self.count <= 150:
@@ -72,5 +76,5 @@ class cpu3(CpuMachine):
 
         x, y = self.rect.midleft
         if pygame.time.get_ticks() - self.gun_start >= 1200:
-            super().Tracking_shoot(x, y)
+            super().shoot(x, y)
             self.gun_start = pygame.time.get_ticks() 
