@@ -9,6 +9,7 @@ class Menu:
         self.screen = screen
         self.stage_num = 1
         self.select_num = 0
+        self.back_num = 0
 
         StageSelect_font = pygame.font.Font("freesansbold.ttf", 55)
         LeftArrow_font = pygame.font.Font("freesansbold.ttf", 150)
@@ -45,6 +46,9 @@ class Menu:
                 self.screen.blit(self.Stage3_text, [110, 80])
                 pygame.draw.rect(self.screen,(255,0,0),Rect(100,70,760,460),5)
 
+            if self.back_num == 1:
+                pygame.draw.rect(self.screen,(255,255,0),Rect(790,3,155,60),5)
+
             pygame.display.update()
 
             for event in pygame.event.get():
@@ -56,9 +60,15 @@ class Menu:
                         if self.stage_num != 1:
                             self.stage_num -= 1
                     elif event.key == K_SPACE:
+                        if self.back_num == 1:
+                            return 0
                         return self.stage_num
                     elif event.key == K_ESCAPE:
                         pygame.quit()
                         sys.exit()
+                    elif event.key == K_UP:
+                        self.back_num = 1
+                    elif event.key == K_DOWN:
+                        self.back_num = 0
             
             self.screen.fill((0,0,0))

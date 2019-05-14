@@ -49,7 +49,9 @@ class Main(pygame.sprite.Sprite):
                     result = stage.loop()
                     if result == EXIT:
                         pygame.quit()
-                        sys.exit()                    
+                        sys.exit()          
+                elif stage_num == 0:
+                    game.do() 
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 print("help menu")
 
