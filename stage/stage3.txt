@@ -1,4 +1,4 @@
-size    300
+size    200
 rule    NORMAL
 
 0
