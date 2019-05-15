@@ -18,11 +18,12 @@ class Main(pygame.sprite.Sprite):
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウを960×600で作成する
         
     def do(self):
-        while True:
+         while True:
             init_screen = Initial_Screen()              #初期画面の描画              
             init_num = init_screen.draw(self.screen)    
 
             if init_num == START_GAME:      #選択したモードがSTART GAMEならメニュー画面に移動
+
                 menu = Menu(self.screen)    #メニュー画面の描画
                 stage_num = menu.draw()
                 
@@ -52,6 +53,23 @@ class Main(pygame.sprite.Sprite):
                         sys.exit()                    
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 print("help menu")
+                
+                while  True:
+                        menu = Menu(self.screen)    #メニュー画面の描画
+                        stageTxt = menu.draw()
+                        self.Stage_draw(stageTxt)                       
+            elif init_num == Help:
+                print("help")
+
+    def Stage_draw(self, stageTxt):
+        stage = Stage(self.screen, "stage/" + stageTxt)
+        pygame.mixer.music.load("sound/sound1.mp3")     # 音楽ファイルの読み込み
+        pygame.mixer.music.play(-1)                     # 音楽の再生回数(ループ再生)
+        result = stage.loop()
+        if result == EXIT:
+            pygame.quit()
+            sys.exit()
+            
 
                 
 if __name__=='__main__':
