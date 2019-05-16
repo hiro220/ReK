@@ -1,5 +1,7 @@
 # coding:utf-8
 
+from rek_time import ReK_time
+
 """Rekでの、それぞれのファイルに共通の定数を定義している"""
 
 # ウィンドウのサイズ
@@ -41,3 +43,5 @@ SCOREGET = "SCOREGET"
 # クリア条件:ステージの移動が止まるまで進み、画面内に残る敵機すべての撃破
 # 失敗条件:自機が撃破される
 NORMAL = "NORMAL"
+
+R_time = ReK_time()
