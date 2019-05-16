@@ -12,8 +12,8 @@ Help = 1                #Helpを選択した時
 
 # メニュー画面におけるステージ名
 Stage1 = "Stage1.txt"
-Stage2 = "Stage1.txt"
-Stage3 = "Stage1.txt" 
+Stage2 = "Stage2.txt"
+Stage3 = "Stage3.txt" 
 
 # 各ステージにおけるプレイヤー機体の初期位置
 PLAYER_X = 100
