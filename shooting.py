@@ -53,13 +53,6 @@ class Main(pygame.sprite.Sprite):
                         sys.exit()                    
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 print("help menu")
-                
-                while  True:
-                        menu = Menu(self.screen)    #メニュー画面の描画
-                        stageTxt = menu.draw()
-                        self.Stage_draw(stageTxt)                       
-            elif init_num == Help:
-                print("help")
 
     def Stage_draw(self, stageTxt):
         stage = Stage(self.screen, "stage/" + stageTxt)
