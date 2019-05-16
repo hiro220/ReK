@@ -2,6 +2,7 @@
 
 from machine import Machine
 import pygame
+from define import *
 
 
 #comment
@@ -11,7 +12,7 @@ class CpuMachine(Machine):
         
         super().__init__(hp, x, y, image, players, score)
         self.dx, self.dy = 5, 5
-        self.gun_start = pygame.time.get_ticks()
+        self.gun_start = R_time.get_ticks()
     
 class cpu(CpuMachine):
     def __init__(self, x, y, players, score):
@@ -25,9 +26,9 @@ class cpu(CpuMachine):
         self.dx, self.dy = -2.5, 0
         self.rect.move_ip(self.dx, self.dy)
         x, y = self.rect.midleft
-        if pygame.time.get_ticks() - self.gun_start >= 600:
+        if R_time.get_ticks() - self.gun_start >= 600:
             super().Opposite_shoot(x, y)
-            self.gun_start = pygame.time.get_ticks()
+            self.gun_start = R_time.get_ticks()
 
 class cpu2(CpuMachine):
     def __init__(self, x, y, players, score):
@@ -51,9 +52,9 @@ class cpu2(CpuMachine):
                 self.count = 0
 
         x, y = self.rect.midleft
-        if pygame.time.get_ticks() - self.gun_start >= 1200:
+        if R_time.get_ticks() - self.gun_start >= 1200:
             super().Reflection_shoot(x, y)
-            self.gun_start = pygame.time.get_ticks() 
+            self.gun_start = R_time.get_ticks() 
 
 class cpu3(CpuMachine):
     def __init__(self, x, y, players, score):
@@ -71,6 +72,6 @@ class cpu3(CpuMachine):
             self.count += 1
 
         x, y = self.rect.midleft
-        if pygame.time.get_ticks() - self.gun_start >= 1200:
+        if R_time.get_ticks() - self.gun_start >= 1200:
             super().Tracking_shoot(x, y)
-            self.gun_start = pygame.time.get_ticks() 
+            self.gun_start = R_time.get_ticks() 
