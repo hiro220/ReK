@@ -8,6 +8,7 @@ from stage import *
 from initial_screen import *
 from menu import *
 import pygame.mixer
+from help_explain import *
 
 class Main(pygame.sprite.Sprite):
 
@@ -51,7 +52,8 @@ class Main(pygame.sprite.Sprite):
                         pygame.quit()
                         sys.exit()                    
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
-                print("help menu")
+                help_c = Help_a(self.screen)
+                help_b = help_c.draw()
 
                 
 if __name__=='__main__':
