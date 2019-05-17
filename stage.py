@@ -36,6 +36,7 @@ class Stage:
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20))    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
+        R_time.restart()
 
         
 
@@ -89,6 +90,8 @@ class Stage:
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
                 return EXIT
             if event.type == KEYDOWN:       # キー入力があった時
+                if event.key == K_SPACE:
+                    R_time.stop()
                 self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
         return CONTINUE
 
@@ -112,6 +115,10 @@ class Stage:
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         self.score.draw(self.screen)
         pygame.display.update()             # 画面を更新する
+
+    def pause(self):
+        ReK_time.stop()
+
 
     def readStage(self, file):
         """引数に指定したテキストファイルからステージ情報を読み込み、cpu情報をx座標がkeyとなる辞書型に格納する。（同様にアイテムの読み込みもできるはず）
