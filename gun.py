@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 # coding:utf-8
 from bullet import *
+from beam import *
 import pygame
 from pygame.locals import *
 import math
 
 class Gun:
 
-    def __init__(self, machines, max):
+    def __init__(self, machines,principal, max):
         """引数は、発射する弾の当たり判定対象となる機体グループ。発射できる弾の上限値max(初期値は無限を意味する-1)"""
         self.max = self.num = max       # インスタンス変数max, numに引数の値をセットする
         self.machines = machines
         self.rect = Rect(0,0,960,600)
+        self.p_rect = principal
         self.count = 0
         self.gun_start = pygame.time.get_ticks()
         
@@ -94,4 +96,9 @@ class Twist_Gun(Gun):
             self.standard_angle += 10
         if self.count == 1:
             self.standard_angle -= 10
+        self.num -= 1
+
+class Beam_Gun(Gun):
+    def shoot(self, x, y):
+        Beam(x, y, 0, 0, self.machines, self.p_rect)
         self.num -= 1
