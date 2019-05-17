@@ -37,7 +37,7 @@ class Stage:
 
         self.clock = pygame.time.Clock()        # 時間管理用
         R_time.restart()
-
+        self.process = self.stage_process
         
 
     def initGroup(self):
@@ -67,7 +67,7 @@ class Stage:
                 break            
         return result
 
-    def process(self):
+    def stage_process(self):
         # 1フレームごとの処理
         self.createCpu()                    # cpuの生成を行う
         self.moveStage()                    # ステージを動かす
@@ -92,6 +92,7 @@ class Stage:
             if event.type == KEYDOWN:       # キー入力があった時
                 if event.key == K_SPACE:
                     R_time.stop()
+                    self.process = self.pause_process
                 self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
         return CONTINUE
 
@@ -116,9 +117,13 @@ class Stage:
         self.score.draw(self.screen)
         pygame.display.update()             # 画面を更新する
 
-    def pause(self):
-        ReK_time.stop()
-
+    def pause_process(self):
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == K_SPACE:
+                    R_time.restart()
+                    self.process = self.stage_process
+        return CONTINUE
 
     def readStage(self, file):
         """引数に指定したテキストファイルからステージ情報を読み込み、cpu情報をx座標がkeyとなる辞書型に格納する。（同様にアイテムの読み込みもできるはず）
