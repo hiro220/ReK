@@ -92,6 +92,7 @@ class Stage:
             if event.type == KEYDOWN:       # キー入力があった時
                 if event.key == K_SPACE:
                     R_time.stop()
+                    pygame.mixer.music.pause()
                     self.process = self.pause_process
                 self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
         return CONTINUE
@@ -121,6 +122,7 @@ class Stage:
         for event in pygame.event.get():
             if event.type == KEYDOWN:
                 if event.key == K_SPACE:
+                    pygame.mixer.music.unpause()
                     R_time.restart()
                     self.process = self.stage_process
         return CONTINUE
