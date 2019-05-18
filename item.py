@@ -3,6 +3,7 @@
 import pygame
 from pygame.locals import *
 from machine import Hp
+from timer import Timer
 
 class Item(pygame.sprite.Sprite):
     """アイテム処理の基底となるクラス。継承するクラスは、メソッドeffect(self, machine)を定義する。
@@ -73,3 +74,22 @@ class ShieldItem(Item):
 
     def effect(self, machine):
         Shield(3, machine)          # 堅さ3のシールドを生成
+
+class SpeedDownItem(Item):
+    def __init__(self, x, y, machine):
+        image = pygame.image.load("img/weight.png").convert_alpha()
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        dx, dy = machine.speedDown(1, 1)             # 獲得した機体のスピードを下げる
+        Timer(3000, machine.speedUp, dx, dy)    # 一定時間経過後、スピードを上げる
+
+class ScoreGetItem(Item):
+    # CPU側が取得しても効果はない
+    def __init__(self, x, y, machine):
+        image = pygame.image.load("img/scoreget.png").convert_alpha()
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        for opp_machine in machine.machines:
+            opp_machine.score.add_score(5)      # 画面内にいる相手の数だけスコアを獲得
