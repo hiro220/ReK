@@ -61,7 +61,7 @@ class Beam_sub(Beam):
         elif self.count < 7:
             self.flag = 1 
 
-        if pygame.time.get_ticks() - self.gun_start >= 4000 and self.flag == 1 and self.rect.height > 0:
+        if pygame.time.get_ticks() - self.gun_start >= 3900 and self.flag == 1 and self.rect.height > 0:
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width-1,self.rect.height-1))
             self.rect = self.image.get_rect()
         
