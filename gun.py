@@ -77,8 +77,8 @@ class Circle_Gun(Gun):
 
 class Twist_Gun(Gun):
 
-    def __init__(self, machines, max):
-        super().__init__(machines, max)
+    def __init__(self, machines, principal, max):
+        super().__init__(machines, principal, max)
         self.standard_parameter = -10.0
         self.standard_angle = 0
     def shoot(self, x, y):
@@ -100,5 +100,5 @@ class Twist_Gun(Gun):
 
 class Beam_Gun(Gun):
     def shoot(self, x, y):
-        Beam(x, y, 0, 0, self.machines, self.p_rect)
+        Beam_principal(x, y, 0, 0, self.machines, self.p_rect,"img/beam3.png")
         self.num -= 1
