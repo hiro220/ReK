@@ -12,6 +12,7 @@ class CpuMachine(Machine):
         
         super().__init__(hp, x, y, image, players, score)
         self.dx, self.dy = 5, 5
+        self.x, self.y = x, y
         self.gun_start = pygame.time.get_ticks()
 
 #これはデバック用のCPUです。
@@ -22,7 +23,7 @@ class cpu0(CpuMachine):
         image = pygame.image.load("img/cpu.png").convert_alpha()
         super().__init__(1, x, y, image, players, score)
         self.dx, self.dy = 5, 5
-        self.gun = Opposite_Gun(self.machines, 10)
+        self.gun = Beam_Gun(self.machines, self.rect, 1)
         self.count = 0
     
     def update(self):
@@ -41,7 +42,7 @@ class cpu(CpuMachine):
         image = pygame.image.load("img/cpu.png").convert_alpha()
         super().__init__(1, x, y, image, players, score)
         self.dx, self.dy = 5, 5
-        self.gun = Opposite_Gun(self.machines, 10)
+        self.gun = Opposite_Gun(self.machines, self.rect, 10)
     
     def update(self):
         self.dx, self.dy = -2.5, 0
@@ -59,7 +60,7 @@ class cpu2(CpuMachine):
         super().__init__(1, x, y, image, players, score)
         self.dx, self.dy = 5, 5
         self.count = 0
-        self.gun = Reflection_Gun(self.machines, 10)
+        self.gun = Reflection_Gun(self.machines, self.rect, 10)
     
     def update(self):
         if 0 <= self.count <= 14:
@@ -86,7 +87,7 @@ class cpu3(CpuMachine):
         super().__init__(1, x, y, image, players, score)
         self.dx, self.dy = 5, 5
         self.count = 0
-        self.gun = Tracking_Gun(self.machines, 10)
+        self.gun = Tracking_Gun(self.machines, self.rect, 10)
 
     def update(self):
         if 0 <= self.count <= 150:
