@@ -37,8 +37,14 @@ class Beam_principal(Beam):
         if pygame.time.get_ticks() - self.gun_start >= 1000 and self.rect.height > 0 and self.flag == 1:
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width,self.rect.height-1))
             self.rect = self.image.get_rect()
+        elif self.rect.height == 0:
+            self.kill()
         x, y = self.p_rect.midleft
         self.rect.midright = (x, y+5)
+        collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+        if collide_list:                        # リストがあるか
+            for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                machine.hit(1)
             
 class Beam_sub(Beam):
     def __init__(self, x, y, dx, dy, machines, principal, img):
@@ -64,6 +70,8 @@ class Beam_sub(Beam):
         if pygame.time.get_ticks() - self.gun_start >= 3900 and self.flag == 1 and self.rect.height > 0:
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width-1,self.rect.height-1))
             self.rect = self.image.get_rect()
+        elif self.rect.height == 0:
+            self.kill()
         
         x, y = self.p_rect.midleft
         self.rect.midright = (x, y+5)
