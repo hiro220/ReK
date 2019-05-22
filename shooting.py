@@ -38,9 +38,32 @@ class Main(pygame.sprite.Sprite):
         if result == EXIT:
             pygame.quit()
             sys.exit()
-            
+        select_num = self.StageResult_draw(result)
+        return 
 
-                
+    def StageResult_draw(self, result):
+        """ステージ結果画面を描画する"""
+        self.screen.fill((0,0,0))
+
+        if result ==  GAMECLEAR:
+            image = pygame.image.load("img/gameclear.jpg").convert_alpha()
+            self.screen.blit(image, [155, 50])    
+        elif result == GAMEOVER:
+            image = pygame.image.load("img/gameover.jpg").convert_alpha()
+            self.screen.blit(image, [170, 10])
+
+        while True:
+            pygame.display.update()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    if event.key == K_RETURN:
+                        return 
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+
 if __name__=='__main__':
 
     game = Main()
