@@ -28,7 +28,7 @@ class Beam_principal(Beam):
     
     def update(self):
         if pygame.time.get_ticks() - self.gun_start >= 1000 and self.rect.width <= 600:                   #クロック数が1000以上とbeam本体の横の長さが600以下
-            self.image = pygame.transform.smoothscale(self.image, (self.rect.width+10,self.rect.height))　#画像の大きさを横に10に長くする
+            self.image = pygame.transform.smoothscale(self.image, (self.rect.width+10,self.rect.height))  #画像の大きさを横に10に長くする
             self.rect = self.image.get_rect()                                                             #画像の長さが変わるのでrect値を更新
         elif self.rect.width >= 600 and self.count == 0:                                                  #本体の長さが600以上とこの行のelifが呼び出されたことがないこと
             self.gun_start = pygame.time.get_ticks()                                                      #本体が伸び切った時のクロック数を入力
@@ -77,7 +77,7 @@ class Beam_sub(Beam):  #サブクラス
         if pygame.time.get_ticks() - self.gun_start >= 3900 and self.flag == 1 and self.rect.height > 0:
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width-1,self.rect.height-1)) #サブ画像の縦横をそれぞれ-1する
             self.rect = self.image.get_rect()                                                             #画像の大きさが変わるのでrect値を更新
-        elif self.rect.height == 0:　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　#サブ画像の高さが0であること
+        elif self.rect.height == 0:                                                                       #サブ画像の高さが0であること
             self.kill()                                                                                   #サブ画像のspriteを削除する
             
         #ここのコードでbeamサブをmachineに追従させる

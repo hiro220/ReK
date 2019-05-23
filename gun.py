@@ -95,7 +95,7 @@ class Twist_Gun(Gun):
         if self.count == 0:
             self.standard_angle += 10                                            #変化角度を+10度する  
         if self.count == 1:
-            self.standard_angle -= 10　　　　　　　　　　　　　　　　　　　　　　　　#変化角度を-10度する
+            self.standard_angle -= 10                                            #変化角度を-10度する
         self.num -= 1
 
 class Beam_Gun(Gun):
