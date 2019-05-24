@@ -32,8 +32,11 @@ class Stage:
         self.creatRange()                       #範囲を設定する
         self.creatRange2()                      #
         
-        font = pygame.font.Font("freesansbold.ttf", 55)
-        self.pause_text = font.render("PAUSE", True, (255,255,255))    #テキストStageSelect
+        font = pygame.font.Font("freesansbold.ttf", 60)
+        menu_font = pygame.font.Font("freesansbold.ttf", 25)
+        self.pause_text = font.render("PAUSE", True, (255,255,255))
+        self.retire_text = menu_font.render("- Retire : Q", True, (255,255,255))
+        self.restart_text = menu_font.render("- Restart : Space", True, (255,255,255))
 
         self.score = Score(10, 10)
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20))    # プレイヤーのマシンを生成する
@@ -132,11 +135,15 @@ class Stage:
                     pygame.mixer.music.unpause()
                     R_time.restart()
                     self.process, self.draw = self.stage_process, self.stage_draw
+                elif event.key == K_q:
+                    return RETIRE
         return CONTINUE
 
     def pause_draw(self):
-        self.stage_draw()
-        self.screen.blit(self.pause_text, [5, 5])
+        self.screen.blit(self.pause_text, [WIDTH/2-80, HEIGHT/4])
+        self.screen.blit(self.restart_text, [WIDTH/2-80, HEIGHT/4+100])
+        self.screen.blit(self.retire_text, [WIDTH/2-80, HEIGHT/4+150])
+        pygame.display.update()
 
     def readStage(self, file):
         """引数に指定したテキストファイルからステージ情報を読み込み、cpu情報をx座標がkeyとなる辞書型に格納する。（同様にアイテムの読み込みもできるはず）
