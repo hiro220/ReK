@@ -52,12 +52,15 @@ class Menu:
 
                     self.Key_Event(event)       #押されたキーによって異なる処理
                     if event.key == K_RETURN:
+                        if self.back_num == 1:
+                            return "0"
                         return self.Return_Stage()
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
             
             self.screen.fill((0,0,0))
+            
     
     def Select_Stage(self):         #選択しているステージを描画
         if self.stage_num == 1:
@@ -71,20 +74,14 @@ class Menu:
             pygame.draw.rect(self.screen,(255,0,0),Rect(100,70,760,460),5)
     
     def Key_Event(self,event):
-        if event.key == K_RIGHT:        #→が押されたなら次のステージへ移動
-            if self.stage_num != 3:
+        if self.back_num == 0:
+            if event.key == K_RIGHT:        #→が押されたなら次のステージへ移動
+                if self.stage_num != 3:
                     self.stage_num += 1
-        elif event.key == K_LEFT:       #←矢印が押されたなら前のステージへ移動
-            if self.stage_num != 1:
+            elif event.key == K_LEFT:       #←矢印が押されたなら前のステージへ移動
+                if self.stage_num != 1:
                     self.stage_num -= 1
-        elif event.key == K_SPACE:
-            if self.back_num == 1:
-                    return 0
-            return self.stage_num
-        elif event.key == K_ESCAPE:
-            pygame.quit()
-            sys.exit()
-        elif event.key == K_UP:
+        if event.key == K_UP:
             self.back_num = 1
         elif event.key == K_DOWN:
             self.back_num = 0
