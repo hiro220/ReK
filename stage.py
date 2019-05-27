@@ -78,11 +78,9 @@ class Stage:
         pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
 
         if self.isGameOver():
-            print("GAMEOVER")
             pygame.mixer.music.stop()
             return GAMEOVER                 # ゲームオーバー条件が満たされた
         if self.isClear():
-            print("GAMECLEAR")
             pygame.mixer.music.stop()
             return GAMECLEAR                # ゲームクリア条件が満たされた
         for event in pygame.event.get():
