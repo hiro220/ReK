@@ -31,8 +31,6 @@ class Beam_principal(Beam):
         if self.principal.survival_flag == 1:
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width,self.rect.height-1))   #本体画像の高さを-1する
             self.rect = self.image.get_rect()                                                             #画像の高さが変わるのでrect値を更新
-        elif self.rect.height == 0:                                                                       #本体の高さが0であること
-            self.kill() 
 
             #クロック数が1000以上とbeam本体の横の長さが600以下
         if pygame.time.get_ticks() - self.gun_start >= 1000 and self.rect.width <= 600 and self.principal.survival_flag == 0:                   
@@ -77,9 +75,6 @@ class Beam_sub(Beam):  #サブクラス
         if  self.principal.survival_flag == 1:
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width-1,self.rect.height-1)) #サブ画像の縦横をそれぞれ-1する
             self.rect = self.image.get_rect()                                                             #画像の大きさが変わるのでrect値を更新
-        elif self.rect.height == 0:                                                                       #サブ画像の高さが0であること
-            self.kill() 
-            self.principal.beam_flag = 0
 
         if  self.flag == 0 and self.count < 6 and self.principal.survival_flag == 0:    #格納したデータを置き換えながら表示する
             self.image = self.c_data[self.count]
