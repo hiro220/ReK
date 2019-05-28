@@ -72,7 +72,7 @@ class Beam_sub(Beam):  #サブクラス
         
         #ここでサブ画像の大きさを大きくする
     def update(self):
-        if  self.principal.survival_flag == 1:
+        if  self.principal.survival_flag == 1:                                                            #このフラッグが１の時マシンは消滅している
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width-1,self.rect.height-1)) #サブ画像の縦横をそれぞれ-1する
             self.rect = self.image.get_rect()                                                             #画像の大きさが変わるのでrect値を更新
 

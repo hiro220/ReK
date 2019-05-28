@@ -31,8 +31,8 @@ class Machine(pygame.sprite.Sprite):
         self.rect.move_ip(x, y)     # 初期位置に移動させる
         self.gun = Gun(machines, self, 10)    # Gunクラスのインスタンスを生成する
         self.machines = machines
-        self.survival_flag = 0
-        self.beam_flag = 0
+        self.survival_flag = 0      #マシンが存在しているかを判定
+        self.beam_flag = 0          #ビームが存在しているかを判定
 
         self.dx = self.dy = 0
         self.score = score
