@@ -12,8 +12,8 @@ Help = 1                #Helpを選択した時
 
 # メニュー画面におけるステージ名
 Stage1 = "Stage1.txt"
-Stage2 = "Stage1.txt"
-Stage3 = "Stage1.txt" 
+Stage2 = "Stage2.txt"
+Stage3 = "Stage3.txt" 
 
 # 各ステージにおけるプレイヤー機体の初期位置
 PLAYER_X = 100
@@ -29,6 +29,7 @@ GAMECLEAR = 3       # ステージをクリアしたとき
 CPU1 = "CPU1"
 CPU2 = "CPU2"
 CPU3 = "CPU3"
+CPU0 = "CPU0"
 
 RECOVERY = "RECOVERY"
 SHIELD = "SHIELD"
