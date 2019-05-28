@@ -13,7 +13,7 @@ class Gun:
         self.max = self.num = max       # インスタンス変数max, numに引数の値をセットする
         self.machines = machines
         self.rect = Rect(0,0,960,600)                         #画面の大きさのrect
-        self.p_rect = principal                               #弾を打つ本人の位置情報
+        self.principal = principal                               #弾を打つ本人の位置情報
         self.count = 0
         self.gun_start = pygame.time.get_ticks()
         
@@ -99,6 +99,22 @@ class Twist_Gun(Gun):
         self.num -= 1
 
 class Beam_Gun(Gun):
+    def __init__(self, machines, principal, max):
+        super().__init__(machines, principal, max)
+        self.principal.beam_flag = 0
+        self.gun_start = pygame.time.get_ticks()
+        self.beam_count = 0
+
     def shoot(self, x, y):
-        Beam_principal(x, y, 0, 0, self.machines, self.p_rect,"img/beam3.png")
-        self.num -= 1
+        if self.principal.beam_flag == 0 and self.beam_count == 0:
+            Beam_principal(x, y, 0, 0, self.machines, self.principal,"img/beam3.png")
+            self.principal.beam_flag = 1
+            self.num -= 1
+            self.beam_count += 1
+        elif self.principal.beam_flag == 0 and self.beam_count == 1 and pygame.time.get_ticks() - self.gun_start >= 600:
+            Beam_principal(x, y, 0, 0, self.machines, self.principal,"img/beam3.png")
+            self.principal.beam_flag = 1
+            self.num -= 1
+
+        if self.principal.beam_flag == 1:
+            self.gun_start = pygame.time.get_ticks()

@@ -22,7 +22,7 @@ class cpu0(CpuMachine):
         image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
         super().__init__(1, x, y, image, players, score)         #superクラス(CpuMachine)を呼び出す
         self.dx, self.dy = 5, 5                                  #機体自身の位置を入力　　
-        self.gun = Beam_Gun(self.machines, self.rect, 1)         #machineクラスのself.gunを上書きする
+        self.gun = Beam_Gun(self.machines, self, 10)             #machineクラスのself.gunを上書きする
         self.count = 0                                           #このクラスupdataが呼ばれた回数を保存する
     
     def update(self):
@@ -41,7 +41,7 @@ class cpu(CpuMachine):
         image = pygame.image.load("img/cpu.png").convert_alpha()
         super().__init__(1, x, y, image, players, score)
         self.dx, self.dy = 5, 5
-        self.gun = Opposite_Gun(self.machines, self.rect, 10)
+        self.gun = Opposite_Gun(self.machines, self, 10)
     
     def update(self):
         self.dx, self.dy = -2.5, 0
@@ -59,7 +59,7 @@ class cpu2(CpuMachine):
         super().__init__(1, x, y, image, players, score)
         self.dx, self.dy = 5, 5
         self.count = 0
-        self.gun = Reflection_Gun(self.machines, self.rect, 10)
+        self.gun = Reflection_Gun(self.machines, self, 10)
     
     def update(self):
         if 0 <= self.count <= 14:
@@ -86,7 +86,7 @@ class cpu3(CpuMachine):
         super().__init__(1, x, y, image, players, score)
         self.dx, self.dy = 5, 5
         self.count = 0
-        self.gun = Tracking_Gun(self.machines, self.rect, 10)
+        self.gun = Tracking_Gun(self.machines, self, 10)
 
     def update(self):
         if 0 <= self.count <= 150:
