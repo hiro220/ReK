@@ -2,6 +2,7 @@
 
 from machine import Machine
 import pygame
+from define import *
 from gun import *
 
 
@@ -13,7 +14,7 @@ class CpuMachine(Machine):
         super().__init__(hp, x, y, image, players, score) #superクラス(machine)を呼び出す
         self.dx, self.dy = 5, 5                           #bulletの移動量を指定する
         self.x, self.y = x, y                             #機体自身の位置を入力
-        self.gun_start = pygame.time.get_ticks()          #createCPUが呼ばれた時のクロック数を入力
+        self.gun_start = R_time.get_ticks()          #createCPUが呼ばれた時のクロック数を入力
 #これはデバック用のCPUです。
 class cpu0(CpuMachine): 
     def __init__(self, x, y, players, score):
@@ -47,9 +48,9 @@ class cpu(CpuMachine):
         self.dx, self.dy = -2.5, 0
         self.rect.move_ip(self.dx, self.dy)
         x, y = self.rect.midleft
-        if pygame.time.get_ticks() - self.gun_start >= 1200:
+        if R_time.get_ticks() - self.gun_start >= 1200:
             super().shoot(x, y)
-            self.gun_start = pygame.time.get_ticks()
+            self.gun_start = R_time.get_ticks()
 
 class cpu2(CpuMachine):
     def __init__(self, x, y, players, score):
@@ -74,9 +75,10 @@ class cpu2(CpuMachine):
                 self.count = 0
 
         x, y = self.rect.midleft
-        if pygame.time.get_ticks() - self.gun_start >= 1200:
+        
+        if R_time.get_ticks() - self.gun_start >= 1200:
             super().shoot(x, y)
-            self.gun_start = pygame.time.get_ticks() 
+            self.gun_start = R_time.get_ticks() 
 
 class cpu3(CpuMachine):
     def __init__(self, x, y, players, score):
@@ -95,6 +97,7 @@ class cpu3(CpuMachine):
             self.count += 1
 
         x, y = self.rect.midleft
-        if pygame.time.get_ticks() - self.gun_start >= 1200:
+        
+        if R_time.get_ticks() - self.gun_start >= 1200:
             super().shoot(x, y)
-            self.gun_start = pygame.time.get_ticks() 
+            self.gun_start = R_time.get_ticks() 
