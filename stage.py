@@ -4,6 +4,7 @@
 import pygame
 from pygame.locals import *
 from bullet import Bullet
+from beam import Beam
 from playermachine import PlayerMachine
 from cpumachine import *
 from item import *
@@ -53,8 +54,9 @@ class Stage:
         self.players = pygame.sprite.Group()        # playerの機体用グループ
         self.cpus = pygame.sprite.Group()           # cpuの機体用グループ
         self.bullets = pygame.sprite.Group()        # bulletのグループ
+        self.beams = pygame.sprite.Group()          # beamのグループ
         self.ranges = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
-        self.ranges2 = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
+        self.ranges2 = pygame.sprite.Group()        # 画面の範囲外のspriteを格納したグループ
         self.timers = pygame.sprite.Group()
 
         PlayerMachine.containers = self.group, self.players     # プレイヤーマシンにグループを割り当てる
@@ -62,6 +64,7 @@ class Stage:
         Bullet.containers = self.group                          # 弾にグループを割り当てる
         Item.containers = self.group
         Bullet.containers = self.group, self.bullets            # 弾にグループを割り当てる
+        Beam.containers = self.group, self.beams
         Range.containers = self.ranges                          # 範囲にグループを割り当てる
         Range2.containers = self.ranges2                        # 範囲にグループを割り当てる
         Timer.containers = self.timers
@@ -87,11 +90,9 @@ class Stage:
         pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
 
         if self.isGameOver():
-            print("GAMEOVER")
             pygame.mixer.music.stop()
             return GAMEOVER                 # ゲームオーバー条件が満たされた
         if self.isClear():
-            print("GAMECLEAR")
             pygame.mixer.music.stop()
             return GAMECLEAR                # ゲームクリア条件が満たされた
         for event in pygame.event.get():
@@ -180,7 +181,7 @@ class Stage:
         # 辞書の定義。キーに定数、値にクラス名を指定する。（キー:値）
 
         # CPUの種類を指す辞書
-        cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3}
+        cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0}
         # アイテムの種類を指す辞書
         item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem}
         sub = name.split('_')
