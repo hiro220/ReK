@@ -31,13 +31,22 @@ class Stage:
         self.readStage(filename)                # ステージ情報を読み込む
 
         self.creatRange()                       #範囲を設定する
-        self.creatRange2()                      #範囲を設定する
+        self.creatRange2()                      #
+        
+        font = pygame.font.Font("freesansbold.ttf", 60)
+        menu_font = pygame.font.Font("freesansbold.ttf", 25)
+        self.pause_text = font.render("PAUSE", True, (255,255,255))
+        self.retire_text = menu_font.render("- Retire : Q", True, (255,255,255))
+        self.restart_text = menu_font.render("- Restart : Space", True, (255,255,255))
 
         self.score = Score(10, 10)
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20))    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
+        R_time.restart()
 
+        self.process = self.stage_process
+        self.draw = self.stage_draw
         
 
     def initGroup(self):
@@ -69,7 +78,7 @@ class Stage:
                 break            
         return result
 
-    def process(self):
+    def stage_process(self):
         # 1フレームごとの処理
         self.createCpu()                    # cpuの生成を行う
         self.moveStage()                    # ステージを動かす
@@ -90,6 +99,10 @@ class Stage:
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
                 return EXIT
             if event.type == KEYDOWN:       # キー入力があった時
+                if event.key == K_SPACE:
+                    R_time.stop()
+                    pygame.mixer.music.pause()
+                    self.process, self.draw = self.pause_process, self.pause_draw
                 self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
         return CONTINUE
 
@@ -105,7 +118,7 @@ class Stage:
             self.image = self.sub_image
             self.sub_image = tmp
 
-    def draw(self):
+    def stage_draw(self):
         # 描画処理
         self.screen.blit(self.image, (-self.x, 0))                      # 背景画像の描画
         self.screen.blit(self.sub_image, (-self.x+self.width, 0))       # 対になる背景画像を繋げて描画
@@ -113,6 +126,25 @@ class Stage:
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         self.score.draw(self.screen)
         pygame.display.update()             # 画面を更新する
+
+    def pause_process(self):
+        for event in pygame.event.get():
+            if event.type == QUIT:          # 「閉じるボタン」を押したとき
+                return EXIT
+            if event.type == KEYDOWN:
+                if event.key == K_SPACE:
+                    pygame.mixer.music.unpause()
+                    R_time.restart()
+                    self.process, self.draw = self.stage_process, self.stage_draw
+                elif event.key == K_q:
+                    return RETIRE
+        return CONTINUE
+
+    def pause_draw(self):
+        self.screen.blit(self.pause_text, [WIDTH/2-80, HEIGHT/4])
+        self.screen.blit(self.restart_text, [WIDTH/2-80, HEIGHT/4+100])
+        self.screen.blit(self.retire_text, [WIDTH/2-80, HEIGHT/4+150])
+        pygame.display.update()
 
     def readStage(self, file):
         """引数に指定したテキストファイルからステージ情報を読み込み、cpu情報をx座標がkeyとなる辞書型に格納する。（同様にアイテムの読み込みもできるはず）

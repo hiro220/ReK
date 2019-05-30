@@ -3,6 +3,7 @@
 
 import pygame
 from pygame.locals import *
+from define import R_time
 
 class Beam(pygame.sprite.Sprite):
     def __init__(self, x, y, dx, dy, machines, principal, img):
@@ -14,7 +15,7 @@ class Beam(pygame.sprite.Sprite):
         self.rect.move_ip(x, y)                               #beamの初期位置に移動
         self.dx, self.dy = dx, dy                             # 移動量
         self.machines = machines                              #相手のマシンの情報を入力
-        self.gun_start = pygame.time.get_ticks()              #Beamを呼び足した時のクロック数を入力
+        self.gun_start = R_time.get_ticks()              #Beamを呼び足した時のクロック数を入力
         self.count = 0
         self.flag = 0                                         #画像を変化させるためのflag
         
@@ -33,16 +34,16 @@ class Beam_principal(Beam):
             self.rect = self.image.get_rect()                                                             #画像の高さが変わるのでrect値を更新
 
             #クロック数が1000以上とbeam本体の横の長さが600以下
-        if pygame.time.get_ticks() - self.gun_start >= 1000 and self.rect.width <= 600 and self.principal.survival_flag == 0:                   
+        if R_time.get_ticks() - self.gun_start >= 1000 and self.rect.width <= 600 and self.principal.survival_flag == 0:                   
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width+10,self.rect.height))  #画像の大きさを横に10に長くする
             self.rect = self.image.get_rect()                                                             #画像の長さが変わるのでrect値を更新
         elif self.rect.width >= 600 and self.count == 0:                                                  #本体の長さが600以上とこの行のelifが呼び出されたことがないこと
-            self.gun_start = pygame.time.get_ticks()                                                      #本体が伸び切った時のクロック数を入力
+            self.gun_start = R_time.get_ticks()                                                      #本体が伸び切った時のクロック数を入力
             self.flag = 1                                                                                 #次の段階に進むためのフラッグを１入力
             self.count = 1 
             
             #本体が伸び切ってからのクロック数が1000以上と本体の高さが０より大きいとflagが１であること
-        if pygame.time.get_ticks() - self.gun_start >= 1000 and self.rect.height > 0 and self.flag == 1 and self.principal.survival_flag == 0:  
+        if R_time.get_ticks() - self.gun_start >= 1000 and self.rect.height > 0 and self.flag == 1 and self.principal.survival_flag == 0:  
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width,self.rect.height-1))   #本体画像の高さを-1する
             self.rect = self.image.get_rect()                                                             #画像の高さが変わるのでrect値を更新
         elif self.rect.height == 0:                                                                       #本体の高さが0であること
@@ -85,7 +86,8 @@ class Beam_sub(Beam):  #サブクラス
             
             #ここでサブ画像を小さくする
             #呼び出されてからのクロックすうが3900以上　サブ画像の高さが０よ大きい　flagが１であること
-        if pygame.time.get_ticks() - self.gun_start >= 3900 and self.flag == 1 and self.rect.height > 0 and self.principal.survival_flag == 0:
+
+        if R_time.get_ticks() - self.gun_start >= 3900 and self.flag == 1 and self.rect.height > 0 and self.principal.survival_flag == 0:
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width-1,self.rect.height-1)) #サブ画像の縦横をそれぞれ-1する
             self.rect = self.image.get_rect()                                                             #画像の大きさが変わるのでrect値を更新
         elif self.rect.height == 0:                                                                       #サブ画像の高さが0であること

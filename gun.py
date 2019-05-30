@@ -2,6 +2,7 @@
 # coding:utf-8
 from bullet import *
 from beam import *
+from define import R_time
 import pygame
 from pygame.locals import *
 import math
@@ -15,7 +16,7 @@ class Gun:
         self.rect = Rect(0,0,960,600)                         #画面の大きさのrect
         self.principal = principal                               #弾を打つ本人の位置情報
         self.count = 0
-        self.gun_start = pygame.time.get_ticks()
+        self.gun_start = R_time.get_ticks()
         
 
     def isBulletZero(self):
@@ -63,15 +64,15 @@ class Circle_Gun(Gun):
     def shoot(self, x, y):
         Bullet_list1 = [[-4.0,0],[-3.5,-3.5],[0,-4.0],[3.5,-3.5],[4.0,0],[3.5,3.5],[0,4.0],[-3.5,3.5]]           #弾の飛ばす方向を格納
         Bullet_list2 = [[1.9,-4.6],[4.6,-1.9],[4.6,1.9],[1.9,4.6],[-1.9,4.6],[-4.6,1.9],[-4.6,-1.9],[-1.9,-4.6]] #弾の飛ばす方向を格納
-        if pygame.time.get_ticks() - self.gun_start >= 1200 and self.count == 0:                  #弾をそれぞれ交互にとばすためのself.count
+        if R_time.get_ticks() - self.gun_start >= 1200 and self.count == 0:                  #弾をそれぞれ交互にとばすためのself.count
             for bullet_list in Bullet_list1:
                 Bullet(x, y, bullet_list[0],bullet_list[1], self.machines)
-            self.gun_start = pygame.time.get_ticks()
+            self.gun_start = R_time.get_ticks()
             self.count = 1
-        if  pygame.time.get_ticks() - self.gun_start >= 1200 and self.count == 1:
+        if  R_time.get_ticks() - self.gun_start >= 1200 and self.count == 1:
             for bullet_list in Bullet_list2:
                 Bullet(x, y, bullet_list[0], bullet_list[1], self.machines)
-            self.gun_start = pygame.time.get_ticks()
+            self.gun_start = R_time.get_ticks()
             self.count = 0
         self.num -= 1
 
