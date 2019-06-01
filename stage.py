@@ -58,6 +58,7 @@ class Stage:
         self.ranges = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
         self.ranges2 = pygame.sprite.Group()        # 画面の範囲外のspriteを格納したグループ
         self.timers = pygame.sprite.Group()
+        self.bosses = pygame.sprite.Group()
 
         PlayerMachine.containers = self.group, self.players     # プレイヤーマシンにグループを割り当てる
         CpuMachine.containers = self.group, self.cpus           # cpuマシンにグループを割り当てる
@@ -68,6 +69,7 @@ class Stage:
         Range.containers = self.ranges                          # 範囲にグループを割り当てる
         Range2.containers = self.ranges2                        # 範囲にグループを割り当てる
         Timer.containers = self.timers
+        Boss.containers = self.group, self.bosses
 
     def loop(self):
         while True:
