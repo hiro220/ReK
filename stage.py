@@ -12,6 +12,7 @@ from define import *
 from out_range import *
 from timer import Timer
 from score import *
+from boss import *
 import pygame.mixer
 
 class Stage:
@@ -183,7 +184,7 @@ class Stage:
         # 辞書の定義。キーに定数、値にクラス名を指定する。（キー:値）
 
         # CPUの種類を指す辞書
-        cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0}
+        cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0, BOSS1:Stage1_boss}
         # アイテムの種類を指す辞書
         item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem}
         sub = name.split('_')
