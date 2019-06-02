@@ -70,7 +70,7 @@ class Stage:
         Range.containers = self.ranges                          # 範囲にグループを割り当てる
         Range2.containers = self.ranges2                        # 範囲にグループを割り当てる
         Timer.containers = self.timers
-        Boss.containers = self.group, self.bosses
+        Boss.containers = self.group, self.cpus
 
     def loop(self):
         while True:
@@ -97,6 +97,7 @@ class Stage:
             return GAMEOVER                 # ゲームオーバー条件が満たされた
         if self.isClear():
             pygame.mixer.music.stop()
+            print("GAMECLEAR")
             return GAMECLEAR                # ゲームクリア条件が満たされた
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき

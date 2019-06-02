@@ -17,9 +17,10 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.stage1_flag = 0
 
     def update(self):
-        if R_time.get_ticks() - self.gun_start >= 600 and stage1_flag == 0:
+        self.move(-1, 0)
+        if R_time.get_ticks() - self.gun_start >= 600 and self.stage1_flag == 0:
             for sub_number in range(5):
-                Stage1_sub(x, y, players, score, sub_number)
+                Stage1_sub(self.x, self.y, self.machines, self.score, sub_number)
             self.stage1_flag = 1
 
 class Stage1_sub(Boss):                                  #ボス付属品の機体
@@ -27,3 +28,6 @@ class Stage1_sub(Boss):                                  #ボス付属品の機�
         image = pygame.image.load("img/boss1_sub.png").convert_alpha()
         super().__init__(1, x, y, image, players, score)
         self.sub_number = sub_number                     #付属品のID
+
+    def update(self):
+        self.move(-2, 0)
