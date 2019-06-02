@@ -39,6 +39,8 @@ class Main(pygame.sprite.Sprite):
         if result[0] == EXIT:
             pygame.quit()
             sys.exit()
+        elif result[0] == RETIRE:
+            return
         select_num = self.StageResult_draw(result)
         return
 
