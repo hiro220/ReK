@@ -17,3 +17,6 @@ class Score:
 
     def add_score(self, x):
         self.score += x 
+    
+    def return_score(self):
+        return self.score

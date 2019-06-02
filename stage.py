@@ -80,11 +80,11 @@ class Stage:
         if self.isGameOver():
             print("GAMEOVER")
             pygame.mixer.music.stop()
-            return GAMEOVER                 # ゲームオーバー条件が満たされた
+            return GAMEOVER, self.score.return_score()                 # ゲームオーバー条件が満たされた
         if self.isClear():
             print("GAMECLEAR")
             pygame.mixer.music.stop()
-            return GAMECLEAR                # ゲームクリア条件が満たされた
+            return GAMECLEAR, self.score.return_score()                # ゲームクリア条件が満たされた
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
                 return EXIT

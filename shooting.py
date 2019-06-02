@@ -7,6 +7,7 @@ import sys
 from stage import *
 from initial_screen import *
 from menu import *
+from  score import *
 import pygame.mixer
 
 class Main(pygame.sprite.Sprite):
@@ -35,20 +36,29 @@ class Main(pygame.sprite.Sprite):
         pygame.mixer.music.load("sound/sound1.mp3")     # 音楽ファイルの読み込み
         pygame.mixer.music.play(-1)                     # 音楽の再生回数(ループ再生)
         result = stage.loop()
-        if result == EXIT:
+        if result[0] == EXIT:
             pygame.quit()
             sys.exit()
         select_num = self.StageResult_draw(result)
-        return 
+        return
 
     def StageResult_draw(self, result):
         """ステージ結果画面を描画する"""
         self.screen.fill((0,0,0))
 
-        if result ==  GAMECLEAR:
+        Score_font = pygame.font.Font("freesansbold.ttf", 50)
+        Enter_font = pygame.font.Font("freesansbold.ttf", 20)
+
+        Score_text = Score_font.render("SCORE: " + str(result[1]), True, (255,255,255))
+        Enter_text = Enter_font.render("ENTER:RETURN", True, (255,255,255))
+
+        self.screen.blit(Score_text, [360, 470])
+        self.screen.blit(Enter_text, [5, 5])
+
+        if result[0] ==  GAMECLEAR:
             image = pygame.image.load("img/gameclear.jpg").convert_alpha()
             self.screen.blit(image, [155, 50])    
-        elif result == GAMEOVER:
+        elif result[0] == GAMEOVER:
             image = pygame.image.load("img/gameover.jpg").convert_alpha()
             self.screen.blit(image, [170, 10])
 
