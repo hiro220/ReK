@@ -1,0 +1,5 @@
+size    200
+rule    NORMAL
+
+0
+CPU0    300
