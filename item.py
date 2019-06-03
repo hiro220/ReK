@@ -67,7 +67,7 @@ class Shield(pygame.sprite.Sprite):
         return False
 
 class ShieldItem(Item):
-    """取得した機体の体力を1回復するアイテム"""
+    """取得した機体にシールドを与えるアイテム"""
     def __init__(self, x, y, machine):
         image = pygame.image.load("img/item_shield.png").convert_alpha()
         super().__init__(x, y, image, machine)
