@@ -2,4 +2,4 @@ size    200
 rule    NORMAL
 
 0
-BOSS1    300
+BOSS1    280
