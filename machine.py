@@ -19,6 +19,9 @@ class Hp:
         self.hp += num
         if self.hp > self.maxhp:
             self.hp = self.maxhp
+    
+    def return_hp(self):
+        return self.hp
 
 class Machine(pygame.sprite.Sprite):
 
