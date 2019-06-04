@@ -18,7 +18,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.stage1_flag = 0
         self.load_count = 0
         self.move_flag = 0
-        self.move_save = [[720,300],4]
+        self.move_save = [[680,280],4]
         self.dx,self.dy = -1,0
 
     def update(self):
@@ -33,27 +33,25 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         if self.rect.left == self.move_save[0][0] and self.rect.top == self.move_save[0][1]:
             self.dx,self.dy = 0, 0
             self.move_rule()
-        #print(self.rect.top, self.rect.left)
         
     def move_rule(self):
-        rule0 = [[WIDTH/2,0],[720,0],[720,HEIGHT/2],[WIDTH/2,HEIGHT],[720,HEIGHT]]                                               #[720,300]
-        rule1 = [[720,0],[WIDTH/2,HEIGHT/2],[720,HEIGHT/2]]                                                                      #[480,  0]
-        rule2 = [[WIDTH/2,HEIGHT/2],[720,HEIGHT/2],[720,HEIGHT]]                                                                 #[480,600]
-        rule3 = [[WIDTH/2,0],[WIDTH/2,HEIGHT/2],[720,HEIGHT/2],[WIDTH,HEIGHT/2],[WIDTH,0]]                                       #[720,  0]
-        rule4 = [[WIDTH/2,0],[720,0],[WIDTH,0],[WIDTH/2,HEIGHT/2],[WIDTH,HEIGHT/2],[WIDTH/2,HEIGHT],[720,HEIGHT],[WIDTH,HEIGHT]] #[720,300]
-        rule5 = [[WIDTH/2,HEIGHT],[WIDTH/2,HEIGHT/2],[720,HEIGHT/2],[WIDTH,HEIGHT/2],[WIDTH,HEIGHT]]                             #[720,600]
-        rule6 = [[720,0],[720,HEIGHT/2],[WIDTH,HEIGHT/2]]                                                                        #[960,  0]
-        rule7 = [[720,HEIGHT],[720,HEIGHT/2],[720,0],[WIDTH,0],[WIDTH,HEIGHT]]                                                   #[960,300]
-        rule8 = [[720,HEIGHT],[720,HEIGHT/2],[WIDTH,HEIGHT/2]]                                                                   #[960,600]
-        point_list = [[720,300],[480,0],[480,600],[720,0],[720,300],[720,600],[960,0],[960,300],[960,600]]
+        rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[440, 40]
+        rule1 = [[mg.left,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.left,mg.bottom]]     #[440,280]
+        rule2 = [[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.centerx,mg.bottom]]                                      #[440,520]
+        rule3 = [[mg.left,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.top]]       #[680, 40]
+        rule4 = [[mg.left,mg.top],[mg.left,mg.centery],[mg.left,mg.bottom],[mg.centerx,mg.bottom],[mg.right,mg.bottom],[mg.right,mg.centery],[mg.right,mg.top],[mg.centerx,mg.top]] #[720,300]
+        rule5 = [[mg.left,mg.bottom],[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.bottom]] #[680,520]
+        rule6 = [[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                           #[920, 40]
+        rule7 = [[mg.right,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.right,mg.bottom]]   #[960,300]
+        rule8 = [[mg.centerx,mg.bottom],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                         #[960,600]
+        point_list = [[440,40],[440,280],[440,520],[680,40],[680,280],[680,520],[920,40],[920,280],[920,520]]
         move_list = [rule0,rule1,rule2,rule3,rule4,rule5,rule6,rule7,rule8]
 
-        #print(self.move_save[1])
         self.moving(move_list[self.move_save[1]],point_list)
     
     def moving(self,move_list,point_list):
         choice_move = random.choices(move_list)
-        print(self.move_save,choice_move)
+        #print(self.move_save,choice_move)
         self.dx,self.dy = (choice_move[0][0] - self.move_save[0][0])/100,(choice_move[0][1] - self.move_save[0][1])/100
         for index,point in enumerate(point_list):
             if choice_move[0][0] == point[0] and choice_move[0][1] == point[1]:
