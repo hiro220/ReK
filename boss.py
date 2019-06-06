@@ -14,7 +14,7 @@ class Boss(Machine):
 class Stage1_boss(Boss):                                 #ボス本体の機体
     def __init__(self, x, y, players, score):
         image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
-        super().__init__(1, x, y, image, players, score)         #superクラス(Boss)を呼び出す
+        super().__init__(10, x, y, image, players, score)         #superクラス(Boss)を呼び出す
         self.stage1_flag = 0
         self.load_count = 0
         self.move_flag = 0
