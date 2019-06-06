@@ -26,7 +26,7 @@ class Main(pygame.sprite.Sprite):
   
                 while True:
                     menu = Menu(self.screen)    #メニュー画面の描画
-                    stageTxt = menu.draw
+                    stageTxt = menu.draw()
                     if stageTxt == "0":
                         break
                     self.Stage_draw(stageTxt)                
