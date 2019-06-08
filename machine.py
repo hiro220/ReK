@@ -56,9 +56,13 @@ class Machine(pygame.sprite.Sprite):
             self.score.add_score(10)
             self.kill()
         else:
+            alpha = 100
+            tmp_image = self.image.copy()
+            self.image.fill((255, 255, 255, alpha), None, pygame.BLEND_RGBA_MULT)
+            Timer(1500, self.set_image, tmp_image)
             group = self.groups()[1]
             self.remove(group)
-            Timer(500, self.add, group)
+            Timer(1500, self.add, group)
 
     def isMachine(self):
         # このクラスは機体
@@ -83,3 +87,5 @@ class Machine(pygame.sprite.Sprite):
             self.dx += dy
         return dx, dy
     
+    def set_image(self, image):
+        self.image = image
