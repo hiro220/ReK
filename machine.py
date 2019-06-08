@@ -52,12 +52,13 @@ class Machine(pygame.sprite.Sprite):
     
     def hit(self, attack):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
-        group = self.groups()[1]
-        self.remove(group)
-        Timer(500, self.add, group)
         if self.hp.damage(attack):
             self.score.add_score(10)
             self.kill()
+        else:
+            group = self.groups()[1]
+            self.remove(group)
+            Timer(500, self.add, group)
 
     def isMachine(self):
         # このクラスは機体
