@@ -24,9 +24,12 @@ class Main(pygame.sprite.Sprite):
             init_num = init_screen.draw(self.screen)    
 
             if init_num == START_GAME:      #選択したモードがSTART GAMEならメニュー画面に移動
+  
                 while True:
                     menu = Menu(self.screen)    #メニュー画面の描画
                     stageTxt = menu.draw()
+                    if stageTxt == "0":
+                        break
                     self.Stage_draw(stageTxt)                
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 print("help menu")
