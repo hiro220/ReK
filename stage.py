@@ -13,7 +13,6 @@ from out_range import *
 from timer import Timer
 from score import *
 import pygame.mixer
-from random import random, randrange
 
 class Stage:
 
@@ -184,7 +183,7 @@ class Stage:
         # CPUの種類を指す辞書
         cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0}
         # アイテムの種類を指す辞書
-        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem}
+        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, METEORITE_ITEM:MeteoriteItem}
         sub = name.split('_')
 
         if sub[0] == 'CPU' and sub[1] in item_dic:      # CPU_〇〇という呼ばれ方をしたアイテムか
@@ -229,14 +228,3 @@ class Stage:
     def playerBreak(self):
         """プレイヤーの機体が破壊されるとTrueが返る"""
         return self.player.isGameOver()
-
-    def fall_meteorite(self, machines, num, millisecond):
-        x, y = WIDTH, 0
-        if random() < 0.5:
-            x = randrange(200, WIDTH, 1)
-        else:
-            y = randrange(200, HEIGHT-200, 1)
-        Meteorite(x, y, -12, 8, machines)
-        if num-1 == 0:
-            return
-        Timer(millisecond, self.fall_meteorite, machines, num-1, millisecond)
