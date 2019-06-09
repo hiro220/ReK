@@ -183,7 +183,7 @@ class Stage:
         # CPUの種類を指す辞書
         cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0}
         # アイテムの種類を指す辞書
-        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, METEORITE_ITEM:MeteoriteItem}
+        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, METEORITE:MeteoriteItem}
         sub = name.split('_')
 
         if sub[0] == 'CPU' and sub[1] in item_dic:      # CPU_〇〇という呼ばれ方をしたアイテムか

@@ -102,6 +102,8 @@ class MeteoriteItem(Item):
     def __init__(self, x, y, machine):
         image = pygame.image.load("img/meteorite_item.png").convert_alpha()
         super().__init__(x, y, image, machine)
+        print(1)
 
     def effect(self, machine):
         machine.fall_meteorite(machine.machines, 5, 1500)
+        print(2)
