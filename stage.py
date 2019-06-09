@@ -18,8 +18,8 @@ class Stage:
 
     def __init__(self, screen, filename):
         """screenは描画対象。filenameはステージ内容を記述したテキストファイル"""
-        self.image = pygame.image.load("img/star.jpg").convert_alpha()              # 背景画像
-        self.sub_image = pygame.image.load("img/star2.jpg").convert_alpha()         # 背景画像を左右反転させた、背景画像（自然につなげるため）
+        self.image = pygame.image.load("img/sky.jpg").convert_alpha()              # 背景画像
+        self.sub_image = pygame.transform.flip(self.image, True, False)         # 背景画像を左右反転させた、背景画像（自然につなげるため）
         self.rect = self.image.get_rect()       # 画像のrect情報
         self.screen = screen                    # 描画対象
         self.x = self.keyx = 0                  # 背景画像の左上の位置、ステージの進行度
