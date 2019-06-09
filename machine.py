@@ -5,6 +5,8 @@ import pygame
 from pygame.locals import *
 from gun import *
 from timer import Timer
+from define import WIDTH, HEIGHT
+from random import random, randrange
 
 class Hp:
     def __init__(self, hp):
@@ -93,3 +95,15 @@ class Machine(pygame.sprite.Sprite):
         group = self.groups()[1]            # 当たり判定用のグループ
         self.remove(group)                  # この機体を当たり判定のグループから取り除く
         Timer(millisecond, self.add, group)                 # 一定時間経過後、グループに戻す
+
+    
+    def fall_meteorite(self, machines, num, millisecond):
+        x, y = WIDTH, 0
+        if random() < 0.5:
+            x = randrange(200, WIDTH, 1)
+        else:
+            y = randrange(200, HEIGHT-200, 1)
+        Meteorite(x, y, -12, 8, machines)
+        if num-1 == 0:
+            return
+        Timer(millisecond, self.fall_meteorite, machines, num-1, millisecond)

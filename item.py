@@ -96,3 +96,12 @@ class ScoreGetItem(Item):
     def effect(self, machine):
         for opp_machine in machine.machines:
             opp_machine.score.add_score(5)      # 画面内にいる相手の数だけスコアを獲得
+
+class MeteoriteItem(Item):
+
+    def __init__(self, x, y, machine):
+        image = pygame.image.load("img/scoreget.png").convert_alpha()
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        machine.fall_meteorite(machine.machines, 5, 1500)
