@@ -13,6 +13,7 @@ from out_range import *
 from timer import Timer
 from score import *
 import pygame.mixer
+from random import random, randrange
 
 class Stage:
 
@@ -206,9 +207,9 @@ class Stage:
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
         Range2(-20,0,10,HEIGHT)
-        Range2(-10,-20,WIDTH+20,10)
+        Range2(-10,-80,WIDTH+20,10)
         Range2(-10,HEIGHT+10,WIDTH+20,10)
-        Range2(WIDTH+10,0,10,HEIGHT)
+        Range2(WIDTH+80,0,10,HEIGHT)
 
     def setRule(self, name):
         """nameに指定したdefine.pyに定義のある定数に応じてルールの設定を行う。
@@ -228,3 +229,14 @@ class Stage:
     def playerBreak(self):
         """プレイヤーの機体が破壊されるとTrueが返る"""
         return self.player.isGameOver()
+
+    def fall_meteorite(self, machines, num, millisecond):
+        x, y = WIDTH, 0
+        if random() < 0.5:
+            x = randrange(200, WIDTH, 1)
+        else:
+            y = randrange(200, HEIGHT-200, 1)
+        Meteorite(x, y, -12, 8, machines)
+        if num-1 == 0:
+            return
+        Timer(millisecond, self.fall_meteorite, machines, num-1, millisecond)
