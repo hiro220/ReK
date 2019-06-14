@@ -53,7 +53,7 @@ class Opposite_Gun(Gun): #右から左に弾を飛ばす
         Bullet(x, y, -10, 0, self.machines)
         self.num -= 1
         
-class Reflection_Gun(Gun): #左から右に弾を飛ばす
+class Reflection_Gun(Gun): #反射弾を飛ばす
 
     def shoot(self, x, y):
         Reflection_Bullet(x, y, -10, 0, self.machines)

@@ -22,6 +22,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.clear_flag = 0
         self.move_save = [[680,280],4]
         self.dx,self.dy = -2,0
+        self.shot_list = []
 
     def update(self):
         self.move(self.dx, self.dy)
@@ -48,6 +49,9 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         
         if R_time.get_ticks() - self.gun_start >= 3500 and self.load_count == 18:
             self.move_flag = 0
+        if self.move_flag == 0 and self.summon_flag == 2 and R_time.get_ticks() - self.gun_start >= 1200:
+            self.shot_list = random.sample(range(18), k=4)
+            self.gun_start = R_time.get_ticks()
         
         #print(self.move_flag)
         #print(self.dx,self.dy)
@@ -109,6 +113,7 @@ class Stage1_sub(Boss):                                  #ボス付属品の機�
         self.rad = 0
         self.move_flag = 0
         self.dx,self.dy = 0,-4
+        self.gun = Opposite_Gun(self.machines, self, 100)
 
     def update(self):
         
@@ -122,10 +127,14 @@ class Stage1_sub(Boss):                                  #ボス付属品の機�
             #print(self.rad)
             #print("---------")
         #print(self.boss.dx,self.boss.dy)
+        print(self.boss.shot_list)
         self.move(self.dx+ int(self.boss.dx), self.dy+int(self.boss.dy))
 
         if self.rad >= 360:
             self.rad = 0
-
         if self.rect.top <= 280:
             self.move_flag =1
+        if self.sub_number in self.boss.shot_list and R_time.get_ticks() - self.gun_start >= 4000:
+            super().shoot(self.rect.centerx, self.rect.centery)
+            self.gun_start = R_time.get_ticks() 
+        
