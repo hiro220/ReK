@@ -16,7 +16,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
     def __init__(self, x, y, players, score):
         image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
         super().__init__(10, x, y, image, players, score)         #superクラス(Boss)を呼び出す
-        self.stage1_flag = 0
+        self.summon_flag = 0
         self.load_count = 0
         self.move_flag = 0
         self.clear_flag = 0
@@ -25,12 +25,12 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
 
     def update(self):
         self.move(self.dx, self.dy)
-        if R_time.get_ticks() - self.gun_start >= 600 and self.stage1_flag == 0:
-            Stage1_sub(self.x, self.y, self.machines, self.score, self.load_count, self.rect)
+        if R_time.get_ticks() - self.gun_start >= 140 and self.summon_flag == 1:
+            Stage1_sub(610, 600, self.machines, self.score, self.load_count, self)
             self.load_count += 1
             self.gun_start = R_time.get_ticks()
-        if self.load_count == 5:
-            self.stage1_flag = 1
+        if self.load_count == 18:
+            self.summon_flag = 2
 
         if self.rect.left == self.move_save[0][0] and self.rect.top == self.move_save[0][1]:
             self.dx,self.dy = 0, 0
@@ -38,11 +38,18 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
                 self.move_rule()
             elif self.move_flag == 1:
                 self.clear_flag = 1
+                self.summon_flag = 1
+                self.move_flag = 2
+                self.gun_start = R_time.get_ticks()
         
         if self.hp.return_hp() <= 5 and self.clear_flag == 0:
+            self.move_flag = 1
             self.move_clear()
         
-        print(self.hp.return_hp())
+        if R_time.get_ticks() - self.gun_start >= 3500 and self.load_count == 18:
+            self.move_flag = 0
+        
+        #print(self.move_flag)
         #print(self.dx,self.dy)
         #print(self.rect.left,self.rect.top)
         #print(mg.centerx,mg.centery)
@@ -90,18 +97,35 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         elif x < 0 and x < 0:
             self.dx,self.dy = -2,-2
         self.move_save = [[680,280],4]
-        self.move_flag = 1
 
 class Stage1_sub(Boss):                                  #ボス付属品の機体
-    def __init__(self, x, y, players, score, sub_number, boss_principal):              
+    def __init__(self, x, y, players, score, sub_number, boss):              
         image = pygame.image.load("img/boss1_sub.png").convert_alpha()
         super().__init__(1, x, y, image, players, score)
         self.sub_number = sub_number                     #付属品のID
-        self.boss_principal = boss_principal
-        self.dx, self.dy = self.boss_principal.midleft
-        self.move(0, 100)
-
+        self.boss = boss
+        self.radius = 100
+        self.sub_count = 0
+        self.rad = 0
+        self.move_flag = 0
+        self.dx,self.dy = 0,-4
 
     def update(self):
-        #print(self.screen)
-        self.move(-2, 0)
+        
+        if self.move_flag == 1:
+            self.rad += 4
+            self.dy = int(35*math.sin(math.radians(self.rad-10))) - int(35*math.sin(math.radians(self.rad)))
+            self.dx = int(35*math.cos(math.radians(self.rad-10))) - int(35*math.cos(math.radians(self.rad)))
+            #print(self.dx,self.dy)
+            #print("---------")
+            #print(25*math.cos(math.radians(self.rad-1)),25*math.cos(math.radians(self.rad)))
+            #print(self.rad)
+            #print("---------")
+        #print(self.boss.dx,self.boss.dy)
+        self.move(self.dx+ int(self.boss.dx), self.dy+int(self.boss.dy))
+
+        if self.rad >= 360:
+            self.rad = 0
+
+        if self.rect.top <= 280:
+            self.move_flag =1
