@@ -101,6 +101,9 @@ while True:
 |`SCORE_BASED`|指定したスコアの達成|自機の破壊*or*スコア未達成|
 
 ### 利用できるアイテム
+- Item Nameの前に、`CPU_`を付けるとCPUが取得するアイテムとして利用できる。
+    - `CPU_SHIELD`など
+
 |Item Name|Effect|
 |:--:|:--:|
 |`RECOVERY`|取得した機体の体力を1回復する|
