@@ -1,8 +1,9 @@
 # ReK
 ## Clone
-```@
-git clone https://github.com/hiroki-inoue-git/ReK
-```
+`git clone https://github.com/hiroki-inoue-git/ReK`
+
+## 実行
+`shooting.py`
 
 ## CPUの作成
 1. CpuMachineクラスを継承したクラスを作成
@@ -145,11 +146,43 @@ while True:
 
 
 ## ステージの作成
+stageフォルダにテキストファイルを作成し、指定の方式で記述する
+### フォーマット
+タブ/スペース区切りで指定する。
+- `size` : ステージの大きさを指定する。ステージは1秒間に30移動する。
+- `rule` : [ステージルール](https://github.com/hiroki-inoue-git/ReK/#利用できるステージルール)を指定する。
+- [アイテム](https://github.com/hiroki-inoue-git/ReK/#利用できるアイテム) : 生成位置のy座標(0~600)を指定する。
+- CPU : 生成位置のy座標(0~600)を指定する。
+
+```python
+# sample.txt
+
+size    200
+rule    SCORE_BASED    150
+
+0
+CPU1    100
+CPU1    300
+CPU1    500
+
+100
+RECOVERY    300
+CPU2    100
+CPU2    100
+
+200
+CPU_SHIELD  300
+CPU3    300
+SCOREGET    150
+CPU3    100
+CPU3    500
+```
+
 ### 利用できるステージルール
-|Rule Name|GameClear|GameOver|
-|:--:|:--:|:--:|
-|`NORMAL`|最終面で残敵機の全滅|自機の破壊|
-|`SCORE_BASED`|指定したスコアの達成|自機の破壊*or*スコア未達成|
+|Rule Name|GameClear|GameOver|Paramater|
+|:-:|:-:|:-:|:-:|
+|`NORMAL`|最終面で残敵機の全滅|自機の破壊|*|
+|`SCORE_BASED`|指定したスコアの達成|自機の破壊*or*スコア未達成|必要スコア|
 
 ### 利用できるアイテム
 - Item Nameの前に、`CPU_`を付けるとCPUが取得するアイテムとして利用できる。
