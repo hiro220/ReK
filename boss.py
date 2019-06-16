@@ -32,7 +32,9 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
     def update(self):
         self.move(self.dx, self.dy)
         self.Invincible()                                           #バリアとマシンのHPを設定しなおす
-
+        self.Invincible2()                                          #HPが５以下の時無敵を生成する
+        self.Move_set()                                             #HPが５以下になるとボスの位置を戻す
+        
         if R_time.get_ticks() - self.gun_start >= 140 and self.summon_flag == 1:
             Stage1_sub(610, 600, self.machines, self.score, self.load_count, self)
             self.load_count += 1
@@ -50,16 +52,12 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
                 self.move_flag = 2
                 self.gun_start = R_time.get_ticks()
         
-        if self.hp.return_hp() <= 5 and self.clear_flag == 0:
-            self.move_flag = 1
-            self.move_clear()
-        
         if R_time.get_ticks() - self.gun_start >= 3500 and self.load_count == 18:
             self.move_flag = 0
         if self.move_flag == 0 and self.summon_flag == None and R_time.get_ticks() - self.gun_start >= 1200:
             self.shot_list = random.sample(range(18), k=4)
-            self.gun_start = R_time.get_ticks()
-    
+            self.gun_start = R_time.get_ticks() 
+
         self.Shield_loop()                                      #シールドを再配置する
                
         #print(self.groups()[1])
@@ -68,8 +66,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         #print(self.rect.left,self.rect.top)
         #print(mg.centerx,mg.centery)
         #print(self.clear_flag)
-        #print(self.hp.return_hp())
-        print(self.survival_flag)
+        print(self.hp.return_hp())
         
     def move_rule(self):
         rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[440, 40]
@@ -118,13 +115,27 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         if R_time.get_ticks() - self.invin_start >= 3000 and self.invincible_flag == 0:
             self.shield.value.hp.set_hp(5)
             self.hp.set_hp(10)
+            self.invincible_flag = 1
+    
+    def Invincible2(self):
+        if self.hp.return_hp() <= 5 and self.invincible_flag == 1:
+            self.hp.set_hp(10000)
+            self.invin_start = R_time.get_ticks()
+            self.invincible_flag = 2
+        elif R_time.get_ticks() - self.invin_start >= 10000 and self.invincible_flag == 2:
+            self.hp.set_hp(5)
             self.invincible_flag = None
     
+    def Move_set(self):
+        if self.invincible_flag == 2 and self.clear_flag == 0:
+            self.move_flag = 1
+            self.move_clear()
+
     def Shield_loop(self):
         if self.shield.value != None:
             if self.hp.return_hp() > 5 and self.shield.value.hp.return_hp() == 0:
-                self.shield = Timer(2500,Shield,5,self)
-        elif self.hp.return_hp() <= 5:
+                self.shield = Timer(5000,Shield,5,self)
+        elif self.invincible_flag == 2:
             self.shield.kill()
 
 class Stage1_sub(Boss):                                  #ボス付属品の機体
