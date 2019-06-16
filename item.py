@@ -50,6 +50,8 @@ class Shield(pygame.sprite.Sprite):
         self.hp = Hp(firmness)                      # 引数で指定した堅さをhpとして保持
         self.rect = self.image.get_rect()           # 画像からrectを生成
         self.machine = machine                      # このシールドが守る機体の情報を保持
+        self.group = self.machine.groups()[1]
+        self.machine.remove(self.group)
         self.update()                               # 更新する
 
     def update(self):
@@ -61,13 +63,14 @@ class Shield(pygame.sprite.Sprite):
     def hit(self, attack):
         if self.hp.damage(attack):                  # ダメージ計算
             self.kill()
+            self.machine.add(self.group)
 
     def isMachine(self):
         # このクラスは機体ではない
         return False
 
 class ShieldItem(Item):
-    """取得した機体の体力を1回復するアイテム"""
+    """取得した機体にシールドを与えるアイテム"""
     def __init__(self, x, y, machine):
         image = pygame.image.load("img/item_shield.png").convert_alpha()
         super().__init__(x, y, image, machine)
@@ -93,3 +96,12 @@ class ScoreGetItem(Item):
     def effect(self, machine):
         for opp_machine in machine.machines:
             opp_machine.score.add_score(5)      # 画面内にいる相手の数だけスコアを獲得
+
+class MeteoriteItem(Item):
+
+    def __init__(self, x, y, machine):
+        image = pygame.image.load("img/meteorite_item.png").convert_alpha()
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        machine.fall_meteorite(machine.machines, 5, 1500)

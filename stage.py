@@ -183,7 +183,7 @@ class Stage:
         # CPUの種類を指す辞書
         cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0}
         # アイテムの種類を指す辞書
-        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem}
+        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, METEORITE:MeteoriteItem}
         sub = name.split('_')
 
         if sub[0] == 'CPU' and sub[1] in item_dic:      # CPU_〇〇という呼ばれ方をしたアイテムか
@@ -206,9 +206,9 @@ class Stage:
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
         Range2(-20,0,10,HEIGHT)
-        Range2(-10,-20,WIDTH+20,10)
+        Range2(-10,-80,WIDTH+20,10)
         Range2(-10,HEIGHT+10,WIDTH+20,10)
-        Range2(WIDTH+10,0,10,HEIGHT)
+        Range2(WIDTH+80,0,10,HEIGHT)
 
     def setRule(self, name):
         """nameに指定したdefine.pyに定義のある定数に応じてルールの設定を行う。
