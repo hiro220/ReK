@@ -17,18 +17,22 @@ class Boss(Machine):
 class Stage1_boss(Boss):                                 #ボス本体の機体
     def __init__(self, x, y, players, score):
         image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
-        super().__init__(10, x, y, image, players, score)         #superクラス(Boss)を呼び出す
-        self.shield  = Timer(10,Shield,5,self)
+        super().__init__(10000, x, y, image, players, score)         #superクラス(Boss)を呼び出す
+        self.shield  = Timer(0,Shield,10000,self)
         self.summon_flag = 0
         self.load_count = 0
         self.move_flag = 0
         self.clear_flag = 0
+        self.invincible_flag = 0
+        self.invin_start = R_time.get_ticks()
         self.move_save = [[680,280],4]
         self.dx,self.dy = -2,0
         self.shot_list = []
 
     def update(self):
         self.move(self.dx, self.dy)
+        self.Invincible()                                           #バリアとマシンのHPを設定しなおす
+
         if R_time.get_ticks() - self.gun_start >= 140 and self.summon_flag == 1:
             Stage1_sub(610, 600, self.machines, self.score, self.load_count, self)
             self.load_count += 1
@@ -56,20 +60,16 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.shot_list = random.sample(range(18), k=4)
             self.gun_start = R_time.get_ticks()
     
-        #if self.hp.return_hp() <= 5:
-            
-        if self.shield.value != None:
-            if self.hp.return_hp() > 5 and self.shield.value.hp.return_hp() == 0:
-                self.shield = Timer(2500,Shield,5,self)
-        elif self.hp.return_hp() <= 5:
-            self.shield.kill()
-    
+        self.Shield_loop()                                      #シールドを再配置する
+               
+        #print(self.groups()[1])
         #print(self.move_flag)
         #print(self.dx,self.dy)
         #print(self.rect.left,self.rect.top)
         #print(mg.centerx,mg.centery)
         #print(self.clear_flag)
-        print(self.hp.return_hp())
+        #print(self.hp.return_hp())
+        print(self.survival_flag)
         
     def move_rule(self):
         rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[440, 40]
@@ -114,13 +114,27 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.dx,self.dy = -2,-2
         self.move_save = [[680,280],4]
 
+    def Invincible(self):
+        if R_time.get_ticks() - self.invin_start >= 3000 and self.invincible_flag == 0:
+            self.shield.value.hp.set_hp(5)
+            self.hp.set_hp(10)
+            self.invincible_flag = None
+    
+    def Shield_loop(self):
+        if self.shield.value != None:
+            if self.hp.return_hp() > 5 and self.shield.value.hp.return_hp() == 0:
+                self.shield = Timer(2500,Shield,5,self)
+        elif self.hp.return_hp() <= 5:
+            self.shield.kill()
+
 class Stage1_sub(Boss):                                  #ボス付属品の機体
     def __init__(self, x, y, players, score, sub_number, boss):              
         image = pygame.image.load("img/boss1_sub.png").convert_alpha()
-        super().__init__(1, x, y, image, players, score)
+        super().__init__(10000, x, y, image, players, score)
         self.sub_number = sub_number                     #付属品のID
         self.boss = boss
-        self.radius = 100
+        self.invincible_flag = 0
+        self.invin_start = R_time.get_ticks()
         self.sub_count = 0
         self.rad = 0
         self.move_flag = 0
@@ -128,18 +142,12 @@ class Stage1_sub(Boss):                                  #ボス付属品の機�
         self.gun = Opposite_Gun(self.machines, self, 100)
 
     def update(self):
-        
+        self.Invincible()                           #サブマシンのHPを再設定する
+        self.Kill_sub()                             #ボスが消えるとサブも消える
         if self.move_flag == 1:
             self.rad += 4
             self.dy = int(35*math.sin(math.radians(self.rad-10))) - int(35*math.sin(math.radians(self.rad)))
             self.dx = int(35*math.cos(math.radians(self.rad-10))) - int(35*math.cos(math.radians(self.rad)))
-            #print(self.dx,self.dy)
-            #print("---------")
-            #print(25*math.cos(math.radians(self.rad-1)),25*math.cos(math.radians(self.rad)))
-            #print(self.rad)
-            #print("---------")
-        #print(self.boss.dx,self.boss.dy)
-        #print(self.boss.shot_list)
         self.move(self.dx+ int(self.boss.dx), self.dy+int(self.boss.dy))
 
         if self.rad >= 360:
@@ -148,5 +156,13 @@ class Stage1_sub(Boss):                                  #ボス付属品の機�
             self.move_flag =1
         if self.sub_number in self.boss.shot_list and R_time.get_ticks() - self.gun_start >= 4000:
             super().shoot(self.rect.centerx, self.rect.centery)
-            self.gun_start = R_time.get_ticks() 
-        
+            self.gun_start = R_time.get_ticks()
+
+    def Invincible(self):
+        if R_time.get_ticks() - self.invin_start >= 250*self.sub_number and self.invincible_flag == 0:
+            self.hp.set_hp(2)
+            self.invincible_flag = None
+    
+    def Kill_sub(self):
+        if self.boss.survival_flag == 1:
+            self.kill()

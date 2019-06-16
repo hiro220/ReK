@@ -22,6 +22,9 @@ class Hp:
     
     def return_hp(self):
         return self.hp
+    
+    def set_hp(self, set_data):
+        self.hp = set_data
 
 class Machine(pygame.sprite.Sprite):
 
@@ -56,6 +59,7 @@ class Machine(pygame.sprite.Sprite):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
         if self.hp.damage(attack):
             self.score.add_score(10)
+            self.survival_flag = 1
             self.kill()
 
     def isMachine(self):

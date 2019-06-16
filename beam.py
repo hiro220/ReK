@@ -55,7 +55,7 @@ class Beam_principal(Beam):
         
         collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
         if collide_list:                                                            # リストがあるか
-            for machine in collide_list:                                            # この弾に当たったすべての機体に対してダメージを与える
+            for machine in collide_list:                                           # この弾に当たったすべての機体に対してダメージを与える
                 machine.hit(.1)
             
 class Beam_sub(Beam):  #サブクラス
