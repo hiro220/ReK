@@ -18,8 +18,8 @@ class Stage:
 
     def __init__(self, screen, filename):
         """screenは描画対象。filenameはステージ内容を記述したテキストファイル"""
-        self.image = pygame.image.load("img/star.jpg").convert_alpha()              # 背景画像
-        self.sub_image = pygame.image.load("img/star2.jpg").convert_alpha()         # 背景画像を左右反転させた、背景画像（自然につなげるため）
+        self.image = pygame.image.load("img/sky.jpg").convert_alpha()              # 背景画像
+        self.sub_image = pygame.transform.flip(self.image, True, False)         # 背景画像を左右反転させた、背景画像（自然につなげるため）
         self.rect = self.image.get_rect()       # 画像のrect情報
         self.screen = screen                    # 描画対象
         self.x = self.keyx = 0                  # 背景画像の左上の位置、ステージの進行度
@@ -159,11 +159,11 @@ class Stage:
                     key = int(line[0])                  # 文字列をintに変換
                     self.dic[key] = []                  # 辞書にkeyを追加し、その値をリストとして初期化しておく
                     continue
-                if len(line) == 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
+                if len(line) >= 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
                     if line[0] == 'size':               # 要素の一つ目がsizeのとき、二つ目の要素にステージサイズが記述されている
                         self.size = int(line[1])
                     elif line[0] == 'rule':             # 要素の一つ目がruleのとき、二つ目の要素にルールを示す定数が記述されている
-                        self.setRule(line[1])           # ルールをセットする
+                        self.setRule(*line[1:])           # ルールをセットする
                     else:                               # sizeでない場合はcpu(アイテム)なので、名前とy座標をリストにして辞書に追加
                         self.dic[key].append([line[0], int(line[1])])
 
@@ -210,15 +210,17 @@ class Stage:
         Range2(-10,HEIGHT+10,WIDTH+20,10)
         Range2(WIDTH+80,0,10,HEIGHT)
 
-    def setRule(self, name):
+    def setRule(self, name, value=None):
         """nameに指定したdefine.pyに定義のある定数に応じてルールの設定を行う。
         辞書型リストのキーに定数、値に関数名のリストを設定しておく。リストは[クリア条件, 失敗条件]に相当する関数を指定する。
         指定する関数は、引数なし、bool型の返却値を取る"""
-        dic = {NORMAL:[self.normalRule, self.playerBreak]}
+        dic = {NORMAL:[self.normalRule, self.playerBreak], SCORE_BASED:[self.scoreWin, self.otherwise]}
         if name in dic:
             ruleList = dic[name]
             self.isClear = ruleList[0]
             self.isGameOver = ruleList[1]
+        if value:
+            self.rule_value = int(value)
 
     def normalRule(self):
         """ステージが画面端まで移動し、画面に残っている敵機をすべて破壊すればTrueが返る"""
@@ -228,3 +230,9 @@ class Stage:
     def playerBreak(self):
         """プレイヤーの機体が破壊されるとTrueが返る"""
         return self.player.isGameOver()
+
+    def scoreWin(self):
+        return self.score.score >= self.rule_value
+
+    def otherwise(self):
+        return self.normalRule() or self.playerBreak()
