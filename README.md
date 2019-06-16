@@ -154,7 +154,7 @@ stageフォルダにテキストファイルを作成し、指定の方式で記
 - [アイテム](https://github.com/hiroki-inoue-git/ReK/#利用できるアイテム) : 生成位置のy座標(0~600)を指定する。
 - CPU : 生成位置のy座標(0~600)を指定する。
 
-```python
+```
 # sample.txt
 
 size    200
