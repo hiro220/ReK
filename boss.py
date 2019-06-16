@@ -66,7 +66,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         #print(self.rect.left,self.rect.top)
         #print(mg.centerx,mg.centery)
         #print(self.clear_flag)
-        print(self.hp.return_hp())
+        #print(self.hp.return_hp())
         
     def move_rule(self):
         rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[440, 40]
