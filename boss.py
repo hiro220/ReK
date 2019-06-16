@@ -3,6 +3,7 @@ import pygame
 from define import *
 from item import *
 from gun import *
+from timer import *
 import random
 import math
 
@@ -17,7 +18,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
     def __init__(self, x, y, players, score):
         image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
         super().__init__(10, x, y, image, players, score)         #superクラス(Boss)を呼び出す
-        Shield(5, self)
+        self.shield  = Timer(10,Shield,5,self)
         self.summon_flag = 0
         self.load_count = 0
         self.move_flag = 0
@@ -54,12 +55,17 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         if self.move_flag == 0 and self.summon_flag == 2 and R_time.get_ticks() - self.gun_start >= 1200:
             self.shot_list = random.sample(range(18), k=4)
             self.gun_start = R_time.get_ticks()
-        
+        """
+        if self.shield.process.hp.return_hp() == 0:
+            self.shield = Timer(2500,Shield,5,self)
+        print(self.shield.process.hp.return_hp())
+        """
         #print(self.move_flag)
         #print(self.dx,self.dy)
         #print(self.rect.left,self.rect.top)
         #print(mg.centerx,mg.centery)
         #print(self.clear_flag)
+        
         
     def move_rule(self):
         rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[440, 40]
