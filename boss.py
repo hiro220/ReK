@@ -34,7 +34,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.load_count += 1
             self.gun_start = R_time.get_ticks()
         if self.load_count == 18:
-            self.summon_flag = 2
+            self.summon_flag = None
 
         if self.rect.left == self.move_save[0][0] and self.rect.top == self.move_save[0][1]:
             self.dx,self.dy = 0, 0
@@ -52,20 +52,24 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         
         if R_time.get_ticks() - self.gun_start >= 3500 and self.load_count == 18:
             self.move_flag = 0
-        if self.move_flag == 0 and self.summon_flag == 2 and R_time.get_ticks() - self.gun_start >= 1200:
+        if self.move_flag == 0 and self.summon_flag == None and R_time.get_ticks() - self.gun_start >= 1200:
             self.shot_list = random.sample(range(18), k=4)
             self.gun_start = R_time.get_ticks()
-        """
-        if self.shield.process.hp.return_hp() == 0:
-            self.shield = Timer(2500,Shield,5,self)
-        print(self.shield.process.hp.return_hp())
-        """
+    
+        #if self.hp.return_hp() <= 5:
+            
+        if self.shield.value != None:
+            if self.hp.return_hp() > 5 and self.shield.value.hp.return_hp() == 0:
+                self.shield = Timer(2500,Shield,5,self)
+        elif self.hp.return_hp() <= 5:
+            self.shield.kill()
+    
         #print(self.move_flag)
         #print(self.dx,self.dy)
         #print(self.rect.left,self.rect.top)
         #print(mg.centerx,mg.centery)
         #print(self.clear_flag)
-        
+        print(self.hp.return_hp())
         
     def move_rule(self):
         rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[440, 40]
@@ -135,7 +139,7 @@ class Stage1_sub(Boss):                                  #ボス付属品の機�
             #print(self.rad)
             #print("---------")
         #print(self.boss.dx,self.boss.dy)
-        print(self.boss.shot_list)
+        #print(self.boss.shot_list)
         self.move(self.dx+ int(self.boss.dx), self.dy+int(self.boss.dy))
 
         if self.rad >= 360:
