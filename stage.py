@@ -91,13 +91,13 @@ class Stage:
 
         if self.isGameOver():
             pygame.mixer.music.stop()
-            return GAMEOVER                 # ゲームオーバー条件が満たされた
+            return GAMEOVER, self.score.return_score()                 # ゲームオーバー条件が満たされた
         if self.isClear():
             pygame.mixer.music.stop()
-            return GAMECLEAR                # ゲームクリア条件が満たされた
+            return GAMECLEAR, self.score.return_score()                # ゲームクリア条件が満たされた
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
-                return EXIT
+                return EXIT, -1
             if event.type == KEYDOWN:       # キー入力があった時
                 if event.key == K_SPACE:
                     R_time.stop()
@@ -130,14 +130,14 @@ class Stage:
     def pause_process(self):
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
-                return EXIT
+                return EXIT, -1
             if event.type == KEYDOWN:
                 if event.key == K_SPACE:
                     pygame.mixer.music.unpause()
                     R_time.restart()
                     self.process, self.draw = self.stage_process, self.stage_draw
                 elif event.key == K_q:
-                    return RETIRE
+                    return RETIRE, -1
         return CONTINUE
 
     def pause_draw(self):
@@ -183,7 +183,7 @@ class Stage:
         # CPUの種類を指す辞書
         cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0}
         # アイテムの種類を指す辞書
-        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem}
+        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, METEORITE:MeteoriteItem}
         sub = name.split('_')
 
         if sub[0] == 'CPU' and sub[1] in item_dic:      # CPU_〇〇という呼ばれ方をしたアイテムか
@@ -206,9 +206,9 @@ class Stage:
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
         Range2(-20,0,10,HEIGHT)
-        Range2(-10,-20,WIDTH+20,10)
+        Range2(-10,-80,WIDTH+20,10)
         Range2(-10,HEIGHT+10,WIDTH+20,10)
-        Range2(WIDTH+10,0,10,HEIGHT)
+        Range2(WIDTH+80,0,10,HEIGHT)
 
     def setRule(self, name, value=None):
         """nameに指定したdefine.pyに定義のある定数に応じてルールの設定を行う。
