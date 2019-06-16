@@ -21,10 +21,11 @@ class SampleCPU(CpuMachine):
         self.gun = Sample_Gun(self.machines, self, 10)  # 銃の設定
 
     def update(self):
-        self.rect.move_ip(self.dx, self.dy)
-        x, y = self.rect.midleft
+        self.rect.move_ip(self.dx, self.dy)     # 移動
+        x, y = self.rect.midleft                # 画像の左真ん中の座標を取得
         if R_time.get_ticks() - self.gun_start >= 1200:
-            super().shoot(x, y)
+            # 前回弾を撃ってから1200ミリ秒経過していれば以下が実行
+            super().shoot(x, y)     # 弾を発射
             self.gun_start = R_time.get_ticks()
 ```
 ```python
@@ -42,6 +43,55 @@ class Stage:
         # 辞書に作成したクラスを追加する
         cpu_dic = {CPU1:cpu, CPU2:cpu2, ..., SAMPLECPU:SampleCPU}
 ```
+
+### 利用できるGUN一覧
+|Name|Shoot|
+|:-:|:-:|
+|`Gun`|右方向に通常弾を撃つ|
+|`Opposite_Gun`|左方向に通常弾を撃つ|
+|`Reflection_Gun`|左方向に画面内で反射する弾を撃つ|
+|`Circle_Gun`|周囲へ同時に通常弾を撃つ|
+|`Twist_Gun`|左方向へ周期的に弾を撃つ|
+|`Beam_Gun`|左方向へビームを撃つ|
+
+
+
+## アイテムの作成
+1. Itemクラスを継承したクラスを作成する
+1. 画面内に流れるアイテムの画像を設定する
+1. アイテムを取得したときの処理を記述する
+1. define.pyに作成したクラスを指定するための定義を記述する
+1. 実際にステージ上に呼び出すために、stage.py内の辞書にクラスを追加
+
+```python
+# item.py
+
+class SampleItem(Item):
+    def __init__(self, x, y, machine):
+        image = pygame.image.load("img/sampleitem.png").convert_alpha()
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        print("sample")
+```
+
+```python
+# define.py
+
+SAMPLEITEM = "SAMPLEITEM"  # 作成したCPUを指定するための定義
+```
+
+```python
+# stage.py
+
+class Stage:
+    ...
+    def createOneCpu(self, name, x, y):
+        ...
+        # 辞書に作成したクラスを追加する
+        item_dic = {RECOVERY:Recovery, ..., SAMPLEITEM:SampleItem}
+```
+
 
 ## Timerの利用
 
@@ -92,6 +142,7 @@ while True:
 # 1000ミリ秒後
 7
 ```
+
 
 ## ステージの作成
 ### 利用できるステージルール
