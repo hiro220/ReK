@@ -116,7 +116,7 @@ def method(a, b):
     print(a+b)
 
 a, b = 10, 5
-Timer(1000, 10, 5)
+Timer(1000, method, a, b)
 ```
 
 ```python
