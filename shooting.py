@@ -9,6 +9,7 @@ from initial_screen import *
 from menu import *
 from  score import *
 import pygame.mixer
+import database
 
 class Main(pygame.sprite.Sprite):
 
@@ -62,7 +63,9 @@ class Main(pygame.sprite.Sprite):
 
         if result[0] ==  GAMECLEAR:
             image = pygame.image.load("img/gameclear.jpg").convert_alpha()
-            self.screen.blit(image, [155, 50])    
+            self.screen.blit(image, [155, 50])
+            database.insert_score(1, result[1])
+            database.print_ranking()
         elif result[0] == GAMEOVER:
             image = pygame.image.load("img/gameover.jpg").convert_alpha()
             self.screen.blit(image, [170, 10])
