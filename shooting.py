@@ -9,7 +9,7 @@ from initial_screen import *
 from menu import *
 from  score import *
 import pygame.mixer
-import database
+import database as db
 
 class Main(pygame.sprite.Sprite):
 
@@ -28,14 +28,14 @@ class Main(pygame.sprite.Sprite):
   
                 while True:
                     menu = Menu(self.screen)    #メニュー画面の描画
-                    stageTxt = menu.draw()
-                    if stageTxt == "0":
+                    stage_id, stageTxt = menu.draw()
+                    if stage_id == None:
                         break
-                    self.Stage_draw(stageTxt)                
+                    self.Stage_draw(stage_id, stageTxt)                
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 print("help menu")
 
-    def Stage_draw(self, stageTxt):
+    def Stage_draw(self, stage_id, stageTxt):
         stage = Stage(self.screen, "stage/" + stageTxt)
         pygame.mixer.music.load("sound/sound1.mp3")     # 音楽ファイルの読み込み
         pygame.mixer.music.play(-1)                     # 音楽の再生回数(ループ再生)
@@ -45,10 +45,10 @@ class Main(pygame.sprite.Sprite):
             sys.exit()
         elif result[0] == RETIRE:
             return
-        select_num = self.StageResult_draw(result)
+        select_num = self.StageResult_draw(stage_id, result)
         return
 
-    def StageResult_draw(self, result):
+    def StageResult_draw(self, stage_id, result):
         """ステージ結果画面を描画する"""
         self.screen.fill((0,0,0))
 
@@ -64,8 +64,8 @@ class Main(pygame.sprite.Sprite):
         if result[0] ==  GAMECLEAR:
             image = pygame.image.load("img/gameclear.jpg").convert_alpha()
             self.screen.blit(image, [155, 50])
-            database.insert_score(1, result[1])
-            database.print_ranking()
+            db.insert_score(stage_id, result[1])
+            db.print_ranking()
         elif result[0] == GAMEOVER:
             image = pygame.image.load("img/gameover.jpg").convert_alpha()
             self.screen.blit(image, [170, 10])
