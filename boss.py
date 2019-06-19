@@ -66,7 +66,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         #print(self.rect.left,self.rect.top)
         #print(mg.centerx,mg.centery)
         #print(self.clear_flag)
-        #print(self.hp.return_hp())
+        print(self.hp.hp)
         
     def move_rule(self):
         rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[440, 40]
@@ -118,7 +118,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.invincible_flag = 1
     
     def Invincible2(self):
-        if self.hp.return_hp() <= 5 and self.invincible_flag == 1:
+        if self.hp.hp <= 5 and self.invincible_flag == 1:
             self.hp.set_hp(10000)
             self.invin_start = R_time.get_ticks()
             self.invincible_flag = 2
@@ -133,7 +133,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
 
     def Shield_loop(self):
         if self.shield.value != None:
-            if self.hp.return_hp() > 5 and self.shield.value.hp.return_hp() == 0:
+            if self.hp.hp > 5 and self.shield.value.hp.hp == 0:
                 self.shield = Timer(5000,Shield,5,self)
         elif self.invincible_flag == 2:
             self.shield.kill()

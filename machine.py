@@ -23,9 +23,6 @@ class Hp:
         if self.hp > self.maxhp:
             self.hp = self.maxhp
     
-    def return_hp(self):
-        return self.hp
-    
     def set_hp(self, set_data):
         self.hp = set_data
 
