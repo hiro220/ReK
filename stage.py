@@ -59,9 +59,11 @@ class Stage:
         self.ranges = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
         self.ranges2 = pygame.sprite.Group()        # 画面の範囲外のspriteを格納したグループ
         self.timers = pygame.sprite.Group()
+        self.cpus2 = pygame.sprite.Group()
+        self.players2 = pygame.sprite.Group()
         
-        PlayerMachine.containers = self.group, self.players     # プレイヤーマシンにグループを割り当てる
-        CpuMachine.containers = self.group, self.cpus           # cpuマシンにグループを割り当てる
+        PlayerMachine.containers = self.group, self.players2, self.players     # プレイヤーマシンにグループを割り当てる
+        CpuMachine.containers = self.group, self.cpus2, self.cpus           # cpuマシンにグループを割り当てる
         Bullet.containers = self.group                          # 弾にグループを割り当てる
         Item.containers = self.group
         Bullet.containers = self.group, self.bullets            # 弾にグループを割り当てる
@@ -69,7 +71,7 @@ class Stage:
         Range.containers = self.ranges                          # 範囲にグループを割り当てる
         Range2.containers = self.ranges2                        # 範囲にグループを割り当てる
         Timer.containers = self.timers
-        Boss.containers = self.group, self.cpus
+        Boss.containers = self.group, self.cpus2, self.cpus
 
     def loop(self):
         while True:
@@ -226,7 +228,7 @@ class Stage:
 
     def normalRule(self):
         """ステージが画面端まで移動し、画面に残っている敵機をすべて破壊すればTrueが返る"""
-        isCpuRemain = bool(self.cpus)                           # cpuが画面内に残っているか
+        isCpuRemain = bool(self.cpus2)                           # cpuが画面内に残っているか
         return not isCpuRemain and self.keyx > self.size        # 上記条件かつ、ステージが最後に達しているか
 
     def playerBreak(self):
