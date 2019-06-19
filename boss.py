@@ -113,17 +113,17 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
 
     def Invincible(self):
         if R_time.get_ticks() - self.invin_start >= 3000 and self.invincible_flag == 0:
-            self.shield.value.hp.set_hp(5)
-            self.hp.set_hp(10)
+            self.shield.value.hp.__init__(5)
+            self.hp.__init__(10)
             self.invincible_flag = 1
     
     def Invincible2(self):
         if self.hp.hp <= 5 and self.invincible_flag == 1:
-            self.hp.set_hp(10000)
+            self.hp.__init__(10000)
             self.invin_start = R_time.get_ticks()
             self.invincible_flag = 2
         elif R_time.get_ticks() - self.invin_start >= 10000 and self.invincible_flag == 2:
-            self.hp.set_hp(5)
+            self.hp.__init__(5)
             self.invincible_flag = None
     
     def Move_set(self):
@@ -171,7 +171,7 @@ class Stage1_sub(Boss):                                  #ボス付属品の機�
 
     def Invincible(self):
         if R_time.get_ticks() - self.invin_start >= 250*self.sub_number and self.invincible_flag == 0:
-            self.hp.set_hp(2)
+            self.hp.__init__(2)
             self.invincible_flag = None
     
     def Kill_sub(self):

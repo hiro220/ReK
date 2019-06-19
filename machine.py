@@ -22,9 +22,6 @@ class Hp:
         self.hp += num
         if self.hp > self.maxhp:
             self.hp = self.maxhp
-    
-    def set_hp(self, set_data):
-        self.hp = set_data
 
 class Machine(pygame.sprite.Sprite):
 
