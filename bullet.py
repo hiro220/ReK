@@ -2,6 +2,8 @@
 # coding:utf-8
 
 import pygame
+import math
+from define import R_time
 from pygame.locals import *
 
 class Bullet(pygame.sprite.Sprite):
@@ -55,32 +57,29 @@ class Reflection_Bullet(Bullet):
             for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
                 machine.hit(1)
 
-    class Missile_Bullet(Bullet):
-        def __init__(self, x, y, dx, dy, machine):
-            super.__init__(self, x, dx, dy, machines)
-            self.gun_start = R_time.get.ticks()
-            self.image = pygame.image.load("img/bullet2.png").convert_alpha()
-            self.rect = self.image.get_rect()
-            self.flag = 0
+class Missile_Bullet(Bullet):
+    def __init__(self, x, y, dx, dy, machines):
+        super().__init__(x, y, dx, dy, machines)
+        self.gun_start = R_time.get_ticks()
+        self.image = pygame.image.load("img/bullet2.png").convert_alpha()
+        self.flag = 0
 
-        def move(self):
-            if CPU or player:
-                self.image = pygame.image.load("img/bullet2.png").convert_alpha()
-            self.rect.move_ip(self.dx, self.dy)
-            if R_time.get_ticks() - self.gun_start >= 600:
-                play_list = self.machine.sprites()
-                x, y = self.rect.midleft
-                for play in play_list:
-                    distance = math.sqrt((play.rect.centerx - x)**2 + (play.rect.centery - y)**2)
-                    if distance >= 40 and self.flag == 0:
-                        angle = distance / 10
-                        self.dx, self.dy = (play.rect.centerx) / angle, (play.rect.centery) / angle
-                        self.rect.move_ip(self.dx, self.dy)
-                        break
-                    else:
-                        self.flag = 1
-                        self.rect.move_ip(self.dx, self.dy)
-                        break
+    def move(self):
+        self.rect.move_ip(self.dx, self.dy)
+        if R_time.get_ticks() - self.gun_start >= 600:
+            play_list = self.machines.sprites()
+            x, y = self.rect.midleft
+            for play in play_list:
+                distance = math.sqrt((play.rect.centerx - x)**2 + (play.rect.centery - y)**2)
+                if distance >= 40 and self.flag == 0:
+                    angle = distance / 5
+                    self.dx, self.dy = (play.rect.centerx) / angle, (play.rect.centery) / angle
+                    self.rect.move_ip(self.dx, self.dy)
+                    break
+                else:
+                    self.flag = 1
+                    self.rect.move_ip(self.dx, self.dy)
+                    break
 
 
 
