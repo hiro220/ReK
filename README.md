@@ -1,4 +1,19 @@
 # ReK
+
+<details><summary>目次</summary><div>
+
+- [Clone](#clone)
+- [実行方法](#実行)
+- [CPUを作成](#CPUの作成)
+    - [GUN一覧](#利用できるGUN一覧)
+- [アイテムの作成](#アイテムの作成)
+- [Timer](#Timerの利用)
+- [ステージを作成する](#ステージの作成)
+- [アイテム一覧](#利用できるアイテム)
+
+</div></details>
+
+
 ## Clone
 `git clone https://github.com/hiroki-inoue-git/ReK`
 
