@@ -2,6 +2,8 @@
 # coding:utf-8
 
 import pygame
+import math
+from define import R_time
 from pygame.locals import *
 
 class Bullet(pygame.sprite.Sprite):
@@ -70,7 +72,6 @@ class Missile_Bullet(Bullet):
             for play in play_list:
                 distance = math.sqrt((play.rect.centerx - x)**2 + (play.rect.centery - y)**2)
                 angle = math.degrees(math.atan2(play.rect.centery - y, x - play.rect.centerx))
-                print(angle)
                 if distance >= 150 and self.flag == 0:
                     self.image = pygame.image.load("img/missile.png").convert_alpha()
                     distance2 = distance / 5
@@ -81,6 +82,12 @@ class Missile_Bullet(Bullet):
                     self.flag = 1
                     self.rect.move_ip(self.dx, self.dy)
                     break
+                    
+        collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+        if collide_list:                        # リストがあるか
+            self.kill()                         # このスプライトを所属するすべてのグループから削除
+            for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                machine.hit(1)
 
 
 class Meteorite(Bullet):
