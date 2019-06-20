@@ -61,7 +61,7 @@ class Missile_Bullet(Bullet):
     def __init__(self, x, y, dx, dy, machines):
         super().__init__(x, y, dx, dy, machines)
         self.gun_start = R_time.get_ticks()
-        self.image = pygame.image.load("img/bullet2.png").convert_alpha()
+        self.image = pygame.image.load("img/missile.png").convert_alpha()
         self.flag = 0
 
     def move(self):
@@ -71,11 +71,14 @@ class Missile_Bullet(Bullet):
             x, y = self.rect.midleft
             for play in play_list:
                 distance = math.sqrt((play.rect.centerx - x)**2 + (play.rect.centery - y)**2)
-                if distance >= 40 and self.flag == 0:
-                    angle = distance / 5
-                    self.dx, self.dy = (play.rect.centerx) / angle, (play.rect.centery) / angle
+                angle = math.degrees(math.atan2(play.rect.centery - y, x - play.rect.centerx))
+                print(angle)
+                if distance >= 150 and self.flag == 0:
+                    self.image = pygame.image.load("img/missile.png").convert_alpha()
+                    distance2 = distance / 5
+                    self.dx, self.dy = (play.rect.centerx - x) / distance2, (play.rect.centery - y) / distance2
                     self.rect.move_ip(self.dx, self.dy)
-                    break
+                    self.image = pygame.transform.rotate(self.image, angle)
                 else:
                     self.flag = 1
                     self.rect.move_ip(self.dx, self.dy)
