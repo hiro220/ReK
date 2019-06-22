@@ -6,7 +6,7 @@ class Help_print():
     def __init__(self, screen, select_num):
         self.screen = screen
         self.select_num = select_num 
-        self.plyer_image = pygame.image.load("img/player.png").convert_alpha()
+        self.player_image = pygame.image.load("img/player.png").convert_alpha()
         
         pygame.font.init()
         print_font = pygame.font.Font("freesansbold.ttf", 25)
