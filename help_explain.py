@@ -1,6 +1,7 @@
 import pygame
 import sys
 from pygame.locals import *
+from help_print import *
 
 class Help_a: 
     def __init__(self, screen):
@@ -32,10 +33,10 @@ class Help_a:
             for event in pygame.event.get():   
                 if event.type == KEYDOWN:
                     self.Key_Event(event)
-                    if event.key == K_RETURN:
-                        return self.selct.num 
-                    elif event.key == K_SPACE:
-                        print (self.select_num)
+                    
+                    if event.key == K_SPACE:
+                        help_print = Help_print(self.screen, self.select_num)
+                        help_print1 = help_print.draw()
                 elif event.type == QUIT:
                     pygame.quit()
                     sys.exit()
