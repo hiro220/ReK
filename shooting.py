@@ -33,6 +33,7 @@ class Main(pygame.sprite.Sprite):
                 help_c = Help_a(self.screen)
                 help_b = help_c.draw()
 
+
     def Stage_draw(self, stageTxt):
         stage = Stage(self.screen, "stage/" + stageTxt)
         pygame.mixer.music.load("sound/sound1.mp3")     # 音楽ファイルの読み込み
