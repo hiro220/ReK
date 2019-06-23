@@ -9,24 +9,17 @@ conn = sqlite3.connect(db)
 # sqliteを操作するカーソルオブジェクトを作成
 cur = conn.cursor()
 
-try:
+cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='ranking'")
+if cur.fetchone()[0] == 0:
     cur.execute('CREATE TABLE ranking(stage INTEGER, score INTEGER)')
 
-except sqlite3.Error as e:
-    print('sqlite3.Error :', e.args[0])
-"""
-cur.execute('INSERT INTO ranking(score) values(100)')
-cur.execute('INSERT INTO ranking(score) values(3400)')
-cur.execute('INSERT INTO ranking(score) values(200)')
-cur.execute('INSERT INTO ranking(score) values(120)')
+cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='data'")
+if cur.fetchone()[0] == 0:
+    cur.execute("CREATE TABLE data(key TEXT, value TEXT)")
 
-# データベースへの変更をコミット
-conn.commit()
-
-print([data for data in cur.execute('SELECT * FROM ranking')])
-"""
 # データベースへのコネクションを閉じる
 conn.close()
+
 
 def insert_score(stage_id, score):
     # データベース
@@ -49,3 +42,39 @@ def print_ranking():
     print([data for data in cur.execute('SELECT * FROM ranking')])
     # データベースへのコネクションを閉じる
     conn.close()
+
+def save(data_dic):
+    # データベース
+    conn = sqlite3.connect(db)
+    # sqliteを操作するカーソルオブジェクトを作成
+    cur = conn.cursor()
+
+    for key, value in data_dic.items():
+        print(key, value)
+        cur.execute("SELECT COUNT(*) FROM data WHERE key=?", key)
+        if cur.fetchone()[0] == 0:
+            cur.execute("INSERT INTO data(key, value) values(?, ?)", [key, value])
+        else:
+            cur.execute("UPDATE data SET value=? WHERE key=?", [value, key])
+    # データベースへの変更をコミット
+    conn.commit()
+    # データベースへのコネクションを閉じる
+    conn.close()
+
+def load():
+    # データベース
+    conn = sqlite3.connect(db)
+    # sqliteを操作するカーソルオブジェクトを作成
+    cur = conn.cursor()
+
+    data_dic = {}
+
+    for key, value in cur.execute("SELECT * FROM data"):
+        data_dic[key] = value
+
+    # データベースへのコネクションを閉じる
+    conn.close()
+    return data_dic
+
+save({"1":"changed", "2":"change", "3":"replace"})
+print(load())
