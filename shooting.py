@@ -65,7 +65,7 @@ class Main(pygame.sprite.Sprite):
             image = pygame.image.load("img/gameclear.jpg").convert_alpha()
             self.screen.blit(image, [155, 50])
             db.insert_score(stage_id, result[1])
-            db.print_ranking()
+            print(sorted(db.load_ranking(stage_id), key=lambda x:x[1], reverse=True))
         elif result[0] == GAMEOVER:
             image = pygame.image.load("img/gameover.jpg").convert_alpha()
             self.screen.blit(image, [170, 10])

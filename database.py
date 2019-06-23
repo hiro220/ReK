@@ -9,10 +9,12 @@ conn = sqlite3.connect(db)
 # sqliteを操作するカーソルオブジェクトを作成
 cur = conn.cursor()
 
+# rankingテーブルが存在しないとき、作成する
 cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='ranking'")
 if cur.fetchone()[0] == 0:
     cur.execute('CREATE TABLE ranking(stage INTEGER, score INTEGER)')
 
+# dataテーブルが存在しないとき、作成する
 cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='data'")
 if cur.fetchone()[0] == 0:
     cur.execute("CREATE TABLE data(key TEXT, value TEXT)")
@@ -34,14 +36,15 @@ def insert_score(stage_id, score):
     # データベースへのコネクションを閉じる
     conn.close()
 
-def print_ranking():
+def load_ranking(stage_id):
     # データベース
     conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
-    print([data for data in cur.execute('SELECT * FROM ranking')])
+    ranking = [data for data in cur.execute('SELECT * FROM ranking WHERE stage=?', str(stage_id))]
     # データベースへのコネクションを閉じる
     conn.close()
+    return ranking
 
 def save(data_dic):
     # データベース
@@ -50,7 +53,7 @@ def save(data_dic):
     cur = conn.cursor()
 
     for key, value in data_dic.items():
-        print(key, value)
+        # keyがテーブル内に存在するなら更新、存在しないなら追加する。
         cur.execute("SELECT COUNT(*) FROM data WHERE key=?", key)
         if cur.fetchone()[0] == 0:
             cur.execute("INSERT INTO data(key, value) values(?, ?)", [key, value])
@@ -67,14 +70,11 @@ def load():
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
 
+    # dataテーブル内から全てのデータを辞書にして取り出す。
     data_dic = {}
-
     for key, value in cur.execute("SELECT * FROM data"):
         data_dic[key] = value
 
     # データベースへのコネクションを閉じる
     conn.close()
     return data_dic
-
-save({"1":"changed", "2":"change", "3":"replace"})
-print(load())
