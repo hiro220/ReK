@@ -1,8 +1,5 @@
-size    200
+size    0
 rule    NORMAL
 
 0
 CPU0    300
-CPU_METEORITE 300
-CPU_SHIELD 300
-METEORITE 100
