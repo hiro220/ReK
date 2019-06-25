@@ -4,6 +4,9 @@
 import pygame
 from pygame.locals import *
 from gun import *
+from timer import Timer
+from define import WIDTH, HEIGHT
+from random import random, randrange
 
 class Hp:
     def __init__(self, hp):
@@ -56,6 +59,9 @@ class Machine(pygame.sprite.Sprite):
             self.score.add_score(10)
             self.money.add_money(100)
             self.kill()
+        else:
+            # ダメージを受けたが、破壊されていないなら、一定時間無敵になる
+            self.invincible(1500)       # 1500ミリ秒無敵
 
     def isMachine(self):
         # このクラスは機体
@@ -80,3 +86,26 @@ class Machine(pygame.sprite.Sprite):
             self.dx += dy
         return dx, dy
     
+    def set_image(self, image):
+        self.image = image
+
+    def invincible(self, millisecond):
+        alpha = 100                         # 透明度
+        tmp_image = self.image.copy()       # 元の画像をコピー
+        self.image.fill((255, 255, 255, alpha), None, pygame.BLEND_RGBA_MULT)       # 指定の透明度に設定する
+        Timer(millisecond, self.set_image, tmp_image)      # 一定時間経過後、元の画像に戻す
+        group = self.groups()[1]            # 当たり判定用のグループ
+        self.remove(group)                  # この機体を当たり判定のグループから取り除く
+        Timer(millisecond, self.add, group)                 # 一定時間経過後、グループに戻す
+
+    
+    def fall_meteorite(self, machines, num, millisecond):
+        x, y = WIDTH, 0
+        if random() < 0.5:
+            x = randrange(200, WIDTH, 1)
+        else:
+            y = randrange(200, HEIGHT-200, 1)
+        Meteorite(x, y, -12, 8, machines)
+        if num-1 == 0:
+            return
+        Timer(millisecond, self.fall_meteorite, machines, num-1, millisecond)

@@ -19,8 +19,8 @@ class Stage:
 
     def __init__(self, screen, filename):
         """screenは描画対象。filenameはステージ内容を記述したテキストファイル"""
-        self.image = pygame.image.load("img/star.jpg").convert_alpha()              # 背景画像
-        self.sub_image = pygame.image.load("img/star2.jpg").convert_alpha()         # 背景画像を左右反転させた、背景画像（自然につなげるため）
+        self.image = pygame.image.load("img/sky.jpg").convert_alpha()              # 背景画像
+        self.sub_image = pygame.transform.flip(self.image, True, False)         # 背景画像を左右反転させた、背景画像（自然につなげるため）
         self.rect = self.image.get_rect()       # 画像のrect情報
         self.screen = screen                    # 描画対象
         self.x = self.keyx = 0                  # 背景画像の左上の位置、ステージの進行度
@@ -93,13 +93,13 @@ class Stage:
 
         if self.isGameOver():
             pygame.mixer.music.stop()
-            return GAMEOVER                 # ゲームオーバー条件が満たされた
+            return GAMEOVER, self.score.return_score()                 # ゲームオーバー条件が満たされた
         if self.isClear():
             pygame.mixer.music.stop()
-            return GAMECLEAR                # ゲームクリア条件が満たされた
+            return GAMECLEAR, self.score.return_score()                # ゲームクリア条件が満たされた
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
-                return EXIT
+                return EXIT, -1
             if event.type == KEYDOWN:       # キー入力があった時
                 if event.key == K_SPACE:
                     R_time.stop()
@@ -133,14 +133,14 @@ class Stage:
     def pause_process(self):
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
-                return EXIT
+                return EXIT, -1
             if event.type == KEYDOWN:
                 if event.key == K_SPACE:
                     pygame.mixer.music.unpause()
                     R_time.restart()
                     self.process, self.draw = self.stage_process, self.stage_draw
                 elif event.key == K_q:
-                    return RETIRE
+                    return RETIRE, -1
         return CONTINUE
 
     def pause_draw(self):
@@ -162,11 +162,11 @@ class Stage:
                     key = int(line[0])                  # 文字列をintに変換
                     self.dic[key] = []                  # 辞書にkeyを追加し、その値をリストとして初期化しておく
                     continue
-                if len(line) == 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
+                if len(line) >= 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
                     if line[0] == 'size':               # 要素の一つ目がsizeのとき、二つ目の要素にステージサイズが記述されている
                         self.size = int(line[1])
                     elif line[0] == 'rule':             # 要素の一つ目がruleのとき、二つ目の要素にルールを示す定数が記述されている
-                        self.setRule(line[1])           # ルールをセットする
+                        self.setRule(*line[1:])           # ルールをセットする
                     else:                               # sizeでない場合はcpu(アイテム)なので、名前とy座標をリストにして辞書に追加
                         self.dic[key].append([line[0], int(line[1])])
 
@@ -186,7 +186,7 @@ class Stage:
         # CPUの種類を指す辞書
         cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0}
         # アイテムの種類を指す辞書
-        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem}
+        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, METEORITE:MeteoriteItem}
         sub = name.split('_')
 
         if sub[0] == 'CPU' and sub[1] in item_dic:      # CPU_〇〇という呼ばれ方をしたアイテムか
@@ -209,19 +209,21 @@ class Stage:
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
         Range2(-20,0,10,HEIGHT)
-        Range2(-10,-20,WIDTH+20,10)
+        Range2(-10,-80,WIDTH+20,10)
         Range2(-10,HEIGHT+10,WIDTH+20,10)
-        Range2(WIDTH+10,0,10,HEIGHT)
+        Range2(WIDTH+80,0,10,HEIGHT)
 
-    def setRule(self, name):
+    def setRule(self, name, value=None):
         """nameに指定したdefine.pyに定義のある定数に応じてルールの設定を行う。
         辞書型リストのキーに定数、値に関数名のリストを設定しておく。リストは[クリア条件, 失敗条件]に相当する関数を指定する。
         指定する関数は、引数なし、bool型の返却値を取る"""
-        dic = {NORMAL:[self.normalRule, self.playerBreak]}
+        dic = {NORMAL:[self.normalRule, self.playerBreak], SCORE_BASED:[self.scoreWin, self.otherwise]}
         if name in dic:
             ruleList = dic[name]
             self.isClear = ruleList[0]
             self.isGameOver = ruleList[1]
+        if value:
+            self.rule_value = int(value)
 
     def normalRule(self):
         """ステージが画面端まで移動し、画面に残っている敵機をすべて破壊すればTrueが返る"""
@@ -231,3 +233,9 @@ class Stage:
     def playerBreak(self):
         """プレイヤーの機体が破壊されるとTrueが返る"""
         return self.player.isGameOver()
+
+    def scoreWin(self):
+        return self.score.score >= self.rule_value
+
+    def otherwise(self):
+        return self.normalRule() or self.playerBreak()
