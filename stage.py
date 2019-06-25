@@ -12,6 +12,7 @@ from define import *
 from out_range import *
 from timer import Timer
 from score import *
+from money import *
 import pygame.mixer
 
 class Stage:
@@ -40,7 +41,8 @@ class Stage:
         self.restart_text = menu_font.render("- Restart : Space", True, (255,255,255))
 
         self.score = Score(10, 10)
-        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20))    # プレイヤーのマシンを生成する
+        self.money = Money(10, 30)
+        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20))    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
         R_time.restart()
@@ -125,6 +127,7 @@ class Stage:
 
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         self.score.draw(self.screen)
+        self.money.draw(self.screen)
         pygame.display.update()             # 画面を更新する
 
     def pause_process(self):
@@ -192,7 +195,7 @@ class Stage:
             cpu_item(x, y, self.cpus)
         if name in cpu_dic:                             # 辞書にキーnameがあるか
             create_cpu = cpu_dic[name]                      # 変数createにクラス名を代入。
-            create_cpu(x, y, self.players, self.score)              # 変数createに代入されているクラスを呼び出す。
+            create_cpu(x, y, self.players, self.score, self.money)              # 変数createに代入されているクラスを呼び出す。
         if name in item_dic:
             create_item = item_dic[name]
             create_item(x, y, self.players)

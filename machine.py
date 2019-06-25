@@ -22,7 +22,7 @@ class Hp:
 
 class Machine(pygame.sprite.Sprite):
 
-    def __init__(self, hp, x, y, img, machines, score):
+    def __init__(self, hp, x, y, img, machines, score, money):
         """引数は、機体の体力を表すhp、機体の初期位置(x, y)、描画する画像、発射する弾の当たり判定対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.hp = Hp(hp)
@@ -36,6 +36,7 @@ class Machine(pygame.sprite.Sprite):
 
         self.dx = self.dy = 0
         self.score = score
+        self.money = money
 
     def move(self, dx, dy):
         """機体を(dx, dy)だけ移動させる"""
@@ -53,6 +54,7 @@ class Machine(pygame.sprite.Sprite):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
         if self.hp.damage(attack):
             self.score.add_score(10)
+            self.money.add_money(100)
             self.kill()
 
     def isMachine(self):
