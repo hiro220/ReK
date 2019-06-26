@@ -3,6 +3,7 @@
 
 import pygame
 from pygame.locals import *
+from define import WIDTH, HEIGHT
 
 class Bullet(pygame.sprite.Sprite):
 
@@ -45,7 +46,7 @@ class Reflection_Bullet(Bullet):
         if self.rect.bottom >= HEIGHT or self.rect.top <= 0 and self.count <= 5:
             self.dy *= -1                                      #bulletの進行方向を逆転
             self.count += 1
-        elif self.rect.right >= STAGE_WIDTH or self.rect.left <= 0 and self.count <= 5:
+        elif self.rect.right >= WIDTH or self.rect.left <= 0 and self.count <= 5:
             self.dx *= -1                                      #bulletの進行方向を逆転
             self.count += 1
         

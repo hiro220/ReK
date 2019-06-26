@@ -122,6 +122,7 @@ class Stage:
         # 描画処理
         self.screen.blit(self.image, (-self.x, 0))                      # 背景画像の描画
         self.screen.blit(self.sub_image, (-self.x+self.width, 0))       # 対になる背景画像を繋げて描画
+        pygame.draw.rect(self.screen, (255,255,255),Rect(0,0,INFO_WIDTH, HEIGHT),5)
 
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         self.score.draw(self.screen)
@@ -199,16 +200,16 @@ class Stage:
     
     def creatRange(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range(-100,-100,10,HEIGHT+50)
+        Range(INFO_WIDTH-100,-100,10,HEIGHT+50)
         #Range(0,-10,WIDTH,10)
         #Range(0,HEIGHT,WIDTH,10)
     
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range2(-20,0,10,HEIGHT)
-        Range2(-10,-80,WIDTH+20,10)
-        Range2(-10,HEIGHT+10,WIDTH+20,10)
-        Range2(WIDTH+80,0,10,HEIGHT)
+        Range2(INFO_WIDTH-20,0,10,HEIGHT)
+        Range2(INFO_WIDTH-10,-80,STAGE_WIDTH+20,10)
+        Range2(INFO_WIDTH-10,HEIGHT+10,STAGE_WIDTH+20,10)
+        Range2(STAGE_WIDTH+80,0,10,HEIGHT)
 
     def setRule(self, name, value=None):
         """nameに指定したdefine.pyに定義のある定数に応じてルールの設定を行う。
