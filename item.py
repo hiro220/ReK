@@ -69,6 +69,9 @@ class Shield(pygame.sprite.Sprite):
         # このクラスは機体ではない
         return False
 
+    def __del__(self):
+        self.machine.kill()
+
 class ShieldItem(Item):
     """取得した機体にシールドを与えるアイテム"""
     def __init__(self, x, y, machine):
