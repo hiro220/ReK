@@ -209,7 +209,7 @@ class Stage:
         Range2(INFO_WIDTH-20,0,10,HEIGHT)
         Range2(INFO_WIDTH-10,-80,STAGE_WIDTH+20,10)
         Range2(INFO_WIDTH-10,HEIGHT+10,STAGE_WIDTH+20,10)
-        Range2(STAGE_WIDTH+80,0,10,HEIGHT)
+        Range2(WIDTH+80,0,10,HEIGHT)
 
     def setRule(self, name, value=None):
         """nameに指定したdefine.pyに定義のある定数に応じてルールの設定を行う。

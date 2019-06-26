@@ -22,8 +22,8 @@ Stage2 = "Stage2.txt"
 Stage3 = "Stage3.txt" 
 
 # 各ステージにおけるプレイヤー機体の初期位置
-PLAYER_X = 100
-PLAYER_Y = 300
+PLAYER_X = INFO_WIDTH + 100
+PLAYER_Y = HEIGHT // 2
 
 # stageにおける処理結果
 EXIT = 0            # ウィンドウの「閉じるボタン」を押したとき
