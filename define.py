@@ -5,8 +5,12 @@ from rek_time import ReK_time
 """Rekでの、それぞれのファイルに共通の定数を定義している"""
 
 # ウィンドウのサイズ
-WIDTH = 960
+WIDTH = 1160
 HEIGHT = 600
+
+# ステージ画面のサイズ
+INFO_WIDTH = 200
+STAGE_WIDTH = 960
 
 # 初期画面におけるモード選択
 START_GAME = 0          #START GAMEを選択した時
