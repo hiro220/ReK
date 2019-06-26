@@ -82,7 +82,7 @@ class Stage:
         # 1フレームごとの処理
         self.createCpu()                    # cpuの生成を行う
         self.moveStage()                    # ステージを動かす
-        self.player.move(HEIGHT, WIDTH)     # 入力に応じてプレイヤーの機体を動かす
+        self.player.move()     # 入力に応じてプレイヤーの機体を動かす
         self.group.update()                 # groupに割り当てられたすべてのスプライトを更新する
         self.timers.update()
 
@@ -122,7 +122,7 @@ class Stage:
         # 描画処理
         self.screen.blit(self.image, (-self.x, 0))                      # 背景画像の描画
         self.screen.blit(self.sub_image, (-self.x+self.width, 0))       # 対になる背景画像を繋げて描画
-        pygame.draw.rect(self.screen, (255,255,255),Rect(0,0,INFO_WIDTH, HEIGHT),5)
+        pygame.draw.rect(self.screen, (255,255,255),Rect(0,0,INFO_WIDTH, HEIGHT), 0)
 
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         self.score.draw(self.screen)
