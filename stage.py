@@ -128,15 +128,17 @@ class Stage:
         pygame.display.update()             # 画面を更新する
 
     def draw_info(self):
-        pygame.draw.rect(self.screen, (0,0,0),Rect(0,0,INFO_WIDTH, HEIGHT))
+        pygame.draw.rect(self.screen, (0,0,0),Rect(0,0,INFO_WIDTH, HEIGHT))     # infoエリアの描画
+        # HPバーの割合計算および描画
         maxhp, hp = self.player.hp.maxhp, self.player.hp.hp
         length = 300 * (hp/maxhp)
-        pygame.draw.rect(self.screen, (255,0,0), Rect(40, HEIGHT-80-length, 30, length))
-        pygame.draw.rect(self.screen, (255,255,255), Rect(40, HEIGHT-380, 30, 300), 3)
+        pygame.draw.rect(self.screen, (255,0,0), Rect(40, HEIGHT-80-length, 30, length)) # HPバー
+        pygame.draw.rect(self.screen, (255,255,255), Rect(40, HEIGHT-380, 30, 300), 3)   # 枠線
+        # Bulletバーの割合計算および描画
         maxbullet, bullet = self.player.gun.max, self.player.gun.num
         length = 300 * (bullet/maxbullet)
-        pygame.draw.rect(self.screen, (100, 0, 150), Rect(120, HEIGHT-80-length, 30, length))
-        pygame.draw.rect(self.screen, (255, 255, 255), Rect(120, HEIGHT-380, 30, 300), 3)
+        pygame.draw.rect(self.screen, (100, 0, 150), Rect(120, HEIGHT-80-length, 30, length))   # Bulletバー
+        pygame.draw.rect(self.screen, (255, 255, 255), Rect(120, HEIGHT-380, 30, 300), 3)       # 枠線
 
 
     def pause_process(self):
