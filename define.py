@@ -51,4 +51,8 @@ METEORITE = "METEORITE"
 NORMAL = "NORMAL"
 SCORE_BASED = "SCORE_BASED"
 
+# stage background
+SKY = "SKY"
+STAR = "STAR"
+
 R_time = ReK_time()

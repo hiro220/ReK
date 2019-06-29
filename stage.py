@@ -18,12 +18,7 @@ class Stage:
 
     def __init__(self, screen, filename):
         """screenは描画対象。filenameはステージ内容を記述したテキストファイル"""
-        self.image = pygame.image.load("img/sky.jpg").convert_alpha()              # 背景画像
-        self.sub_image = pygame.transform.flip(self.image, True, False)         # 背景画像を左右反転させた、背景画像（自然につなげるため）
-        self.rect = self.image.get_rect()       # 画像のrect情報
         self.screen = screen                    # 描画対象
-        self.x = self.keyx = 0                  # 背景画像の左上の位置、ステージの進行度
-        self.width, _ = self.rect.midright      # 背景画像のサイズ、_は使わない部分の値
         self.speed = 1                          # 背景の移動速度
         
         self.initGroup()                        # グループを初期化する
@@ -166,7 +161,10 @@ class Stage:
         with open(file, 'r', encoding="utf-8") as fp:   # ファイルを読み取り専用で開く
             self.size = key = 0                         # 画面サイズと、辞書のkeyを0に初期化する
             self.dic = {}                               # 辞書を定義する
+            # ステージ初期設定
             self.setRule(NORMAL)                        # ステージルールをNORMALに設定する。
+            self.set_background(SKY)                    # 背景をSKYに初期化
+            # ファイルから情報を抽出し、ステージの形成
             for line in fp.readlines():                 # ファイルを一行ごとに読み取り、変数lineに文字列として格納する
                 line = line.strip('\n').split()         # 改行コード'\n'を取り除き、タブ区切りでリストに分割する
                 if len(line) == 1:                      # リストの要素数が1のとき、keyとなるx座標が記述されている
@@ -177,7 +175,9 @@ class Stage:
                     if line[0] == 'size':               # 要素の一つ目がsizeのとき、二つ目の要素にステージサイズが記述されている
                         self.size = int(line[1])
                     elif line[0] == 'rule':             # 要素の一つ目がruleのとき、二つ目の要素にルールを示す定数が記述されている
-                        self.setRule(*line[1:])           # ルールをセットする
+                        self.setRule(*line[1:])         # ルールをセットする
+                    elif line[0] == 'bg':
+                        self.set_background(line[1])    # 背景画像の設定
                     else:                               # sizeでない場合はcpu(アイテム)なので、名前とy座標をリストにして辞書に追加
                         self.dic[key].append([line[0], int(line[1])])
 
@@ -223,6 +223,17 @@ class Stage:
         Range2(INFO_WIDTH-10,-80,STAGE_WIDTH+20,10)
         Range2(INFO_WIDTH-10,HEIGHT+10,STAGE_WIDTH+20,10)
         Range2(WIDTH+80,0,10,HEIGHT)
+
+    def set_background(self, image_id):
+        dic = {SKY:"sky.jpg", STAR:"star.jpg"}
+        if image_id not in dic:
+            return
+        path = "img/bg/" + dic[image_id]
+        self.image = pygame.image.load(path).convert_alpha()              # 背景画像
+        self.sub_image = pygame.transform.flip(self.image, True, False)         # 背景画像を左右反転させた、背景画像（自然につなげるため）
+        self.rect = self.image.get_rect()       # 画像のrect情報
+        self.x = self.keyx = 0                  # 背景画像の左上の位置、ステージの進行度
+        self.width, _ = self.rect.midright      # 背景画像のサイズ、_は使わない部分の値
 
     def setRule(self, name, value=None):
         """nameに指定したdefine.pyに定義のある定数に応じてルールの設定を行う。
