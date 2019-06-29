@@ -122,11 +122,20 @@ class Stage:
         # 描画処理
         self.screen.blit(self.image, (-self.x, 0))                      # 背景画像の描画
         self.screen.blit(self.sub_image, (-self.x+self.width, 0))       # 対になる背景画像を繋げて描画
-        pygame.draw.rect(self.screen, (255,255,255),Rect(0,0,INFO_WIDTH, HEIGHT), 0)
-
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
+        self.draw_info()
         self.score.draw(self.screen)
         pygame.display.update()             # 画面を更新する
+
+    def draw_info(self):
+        pygame.draw.rect(self.screen, (0,0,0),Rect(0,0,INFO_WIDTH, HEIGHT), 0)
+        maxhp, hp = self.player.hp.maxhp, self.player.hp.hp
+        length = 300 * (hp/maxhp)
+        pygame.draw.rect(self.screen, (255,0,0), Rect(50, HEIGHT-80-length, 30, length))
+        maxbullet, bullet = self.player.gun.max, self.player.gun.num
+        length = 300 * (bullet/maxbullet)
+        pygame.draw.rect(self.screen, (100, 0, 150), Rect(110, HEIGHT-80-length, 30, length))
+
 
     def pause_process(self):
         for event in pygame.event.get():
