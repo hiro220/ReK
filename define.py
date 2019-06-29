@@ -11,6 +11,7 @@ HEIGHT = 600
 # 初期画面におけるモード選択
 START_GAME = 0          #START GAMEを選択した時
 Help = 1                #Helpを選択した時
+End = 2
 
 # メニュー画面におけるステージ名
 Stage1 = "Stage1.txt"
