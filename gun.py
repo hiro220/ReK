@@ -46,22 +46,14 @@ class Tracking_Gun(Gun):
             break
         self.num -= 1     #弾の残弾数を減らす                                                                       
 
-<<<<<<< HEAD
-class Opposite_Gun(Gun):
-=======
 class Opposite_Gun(Gun): #右から左に弾を飛ばす
 
->>>>>>> master
     def shoot(self, x, y):
         Bullet(x, y, -10, 0, self.machines)
         self.num -= 1
         
-<<<<<<< HEAD
-class Reflection_Gun(Gun):
-=======
 class Reflection_Gun(Gun): #左から右に弾を飛ばす
 
->>>>>>> master
     def shoot(self, x, y):
         Reflection_Bullet(x, y, -10, 0, self.machines)
         self.num -= 1
@@ -124,15 +116,5 @@ class Beam_Gun(Gun):
             self.principal.beam_flag = 1
             self.num -= 1
 
-<<<<<<< HEAD
-class Shot_Gun(Gun):
-    def shoot(self, x, y):
-        list = []
-        Bullet(x, y, -10,0,self.machines)
-        Bullet(x, y, )
-        
-
-=======
         if self.principal.beam_flag == 1:
             self.gun_start = pygame.time.get_ticks()
->>>>>>> master
