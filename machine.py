@@ -57,19 +57,16 @@ class Machine(pygame.sprite.Sprite):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除
         機体に対して持続的にダメージを与えるときはlastingをTrueにする。
         """
-        print(self.hp.hp)
         if self.hp.damage(attack):
             self.score.add_score(10)
             self.kill()
             self.flagtimer.kill()
-        elif lasting:
-            if len(self.flagtimer.groups()) == 0:
-                self.flagtimer = FlagTimer(self.invincible, 1500, flag=True)
-            else:
-                self.flagtimer.flag = True
         else:
             # ダメージを受けたが、破壊されていないなら、一定時間無敵になる
-            self.invincible(1500)       # 1500ミリ秒無敵
+            if len(self.flagtimer.groups()) == 0:
+                self.flagtimer = FlagTimer(self.invincible, 1500, flag=lasting)
+            else:
+                self.flagtimer.flag = lasting
 
     def isMachine(self):
         # このクラスは機体
