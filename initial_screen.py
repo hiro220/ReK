@@ -23,7 +23,7 @@ class Initial_Screen:
             screen.blit(self.title_text, [430, 200])     # タイトルReKを描画
             screen.blit(self.game_text, [430, 300])      # START GAMEを描画
             screen.blit(self.help_text, [430, 330])      # Helpを描画
-            screen.blit(self.end_text, [430, 360])
+            screen.blit(self.end_text, [530, 360])
             self.Draw_Key(screen)        #選択矢印を描画
 
             pygame.display.update()     #画面更新
