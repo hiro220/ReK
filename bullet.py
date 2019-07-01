@@ -23,8 +23,9 @@ class Bullet(pygame.sprite.Sprite):
         if collide_list:                        # リストがあるか
             self.kill()                         # このスプライトを所属するすべてのグループから削除
             for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
-                machine.survival_flag = 1
                 machine.hit(1)
+                if machine.hp.hp <= 0:
+                    self.survival_flag = 1
 
 class Reflection_Bullet(Bullet):
     
@@ -54,6 +55,8 @@ class Reflection_Bullet(Bullet):
             self.kill()                         # このスプライトを所属するすべてのグループから削除
             for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
                 machine.hit(1)
+                if machine.hp.hp <= 0:
+                    self.survival_flag = 1
 
 class Meteorite(Bullet):
 

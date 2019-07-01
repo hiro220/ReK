@@ -13,7 +13,7 @@ class PlayerMachine(Machine):
         super().__init__(2, x, y, image, cpus, score)
         self.dx, self.dy = 7, 7                         # 移動量
         self.cop_flag = True
-        self.gun = Beam_Gun(self.machines, self, 100)
+        #self.gun = Beam_Gun(self.machines, self, 100)
 
     def move(self, height, width):
         key = pygame.key.get_pressed()      # 押されたキーを受け取る
@@ -26,8 +26,6 @@ class PlayerMachine(Machine):
         if key[K_LEFT]:                     # 矢印キー左が押されているとき(長押し)
             super().move(-self.dx, 0)
         self.rect.clamp_ip(Rect(0, 0, width, height))       # 画面外に出たとき、画面内に収まるよう移動
-
-        print(self.gun.num)
 
     def shoot(self, key):
         if key == K_x:              # ｘキーが押されたとき弾を発射
