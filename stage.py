@@ -12,6 +12,7 @@ from define import *
 from out_range import *
 from timer import Timer
 from score import *
+from boss import *
 import pygame.mixer
 
 class Stage:
@@ -58,9 +59,11 @@ class Stage:
         self.ranges = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
         self.ranges2 = pygame.sprite.Group()        # 画面の範囲外のspriteを格納したグループ
         self.timers = pygame.sprite.Group()
-
-        PlayerMachine.containers = self.group, self.players     # プレイヤーマシンにグループを割り当てる
-        CpuMachine.containers = self.group, self.cpus           # cpuマシンにグループを割り当てる
+        self.cpus2 = pygame.sprite.Group()
+        self.players2 = pygame.sprite.Group()
+        
+        PlayerMachine.containers = self.group, self.players2, self.players     # プレイヤーマシンにグループを割り当てる
+        CpuMachine.containers = self.group, self.cpus2, self.cpus           # cpuマシンにグループを割り当てる
         Bullet.containers = self.group                          # 弾にグループを割り当てる
         Item.containers = self.group
         Bullet.containers = self.group, self.bullets            # 弾にグループを割り当てる
@@ -68,6 +71,7 @@ class Stage:
         Range.containers = self.ranges                          # 範囲にグループを割り当てる
         Range2.containers = self.ranges2                        # 範囲にグループを割り当てる
         Timer.containers = self.timers
+        Boss.containers = self.group, self.cpus2, self.cpus
 
     def loop(self):
         while True:
@@ -181,7 +185,7 @@ class Stage:
         # 辞書の定義。キーに定数、値にクラス名を指定する。（キー:値）
 
         # CPUの種類を指す辞書
-        cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0}
+        cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0, BOSS1:Stage1_boss}
         # アイテムの種類を指す辞書
         item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, METEORITE:MeteoriteItem}
         sub = name.split('_')
@@ -224,7 +228,7 @@ class Stage:
 
     def normalRule(self):
         """ステージが画面端まで移動し、画面に残っている敵機をすべて破壊すればTrueが返る"""
-        isCpuRemain = bool(self.cpus)                           # cpuが画面内に残っているか
+        isCpuRemain = bool(self.cpus2)                           # cpuが画面内に残っているか
         return not isCpuRemain and self.keyx > self.size        # 上記条件かつ、ステージが最後に達しているか
 
     def playerBreak(self):

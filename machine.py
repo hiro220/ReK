@@ -66,6 +66,7 @@ class Machine(pygame.sprite.Sprite):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
         if self.hp.damage(attack):
             self.score.add_score(10)
+            self.survival_flag = 1
             self.kill()
         else:
             # ダメージを受けたが、破壊されていないなら、一定時間無敵になる
@@ -102,11 +103,10 @@ class Machine(pygame.sprite.Sprite):
         tmp_image = self.image.copy()       # 元の画像をコピー
         self.image.fill((255, 255, 255, alpha), None, pygame.BLEND_RGBA_MULT)       # 指定の透明度に設定する
         Timer(millisecond, self.set_image, tmp_image)      # 一定時間経過後、元の画像に戻す
-        group = self.groups()[1]            # 当たり判定用のグループ
+        group = self.groups()[2]            # 当たり判定用のグループ
         self.remove(group)                  # この機体を当たり判定のグループから取り除く
         Timer(millisecond, self.add, group)                 # 一定時間経過後、グループに戻す
 
-    
     def fall_meteorite(self, machines, num, millisecond):
         x, y = WIDTH, 0
         if random() < 0.5:
