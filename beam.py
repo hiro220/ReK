@@ -64,8 +64,6 @@ class Beam_principal(Beam):
         if collide_list:                                                            # リストがあるか
             for machine in collide_list:                                           # この弾に当たったすべての機体に対してダメージを与える
                 machine.hit(.1)
-                if machine.hp.hp <= 0:
-                    machine.survival_flag = 1
             
 class Beam_sub(Beam):  #サブクラス
     def __init__(self, x, y, dx, dy, machines, principal,img):
