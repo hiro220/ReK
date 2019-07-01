@@ -37,6 +37,7 @@ class Machine(pygame.sprite.Sprite):
         self.survival_flag = 0      #マシンが存在しているかを判定
         self.beam_flag = 0          #ビームが存在しているかを判定
         self.reload_flag = True
+        self.cop_flag = 0
 
         self.dx = self.dy = 0
         self.score = score
@@ -51,7 +52,6 @@ class Machine(pygame.sprite.Sprite):
             self.gun.shoot(x, y)
 
     def reload(self):
-        print(self.reload_flag)
         if self.reload_flag:
             self.reload_flag = False
             bullet_num = self.gun.num
