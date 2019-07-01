@@ -13,7 +13,7 @@ class PlayerMachine(Machine):
         super().__init__(2, x, y, image, cpus, score)
         self.dx, self.dy = 7, 7                         # 移動量
         self.cop_flag = True
-        #self.gun = Beam_Gun(self.machines, self, 100)
+        self.gun = Beam_Gun(self.machines, self, 100)
 
     def move(self, height, width):
         key = pygame.key.get_pressed()      # 押されたキーを受け取る

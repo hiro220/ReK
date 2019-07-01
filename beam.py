@@ -53,13 +53,19 @@ class Beam_principal(Beam):
             self.kill()                                                                                   #本体のspriteを削除する
             
         #ここのコードでbeam本体をmachineに追従させる
-        x, y = self.principal.rect.midleft                                                                #打ったmachineの座標を所得する
-        self.rect.midright = (x, y+5)                                                                     #beam本体の座標を打ったmachineの座標に合わせる
+        if self.principal.cop_flag:
+            x,y = self.principal.rect.midright
+            self.rect.midleft = (x, y+5)
+        else:
+            x, y = self.principal.rect.midleft                                                                #打ったmachineの座標を所得する
+            self.rect.midright = (x, y+5)                                                                     #beam本体の座標を打ったmachineの座標に合わせる
         
         collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
         if collide_list:                                                            # リストがあるか
             for machine in collide_list:                                            # この弾に当たったすべての機体に対してダメージを与える
                 machine.hit(.1)
+                if machine.hp.hp <= 0:
+                    machine.survival_flag = 1
             
 class Beam_sub(Beam):  #サブクラス
     def __init__(self, x, y, dx, dy, machines, principal,img):
