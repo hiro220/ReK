@@ -36,6 +36,7 @@ class Machine(pygame.sprite.Sprite):
         self.machines = machines
         self.survival_flag = 0      #マシンが存在しているかを判定
         self.beam_flag = 0          #ビームが存在しているかを判定
+        self.reload_flag = True
 
         self.dx = self.dy = 0
         self.score = score
@@ -50,7 +51,16 @@ class Machine(pygame.sprite.Sprite):
             self.gun.shoot(x, y)
 
     def reload(self):
-        self.gun.reload()
+        print(self.reload_flag)
+        if self.reload_flag:
+            self.reload_flag = False
+            bullet_num = self.gun.num
+            self.gun.num = 0
+            Timer(1000+bullet_num*500, self.gun.reload)
+            Timer(1500+bullet_num*500, self.change_flag)
+    
+    def change_flag(self):
+        self.reload_flag = True
     
     def hit(self, attack):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
