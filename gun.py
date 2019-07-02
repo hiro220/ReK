@@ -119,3 +119,8 @@ class Beam_Gun(Gun):
 
         if self.principal.beam_flag == 1:
             self.gun_start = pygame.time.get_ticks()
+
+class Missile_Gun(Gun):
+    def shoot(self, x, y):
+        Missile_Bullet(x, y, -10, 0, self.machines)
+        self.num -= 1
