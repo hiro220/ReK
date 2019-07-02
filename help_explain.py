@@ -7,6 +7,7 @@ class Help_a:
     def __init__(self, screen):
         self.screen = screen
         self.select_num = 0
+        self.back_num = 0
         pygame.font.init()
         explain_font = pygame.font.Font("freesansbold.ttf", 25)
         
@@ -28,15 +29,19 @@ class Help_a:
             self.screen.blit(self.dic_data[5], [430, 240]) 
             self.Draw_key(self.screen)
 
+            
             pygame.display.update()
            
             for event in pygame.event.get():   
                 if event.type == KEYDOWN:
                     self.Key_Event(event)
+                    if event.key == K_RETURN:
+                        if self.back_num == 1:
+                            return "0"
+                        else :
+                            help_print = Help_print(self.screen, self.select_num)
+                            help_print1 = help_print.draw()
                     
-                    if event.key == K_SPACE:
-                        help_print = Help_print(self.screen, self.select_num)
-                        help_print1 = help_print.draw()
                 elif event.type == QUIT:
                     pygame.quit()
                     sys.exit()
@@ -54,6 +59,7 @@ class Help_a:
                 self.select_num = 2
             elif self.select_num == 2:
                 self.select_num = 3
+                self.back_num = 1
             else :
                 self.select_num = 0
 
@@ -65,7 +71,8 @@ class Help_a:
             elif self.select_num == 1:
                 self.select_num = 0
             else :
-                self.select_num = 3                
+                self.select_num = 3
+                self.back_num = 1                
 
     def Draw_key(self, screen):
         if self.select_num == 0:
@@ -76,3 +83,5 @@ class Help_a:
             self.screen.blit(self.dic_data[6], [400, 200])
         if self.select_num == 3:
             self.screen.blit(self.dic_data[6], [400, 240])       
+
+    
