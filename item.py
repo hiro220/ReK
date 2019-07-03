@@ -73,6 +73,10 @@ class Shield(pygame.sprite.Sprite):
         # このクラスは機体ではない
         return False
 
+    def __del__(self):
+        if len(self.machine.groups()) != 3:
+            self.machine.add(self.group)
+
 class ShieldItem(Item):
     """取得した機体にシールドを与えるアイテム"""
     def __init__(self, x, y, machine):

@@ -5,6 +5,7 @@ import pygame
 import math
 from define import R_time
 from pygame.locals import *
+from define import INFO_WIDTH, WIDTH, HEIGHT
 
 class Bullet(pygame.sprite.Sprite):
 
@@ -43,10 +44,10 @@ class Reflection_Bullet(Bullet):
 
     def move(self):
         self.rect.move_ip(self.dx, self.dy)
-        if self.rect.bottom >= 600 or self.rect.top <= 0 and self.count <= 5:
+        if self.rect.bottom >= HEIGHT or self.rect.top <= 0 and self.count <= 5:
             self.dy *= -1                                      #bulletの進行方向を逆転
             self.count += 1
-        elif self.rect.right >= 960 or self.rect.left <= 0 and self.count <= 5:
+        elif self.rect.right >= WIDTH or self.rect.left <= INFO_WIDTH and self.count <= 5:
             self.dx *= -1                                      #bulletの進行方向を逆転
             self.count += 1
         

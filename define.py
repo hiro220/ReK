@@ -6,12 +6,17 @@ from rek_time import ReK_time
 """Rekでの、それぞれのファイルに共通の定数を定義している"""
 
 # ウィンドウのサイズ
-WIDTH = 960
+WIDTH = 1160
 HEIGHT = 600
+
+# ステージ画面のサイズ
+INFO_WIDTH = 200
+STAGE_WIDTH = 960
 
 # 初期画面におけるモード選択
 START_GAME = 0          #START GAMEを選択した時
 Help = 1                #Helpを選択した時
+End = 2
 
 # メニュー画面におけるステージ名
 Stage1 = "Stage1.txt"
@@ -19,8 +24,8 @@ Stage2 = "Stage2.txt"
 Stage3 = "Stage3.txt" 
 
 # 各ステージにおけるプレイヤー機体の初期位置
-PLAYER_X = 100
-PLAYER_Y = 300
+PLAYER_X = INFO_WIDTH + 100
+PLAYER_Y = HEIGHT // 2
 
 # stageにおける処理結果
 EXIT = 0            # ウィンドウの「閉じるボタン」を押したとき
@@ -49,9 +54,12 @@ METEORITE = "METEORITE"
 NORMAL = "NORMAL"
 SCORE_BASED = "SCORE_BASED"
 
-R_time = ReK_time()
-
 #bossの座標調整のための設定
 Move_range = Rect(440,40,480,480)
 mg = Move_range
 Correction = 10
+# stage background
+SKY = "SKY"
+STAR = "STAR"
+
+R_time = ReK_time()
