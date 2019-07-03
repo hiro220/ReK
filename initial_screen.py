@@ -8,10 +8,12 @@ class Initial_Screen:
         title_font = pygame.font.Font("freesansbold.ttf", 55)
         game_font = pygame.font.Font("freesansbold.ttf", 25)
         help_font = pygame.font.Font("freesansbold.ttf", 25)
+        end_font = pygame.font.Font("freesansbold.ttf", 25)
         choice_font = pygame.font.Font("freesansbold.ttf", 25)
         self.title_text = title_font.render("ReK", True, (255,255,255))        #タイトルテキストReK
         self.game_text = game_font.render("START GAME", True, (255,255,255))   #テキストSTART_GAME
         self.help_text = help_font.render("Help", True, (255,255,255))         #テキストHelp
+        self.end_text = end_font.render("End", True, (255, 255, 255))          #テキストEnd
         self.choice_text = choice_font.render("->", True, (255,255,255))       #選択矢印->
         self.select_num = START_GAME        #現在選択しているモード
 
@@ -21,6 +23,7 @@ class Initial_Screen:
             screen.blit(self.title_text, [530, 200])     # タイトルReKを描画
             screen.blit(self.game_text, [530, 300])      # START GAMEを描画
             screen.blit(self.help_text, [530, 330])      # Helpを描画
+            screen.blit(self.end_text, [530, 360])
             self.Draw_Key(screen)        #選択矢印を描画
 
             pygame.display.update()     #画面更新
@@ -41,15 +44,17 @@ class Initial_Screen:
             screen.blit(self.choice_text, [505, 300])    #選択矢印->をSTART GAMEの横へ描画
          elif self.select_num == Help:                       
             screen.blit(self.choice_text, [505, 330])    #選択矢印->をHelpの横へ描画
+         elif self.select_num == End:
+            screen.blit(self.choice_text, [505, 330])    #選択矢印->をHelpの横へ描画
 
     def Key_Event(self, event):     
             if event.key == K_UP:       #↑が押されたとき選択矢印->を上方向に移動（但し、一番上なら一番下に移動）
                 if self.select_num == START_GAME:
-                    self.select_num = Help
+                    self.select_num = End
                 else:
                     self.select_num -= 1     
             if event.key == K_DOWN:     #↓が押されたとき選択矢印->を下方向に移動（但し、一番下なら一番上に移動）
-                if self.select_num == Help:
+                if self.select_num == End:
                     self.select_num  = START_GAME
                 else:
                     self.select_num += 1
