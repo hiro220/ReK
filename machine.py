@@ -4,7 +4,7 @@
 import pygame
 from pygame.locals import *
 from gun import *
-from timer import Timer
+from timer import Timer, FlagTimer
 from define import WIDTH, HEIGHT
 from random import random, randrange
 
@@ -36,6 +36,7 @@ class Machine(pygame.sprite.Sprite):
         self.machines = machines
         self.survival_flag = 0      #マシンが存在しているかを判定
         self.beam_flag = 0          #ビームが存在しているかを判定
+        self.flagtimer = FlagTimer(lambda x:x, 0)
 
         self.dx = self.dy = 0
         self.score = score
@@ -53,15 +54,21 @@ class Machine(pygame.sprite.Sprite):
     def reload(self):
         self.gun.reload()
     
-    def hit(self, attack):
-        """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
+    def hit(self, attack, lasting=False):
+        """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除
+        機体に対して持続的にダメージを与えるときはlastingをTrueにする。
+        """
         if self.hp.damage(attack):
             self.score.add_score(10)
             self.money.add_money(100)
             self.kill()
+            self.flagtimer.kill()
         else:
             # ダメージを受けたが、破壊されていないなら、一定時間無敵になる
-            self.invincible(1500)       # 1500ミリ秒無敵
+            if len(self.flagtimer.groups()) == 0:
+                self.flagtimer = FlagTimer(self.invincible, 1500, flag=lasting)
+            else:
+                self.flagtimer.flag = lasting
 
     def isMachine(self):
         # このクラスは機体
