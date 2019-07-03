@@ -1,57 +1,227 @@
 # ReK
-## 1.コマンドプロンプトで次のコードを打って、リポジトリにフォルダを作る。
-~~~
-git clone https://github.com/hiroki-inoue-git/Rek
-~~~
 
-## 2.作業するときは、ブランチを切る。
-VSCodeでReKフォルダに移動すると、左下に'Y'みたいな記号に続いて、'master'と書かれた場所があるはず。それをクリックすると、上部に枠が出る。その、'＋新しいブランチを作成'を押して、ブランチ名を入力してEnter。
+<details><summary>目次</summary><div>
 
-## 3.ファイルを作成、変更した後には、コミット。
-### 3.1 VSCodeでのGitと見方
-VSCode左にある'Y'みたいな記号をクリック。新しく作成したファイルには'U'、更新したファイルには'M'、消したファイルには'D'、ステージングされたファイルには'A'がファイル名の右に出る。
-~~~
-ex)
-main.py   U
-test.py   M
-game.py   D
-~~~
+- [Clone](#clone)
+- [実行方法](#実行)
+- [CPUを作成](#CPUの作成)
+    - [GUN一覧](#利用できるGUN一覧)
+- [アイテムの作成](#アイテムの作成)
+- [Timer](#Timerの利用)
+- [ステージを作成する](#ステージの作成)
+- [アイテム一覧](#利用できるアイテム)
 
-### 3.2 コミットの準備
-ファイルにマウスカーソルを合わせると、'+'が出る。これをクリックすると、そのファイルがステージングされる。コミットしたいファイルはステージングする必要がある。間違ったファイルをステージングした場合は、そのファイルにカーソルを合わせると'-'が表示されるので、それをクリックするとステージングが解除される。
-~~~
-ex)
-ステージング済みの変更
-main.py     A
-変更
-test.py     M
-game.py     D
-~~~
-
-### 3.3 コミットする
-Messageと書かれた枠に変更内容などのコメントを記入する。日本語でいい。'A'や'U'や'M'や'D'と書かれた上を見ると、'…'がある。これをクリックすると、'プッシュ''プッシュ先''プル'などが出てくる。この中から、ステージング済みをコミットを選択する。これでコミットが完了する。
-~~~
-ex)
-バグを修正した。
-~~~
-
-### 3.4 コミットはこまめに
-コミットをすると、Gitにログが記録される。特に、正常に動いているように見えるならコミットしよう。コミットしておけば、ログからコードを戻せる。「機能を追加したために動かなくなった。ちゃんと動いていたコードがわからない」なんてことにならないように！
+</div></details>
 
 
-## 4.Githubにコミット内容を反映する。
-コミットしたときと同じ要領で、'…'をクリックする。出てきたメニューから、'プッシュ'を選択する。ブランチを切って初めてプッシュするときには、'[ブランチ名]ブランチに上流ブランチがありません。このブランチを公開しますか？'とウィンドウが表示されるので、'OK'を押す。これでGithub上にコミット内容が反映される。
+## Clone
+`git clone https://github.com/hiroki-inoue-git/ReK`
+
+## 環境
+- windows 10
+- python 3.7.3
+- pygame 1.9.6
+
+## 実行
+`shooting.py`
+
+## CPUの作成
+1. CpuMachineクラスを継承したクラスを作成
+1. 画像、体力などを設定する
+1. 移動、銃を撃つタイミングなどupdateの処理を記述する
+1. define.pyに作成したクラスを指定するための定義を記述する
+1. 実際にステージ上に呼び出すために、stage.py内の辞書にクラスを追加
+```python
+# cpumachine.py
+
+class SampleCPU(CpuMachine):
+    def __init__(self, x, y, player, score):
+        image = pygame.image.load("img/samplecpu.png").convert_alpha()  # 画像のロード
+        super().__init__(1, x, y, image, players, score)  # 第1引数は体力
+        self.dx, self.dy = -2, 0   # 移動量はself.dx, self.dyを用いる
+        self.gun = Sample_Gun(self.machines, self, 10)  # 銃の設定
+
+    def update(self):
+        self.rect.move_ip(self.dx, self.dy)     # 移動
+        x, y = self.rect.midleft                # 画像の左真ん中の座標を取得
+        if R_time.get_ticks() - self.gun_start >= 1200:
+            # 前回弾を撃ってから1200ミリ秒経過していれば以下が実行
+            super().shoot(x, y)     # 弾を発射
+            self.gun_start = R_time.get_ticks()
+```
+```python
+# define.py
+
+SAMPLECPU = "SAMPLECPU"     # 作成したCPUを指定するための定義
+```
+```python
+# stage.py
+
+class Stage:
+    ...
+    def createOneCpu(self, name, x, y):
+        ...
+        # 辞書に作成したクラスを追加する
+        cpu_dic = {CPU1:cpu, CPU2:cpu2, ..., SAMPLECPU:SampleCPU}
+```
+
+### 利用できるGUN一覧
+|Name|Shoot|
+|:-:|:-:|
+|`Gun`|右方向に通常弾を撃つ|
+|`Opposite_Gun`|左方向に通常弾を撃つ|
+|`Reflection_Gun`|左方向に画面内で反射する弾を撃つ|
+|`Circle_Gun`|周囲へ同時に通常弾を撃つ|
+|`Twist_Gun`|左方向へ周期的に弾を撃つ|
+|`Beam_Gun`|左方向へビームを撃つ|
 
 
-## 5.ブランチをマージする。
-作るべきコードが書き終わって、バグもなさそうなら切ったブランチをマージする。次のようなボタンをGithubのページで探す。場合によってはmaster以外が掛かれているかもしれない。
-~~~
-Branch:master▼
-~~~
-これをクリックして、自分が作業したブランチを選択する。これでGithub上でブランチの移動ができる。Githubで作業したブランチを確認すると、次のように書かれたボタンがある。
-~~~
-Compare & pull request
-~~~
-このボタンを押すと、画面が移動してコメントを入力する画面になる。上の枠だけでいいので一言コメントを書いて、Create pull requestボタンを押す。
-### ※Marge pull requestは押さない。
-コードを作成した人が自分でバグのチェックをしても、自分では気づけないバグがあるかもしれない。Marge pull requestを押すと、masterブランチにマージされるので、他の人にテストしてもらって、バグがないか確認してもらってマージしてもらう。
+
+## アイテムの作成
+1. Itemクラスを継承したクラスを作成する
+1. 画面内に流れるアイテムの画像を設定する
+1. アイテムを取得したときの処理を記述する
+1. define.pyに作成したクラスを指定するための定義を記述する
+1. 実際にステージ上に呼び出すために、stage.py内の辞書にクラスを追加
+
+```python
+# item.py
+
+class SampleItem(Item):
+    def __init__(self, x, y, machine):
+        image = pygame.image.load("img/sampleitem.png").convert_alpha()
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        print("sample")
+```
+
+```python
+# define.py
+
+SAMPLEITEM = "SAMPLEITEM"  # 作成したCPUを指定するための定義
+```
+
+```python
+# stage.py
+
+class Stage:
+    ...
+    def createOneCpu(self, name, x, y):
+        ...
+        # 辞書に作成したクラスを追加する
+        item_dic = {RECOVERY:Recovery, ..., SAMPLEITEM:SampleItem}
+```
+
+
+## Timerの利用
+
+- シンプルなタイマーの実行
+
+```python
+def method():
+    print("result")
+
+Timer(1000, method)
+```
+
+```python
+# 1000ミリ秒後
+result
+```
+
+- 実行する関数に引数を与えるとき
+
+```python
+def method(a, b):
+    print(a+b)
+
+a, b = 10, 5
+Timer(1000, method, a, b)
+```
+
+```python
+# 1000ミリ秒後
+15
+```
+
+- 実行する関数の返り値を利用したいとき
+```python
+def method(a, b):
+    return a + b
+
+a, b = 3, 4
+timer = Timer(1000, method, a, b)
+
+while True:
+    if timer.value != None:
+        print(timer.value)      # 返り値の利用
+        timer.value = None      # リセット
+```
+
+```python
+# 1000ミリ秒後
+7
+```
+
+
+## ステージの作成
+stageフォルダにテキストファイルを作成し、指定の方式で記述する
+### フォーマット
+タブ/スペース区切りで指定する。
+- `size` : ステージの大きさを指定する。ステージは1秒間に30移動する。
+- `rule` : [ステージルール](#利用できるステージルール)を指定する。
+- `bg` : 背景画像を指定する。指定できるのは、以下の*BG Name*に記載されているもの。
+    <details><summary>背景画像</summary><div>
+
+    |BG Name|Explain|
+    |:-:|:-:|
+    |`SKY`|空の画像|
+    |`STAR`|宇宙の画像|
+
+    </div></details>
+- x座標 : どのタイミングでアイテム、CPUを生成するかを指定する。
+    - [アイテム](#利用できるアイテム) : 生成位置のy座標(0~600)を指定する。
+    - CPU : 生成位置のy座標(0~600)を指定する。
+
+```
+# sample.txt
+
+size    200
+rule    SCORE_BASED    150
+
+0
+CPU1    100
+CPU1    300
+CPU1    500
+
+100
+RECOVERY    300
+CPU2    100
+CPU2    100
+
+200
+CPU_SHIELD  300
+CPU3    300
+SCOREGET    150
+CPU3    100
+CPU3    500
+```
+
+### 利用できるステージルール
+|Rule Name|GameClear|GameOver|Paramater|
+|:-:|:-:|:-:|:-:|
+|`NORMAL`|最終面で残敵機の全滅|自機の破壊|*|
+|`SCORE_BASED`|指定したスコアの達成|自機の破壊*or*スコア未達成|必要スコア|
+
+### 利用できるアイテム
+- Item Nameの前に、`CPU_`を付けるとCPUが取得するアイテムとして利用できる。
+    - `CPU_SHIELD`など
+
+|Item Name|Effect|
+|:--:|:--:|
+|`RECOVERY`|取得した機体の体力を1回復する|
+|`SHIELD`|取得した機体に体力3のシールドを付与|
+|`SPEEDDOWN`|取得した機体のスピードが3秒間落ちる|
+|`SCOREGET`|取得した時点で画面内に残る敵機数×5のスコアを獲得する|
+|`METEORITE`|相手にダメージのある隕石を5つ落とす|

@@ -12,18 +12,14 @@ from define import *
 from out_range import *
 from timer import Timer
 from score import *
+from money import *
 import pygame.mixer
 
 class Stage:
 
     def __init__(self, screen, filename):
         """screenは描画対象。filenameはステージ内容を記述したテキストファイル"""
-        self.image = pygame.image.load("img/star.jpg").convert_alpha()              # 背景画像
-        self.sub_image = pygame.image.load("img/star2.jpg").convert_alpha()         # 背景画像を左右反転させた、背景画像（自然につなげるため）
-        self.rect = self.image.get_rect()       # 画像のrect情報
         self.screen = screen                    # 描画対象
-        self.x = self.keyx = 0                  # 背景画像の左上の位置、ステージの進行度
-        self.width, _ = self.rect.midright      # 背景画像のサイズ、_は使わない部分の値
         self.speed = 1                          # 背景の移動速度
         
         self.initGroup()                        # グループを初期化する
@@ -40,7 +36,8 @@ class Stage:
         self.restart_text = menu_font.render("- Restart : Space", True, (255,255,255))
 
         self.score = Score(10, 10)
-        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20))    # プレイヤーのマシンを生成する
+        self.money = Money(10, 30)
+        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20))    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
         R_time.restart()
@@ -82,7 +79,7 @@ class Stage:
         # 1フレームごとの処理
         self.createCpu()                    # cpuの生成を行う
         self.moveStage()                    # ステージを動かす
-        self.player.move(HEIGHT, WIDTH)     # 入力に応じてプレイヤーの機体を動かす
+        self.player.move()     # 入力に応じてプレイヤーの機体を動かす
         self.group.update()                 # groupに割り当てられたすべてのスプライトを更新する
         self.timers.update()
 
@@ -122,10 +119,25 @@ class Stage:
         # 描画処理
         self.screen.blit(self.image, (-self.x, 0))                      # 背景画像の描画
         self.screen.blit(self.sub_image, (-self.x+self.width, 0))       # 対になる背景画像を繋げて描画
-
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
+        self.draw_info()
         self.score.draw(self.screen)
+        self.money.draw(self.screen)
         pygame.display.update()             # 画面を更新する
+
+    def draw_info(self):
+        pygame.draw.rect(self.screen, (0,0,0),Rect(0,0,INFO_WIDTH, HEIGHT))     # infoエリアの描画
+        # HPバーの割合計算および描画
+        maxhp, hp = self.player.hp.maxhp, self.player.hp.hp
+        length = 300 * (hp/maxhp)
+        pygame.draw.rect(self.screen, (255,0,0), Rect(40, HEIGHT-80-length, 30, length)) # HPバー
+        pygame.draw.rect(self.screen, (255,255,255), Rect(40, HEIGHT-380, 30, 300), 3)   # 枠線
+        # Bulletバーの割合計算および描画
+        maxbullet, bullet = self.player.gun.max, self.player.gun.num
+        length = 300 * (bullet/maxbullet)
+        pygame.draw.rect(self.screen, (100, 0, 150), Rect(120, HEIGHT-80-length, 30, length))   # Bulletバー
+        pygame.draw.rect(self.screen, (255, 255, 255), Rect(120, HEIGHT-380, 30, 300), 3)       # 枠線
+
 
     def pause_process(self):
         for event in pygame.event.get():
@@ -152,18 +164,23 @@ class Stage:
         with open(file, 'r', encoding="utf-8") as fp:   # ファイルを読み取り専用で開く
             self.size = key = 0                         # 画面サイズと、辞書のkeyを0に初期化する
             self.dic = {}                               # 辞書を定義する
+            # ステージ初期設定
             self.setRule(NORMAL)                        # ステージルールをNORMALに設定する。
+            self.set_background(SKY)                    # 背景をSKYに初期化
+            # ファイルから情報を抽出し、ステージの形成
             for line in fp.readlines():                 # ファイルを一行ごとに読み取り、変数lineに文字列として格納する
                 line = line.strip('\n').split()         # 改行コード'\n'を取り除き、タブ区切りでリストに分割する
                 if len(line) == 1:                      # リストの要素数が1のとき、keyとなるx座標が記述されている
                     key = int(line[0])                  # 文字列をintに変換
                     self.dic[key] = []                  # 辞書にkeyを追加し、その値をリストとして初期化しておく
                     continue
-                if len(line) == 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
+                if len(line) >= 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
                     if line[0] == 'size':               # 要素の一つ目がsizeのとき、二つ目の要素にステージサイズが記述されている
                         self.size = int(line[1])
                     elif line[0] == 'rule':             # 要素の一つ目がruleのとき、二つ目の要素にルールを示す定数が記述されている
-                        self.setRule(line[1])           # ルールをセットする
+                        self.setRule(*line[1:])         # ルールをセットする
+                    elif line[0] == 'bg':
+                        self.set_background(line[1])    # 背景画像の設定
                     else:                               # sizeでない場合はcpu(アイテム)なので、名前とy座標をリストにして辞書に追加
                         self.dic[key].append([line[0], int(line[1])])
 
@@ -183,7 +200,7 @@ class Stage:
         # CPUの種類を指す辞書
         cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0}
         # アイテムの種類を指す辞書
-        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem}
+        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, METEORITE:MeteoriteItem}
         sub = name.split('_')
 
         if sub[0] == 'CPU' and sub[1] in item_dic:      # CPU_〇〇という呼ばれ方をしたアイテムか
@@ -192,33 +209,46 @@ class Stage:
             cpu_item(x, y, self.cpus)
         if name in cpu_dic:                             # 辞書にキーnameがあるか
             create_cpu = cpu_dic[name]                      # 変数createにクラス名を代入。
-            create_cpu(x, y, self.players, self.score)              # 変数createに代入されているクラスを呼び出す。
+            create_cpu(x, y, self.players, self.score, self.money)              # 変数createに代入されているクラスを呼び出す。
         if name in item_dic:
             create_item = item_dic[name]
             create_item(x, y, self.players)
     
     def creatRange(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range(-100,-100,10,HEIGHT+50)
+        Range(INFO_WIDTH-100,-100,10,HEIGHT+50)
         #Range(0,-10,WIDTH,10)
         #Range(0,HEIGHT,WIDTH,10)
     
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range2(-20,0,10,HEIGHT)
-        Range2(-10,-20,WIDTH+20,10)
-        Range2(-10,HEIGHT+10,WIDTH+20,10)
-        Range2(WIDTH+10,0,10,HEIGHT)
+        Range2(INFO_WIDTH-20,0,10,HEIGHT)
+        Range2(INFO_WIDTH-10,-80,STAGE_WIDTH+20,10)
+        Range2(INFO_WIDTH-10,HEIGHT+10,STAGE_WIDTH+20,10)
+        Range2(WIDTH+80,0,10,HEIGHT)
 
-    def setRule(self, name):
+    def set_background(self, image_id):
+        dic = {SKY:"sky.jpg", STAR:"star.jpg"}
+        if image_id not in dic:
+            return
+        path = "img/bg/" + dic[image_id]
+        self.image = pygame.image.load(path).convert_alpha()              # 背景画像
+        self.sub_image = pygame.transform.flip(self.image, True, False)         # 背景画像を左右反転させた、背景画像（自然につなげるため）
+        self.rect = self.image.get_rect()       # 画像のrect情報
+        self.x = self.keyx = 0                  # 背景画像の左上の位置、ステージの進行度
+        self.width, _ = self.rect.midright      # 背景画像のサイズ、_は使わない部分の値
+
+    def setRule(self, name, value=None):
         """nameに指定したdefine.pyに定義のある定数に応じてルールの設定を行う。
         辞書型リストのキーに定数、値に関数名のリストを設定しておく。リストは[クリア条件, 失敗条件]に相当する関数を指定する。
         指定する関数は、引数なし、bool型の返却値を取る"""
-        dic = {NORMAL:[self.normalRule, self.playerBreak]}
+        dic = {NORMAL:[self.normalRule, self.playerBreak], SCORE_BASED:[self.scoreWin, self.otherwise]}
         if name in dic:
             ruleList = dic[name]
             self.isClear = ruleList[0]
             self.isGameOver = ruleList[1]
+        if value:
+            self.rule_value = int(value)
 
     def normalRule(self):
         """ステージが画面端まで移動し、画面に残っている敵機をすべて破壊すればTrueが返る"""
@@ -228,3 +258,9 @@ class Stage:
     def playerBreak(self):
         """プレイヤーの機体が破壊されるとTrueが返る"""
         return self.player.isGameOver()
+
+    def scoreWin(self):
+        return self.score.score >= self.rule_value
+
+    def otherwise(self):
+        return self.normalRule() or self.playerBreak()

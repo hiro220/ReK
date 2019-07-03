@@ -20,9 +20,9 @@ class Initial_Screen:
 
     def draw(self, screen):
         while True:
-            screen.blit(self.title_text, [430, 200])     # タイトルReKを描画
-            screen.blit(self.game_text, [430, 300])      # START GAMEを描画
-            screen.blit(self.help_text, [430, 330])      # Helpを描画
+            screen.blit(self.title_text, [530, 200])     # タイトルReKを描画
+            screen.blit(self.game_text, [530, 300])      # START GAMEを描画
+            screen.blit(self.help_text, [530, 330])      # Helpを描画
             screen.blit(self.end_text, [530, 360])
             self.Draw_Key(screen)        #選択矢印を描画
 
@@ -41,11 +41,11 @@ class Initial_Screen:
 
     def Draw_Key(self, screen):
          if self.select_num == START_GAME:                         
-            screen.blit(self.choice_text, [405, 300])    #選択矢印->をSTART GAMEの横へ描画
+            screen.blit(self.choice_text, [505, 300])    #選択矢印->をSTART GAMEの横へ描画
          elif self.select_num == Help:                       
-            screen.blit(self.choice_text, [405, 330])    #選択矢印->をHelpの横へ描画
+            screen.blit(self.choice_text, [505, 330])    #選択矢印->をHelpの横へ描画
          elif self.select_num == End:
-            screen.blit(self.choice_text, [405, 360])
+            screen.blit(self.choice_text, [505, 330])    #選択矢印->をHelpの横へ描画
 
     def Key_Event(self, event):     
             if event.key == K_UP:       #↑が押されたとき選択矢印->を上方向に移動（但し、一番上なら一番下に移動）
