@@ -22,7 +22,10 @@ class Beam(pygame.sprite.Sprite):
 class Beam_principal(Beam):
     def __init__(self, x, y, dx, dy, machines, principal, img):
         super().__init__(x, y, dx, dy, machines, principal,img)
-        Beam_sub(x, y, dx, dy, machines, principal,"img/beam5.png")                    #beam本体に付属するエフェクトを呼び出す
+        if self.principal.cop_flag:
+            Beam_sub(x, y, dx, dy, machines, principal,"img/beam6.png")                #beam本体に付属するエフェクトを呼び出す
+        else:
+            Beam_sub(x, y, dx, dy, machines, principal,"img/beam5.png")
         self.image = pygame.transform.smoothscale(self.image, (10,self.rect.height))   #beam本体の画像の大きさを変更
         self.rect = self.image.get_rect()                                              #大きさ変更後のrect値を格納
         x = x - self.rect.width                                                        #beam右端の値を入力
@@ -50,8 +53,12 @@ class Beam_principal(Beam):
             self.kill()                                                                                   #本体のspriteを削除する
             
         #ここのコードでbeam本体をmachineに追従させる
-        x, y = self.principal.rect.midleft                                                                #打ったmachineの座標を所得する
-        self.rect.midright = (x, y+5)                                                                     #beam本体の座標を打ったmachineの座標に合わせる
+        if self.principal.cop_flag:
+            x,y = self.principal.rect.midright
+            self.rect.midleft = (x, y+5)
+        else:
+            x, y = self.principal.rect.midleft                                                                #打ったmachineの座標を所得する
+            self.rect.midright = (x, y+5)                                                                     #beam本体の座標を打ったmachineの座標に合わせる
         
         collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
         if collide_list:                                                            # リストがあるか
@@ -61,7 +68,11 @@ class Beam_principal(Beam):
 class Beam_sub(Beam):  #サブクラス
     def __init__(self, x, y, dx, dy, machines, principal,img):
         super().__init__(x, y, dx, dy, machines, principal, img)                    #superクラス(beam)から呼び出す
-        self.change_image = pygame.image.load("img/beam5.png").convert_alpha()      #サブ用の画像を呼び込む
+        if self.principal.cop_flag:
+            self.change_image = pygame.image.load("img/beam6.png").convert_alpha()      #サブ用の画像を呼び込む
+        else:
+            self.change_image = pygame.image.load("img/beam5.png").convert_alpha()      #サブ用の画像を呼び込む
+
         self.image = pygame.transform.smoothscale(self.image, (9,6))                #それそれの大きさの画像を設定する
         self.c_image1 = pygame.transform.smoothscale(self.image, (14,9))
         self.c_image2 = pygame.transform.smoothscale(self.image, (17,12))
@@ -95,6 +106,8 @@ class Beam_sub(Beam):  #サブクラス
             self.principal.beam_flag = 0
             
         #ここのコードでbeamサブをmachineに追従させる
-        x, y = self.principal.rect.midleft                                                                        #打ったmachineの座標を所得する
+        x, y = self.principal.rect.midleft                                                                #打ったmachineの座標を所得する
+        if self.principal.cop_flag:
+            x += self.principal.rect.width+self.rect.width                                                #プレイヤーのrectに合わせる
         self.rect.midright = (x, y+5)                                                                     #beam本体の座標を打ったmachineの座標に合わせる
         

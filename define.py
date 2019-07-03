@@ -1,5 +1,6 @@
 # coding:utf-8
-
+import pygame
+from pygame.locals import *
 from rek_time import ReK_time
 
 """Rekでの、それぞれのファイルに共通の定数を定義している"""
@@ -38,6 +39,7 @@ CPU1 = "CPU1"
 CPU2 = "CPU2"
 CPU3 = "CPU3"
 CPU0 = "CPU0"
+BOSS1 = "BOSS1"
 
 RECOVERY = "RECOVERY"
 SHIELD = "SHIELD"
@@ -52,6 +54,10 @@ METEORITE = "METEORITE"
 NORMAL = "NORMAL"
 SCORE_BASED = "SCORE_BASED"
 
+#bossの座標調整のための設定
+Move_range = Rect(440,40,480,480)
+mg = Move_range
+Correction = 10
 # stage background
 SKY = "SKY"
 STAR = "STAR"

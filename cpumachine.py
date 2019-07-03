@@ -34,7 +34,6 @@ class cpu0(CpuMachine):
         x, y = self.rect.midleft                                 #機体自身の位置を入力
         super().shoot(x, y)
 
-    
 class cpu(CpuMachine):
     def __init__(self, x, y, players, score, money):
         """引数は、初期位置(x, y)、弾の当たり判定対象となるプレイヤーの機体グループ"""
