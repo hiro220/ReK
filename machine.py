@@ -55,6 +55,7 @@ class Machine(pygame.sprite.Sprite):
         if self.reload_flag:
             self.reload_flag = False
             bullet_num = self.gun.num
+            bullet_num /= self.gun.max/10
             self.gun.num = 0
             Timer(1000+bullet_num*500, self.gun.reload)
             Timer(1500+bullet_num*500, self.change_flag)
