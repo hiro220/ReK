@@ -25,7 +25,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.clear_flag = 0
         self.invincible_flag = 0
         self.invin_start = R_time.get_ticks()
-        self.move_save = [[680,280],4]
+        self.move_save = [[640,280],4]
         self.dx,self.dy = -2,0
         self.shot_list = []
 
@@ -78,7 +78,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         rule6 = [[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                           #[920, 40]
         rule7 = [[mg.right,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.right,mg.bottom]]   #[960,300]
         rule8 = [[mg.centerx,mg.bottom],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                        #[960,600]
-        point_list = [[440,40],[440,280],[440,520],[680,40],[680,280],[680,520],[920,40],[920,280],[920,520]]
+        point_list = [[400,40],[400,280],[400,520],[640,40],[640,280],[640,520],[880,40],[880,280],[880,520]]
         move_list = [rule0,rule1,rule2,rule3,rule4,rule5,rule6,rule7,rule8]
 
         self.moving(move_list[self.move_save[1]],point_list)
@@ -109,7 +109,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.dx,self.dy = -2,2
         elif x < 0 and x < 0:
             self.dx,self.dy = -2,-2
-        self.move_save = [[680,280],4]
+        self.move_save = [[640,280],4]
 
     def Invincible(self):
         if R_time.get_ticks() - self.invin_start >= 3000 and self.invincible_flag == 0:

@@ -52,6 +52,6 @@ SCORE_BASED = "SCORE_BASED"
 R_time = ReK_time()
 
 #bossの座標調整のための設定
-Move_range = Rect(WIDTH-40,40,WIDTH/2,WIDTH/2)
+Move_range = Rect(400,40,WIDTH/2,WIDTH/2)
 mg = Move_range
 Correction = 10
