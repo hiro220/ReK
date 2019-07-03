@@ -3,6 +3,7 @@
 from machine import Machine
 import pygame
 from pygame.locals import *
+from gun import *
 
 class PlayerMachine(Machine):
 
@@ -11,6 +12,7 @@ class PlayerMachine(Machine):
         image = pygame.image.load("img/player.png").convert_alpha()
         super().__init__(2, x, y, image, cpus, score)
         self.dx, self.dy = 7, 7                         # 移動量
+        gunpack = [None for i range(3)]
 
     def move(self, height, width):
         key = pygame.key.get_pressed()      # 押されたキーを受け取る
@@ -30,6 +32,9 @@ class PlayerMachine(Machine):
             super().shoot(x, y)
         elif key == K_v:
             super().reload()
+
+    def change(self, key):
+        if key == K_a:
     
     def isGameOver(self):
         return not self.alive()
