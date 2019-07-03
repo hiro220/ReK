@@ -35,15 +35,15 @@ class Menu:
 
         while True:
 
-            self.screen.blit(self.StageSelect_text, [5, 5])     #テキストStageSelectを描画
-            self.screen.blit(self.RightArrow_text, [865, 220])  #テキスト ＞ を描画
-            self.screen.blit(self.LeftArrow_text, [5, 220])     #テキスト ＞ を描画
-            self.screen.blit(self.back_text,[800, 5])
+            self.screen.blit(self.StageSelect_text, [105, 5])     #テキストStageSelectを描画
+            self.screen.blit(self.RightArrow_text, [965, 220])  #テキスト ＞ を描画
+            self.screen.blit(self.LeftArrow_text, [105, 220])     #テキスト ＞ を描画
+            self.screen.blit(self.back_text,[900, 5])
 
             self.Select_Stage()     #ステージ選択処理
 
             if self.back_num == 1:
-                pygame.draw.rect(self.screen,(255,255,0),Rect(790,3,155,60),5)
+                pygame.draw.rect(self.screen,(255,255,0),Rect(890,3,155,60),5)
 
             pygame.display.update()
 
@@ -63,15 +63,10 @@ class Menu:
             
     
     def Select_Stage(self):         #選択しているステージを描画
-        if self.stage_num == 1:
-            self.screen.blit(self.Stage1_text, [110, 80])
-            pygame.draw.rect(self.screen,(0,0,255),Rect(100,70,760,460),5)
-        elif self.stage_num == 2:
-            self.screen.blit(self.Stage2_text, [110, 80])
-            pygame.draw.rect(self.screen,(0,255,0),Rect(100,70,760,460),5)
-        elif self.stage_num == 3:
-            self.screen.blit(self.Stage3_text, [110, 80])
-            pygame.draw.rect(self.screen,(255,0,0),Rect(100,70,760,460),5)
+        color = [(0,0,255),(0,255,0), (255,0,0)]
+        stage = [self.Stage1_text, self.Stage2_text, self.Stage3_text]
+        self.screen.blit(stage[self.stage_num-1], [210, 80])
+        pygame.draw.rect(self.screen,color[self.stage_num-1],Rect(200,70,760,460),5)
     
     def Key_Event(self,event):
         if self.back_num == 0:
