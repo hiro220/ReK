@@ -9,6 +9,7 @@ from initial_screen import *
 from menu import *
 from  score import *
 import pygame.mixer
+from help_explain import *
 
 class Main(pygame.sprite.Sprite):
 
@@ -24,15 +25,16 @@ class Main(pygame.sprite.Sprite):
             init_num = init_screen.draw(self.screen)    
 
             if init_num == START_GAME:      #選択したモードがSTART GAMEならメニュー画面に移動
-  
+
                 while True:
                     menu = Menu(self.screen)    #メニュー画面の描画
                     stageTxt = menu.draw()
                     if stageTxt == "0":
                         break
-                    self.Stage_draw(stageTxt)                
-            elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
-                print("help menu")
+                    self.Stage_draw(stageTxt)                       
+            elif init_num == Help:
+                help_c = Help_a(self.screen)
+                help_b = help_c.draw()
 
     def Stage_draw(self, stageTxt):
         stage = Stage(self.screen, "stage/" + stageTxt)
@@ -42,6 +44,7 @@ class Main(pygame.sprite.Sprite):
         if result[0] == EXIT:
             pygame.quit()
             sys.exit()
+
         elif result[0] == RETIRE:
             return
         select_num = self.StageResult_draw(result)
