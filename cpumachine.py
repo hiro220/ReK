@@ -97,7 +97,7 @@ class cpu3(CpuMachine):
 
         x, y = self.rect.midleft
         if R_time.get_ticks() - self.gun_start >= 1200:
-            super().Tracking_shoot(x, y)
+            super().shoot(x, y)
             self.gun_start = R_time.get_ticks() 
 
     """test"""
