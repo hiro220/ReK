@@ -13,7 +13,6 @@ class Gun:
         """引数は、発射する弾の当たり判定対象となる機体グループ。発射できる弾の上限値max(初期値は無限を意味する-1)"""
         self.max = self.num = max       # インスタンス変数max, numに引数の値をセットする
         self.machines = machines
-        self.rect = Rect(0,0,960,600)                         #画面の大きさのrect
         self.principal = principal                               #弾を打つ本人の位置情報
         self.count = 0
         self.gun_start = R_time.get_ticks()

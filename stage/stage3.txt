@@ -1,5 +1,6 @@
 size    200
 rule    NORMAL
+bg      STAR
 
 0
 CPU0    300
