@@ -24,10 +24,13 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.move_flag = 0
         self.clear_flag = 0
         self.invincible_flag = 0
+        self.shot_flag = False
         self.invin_start = R_time.get_ticks()
+        self.shot_time = R_time.get_ticks()
         self.move_save = [[640,280],4]
         self.dx,self.dy = -2,0
         self.shot_list = []
+        self.shot_list2 = []
 
     def update(self):
         self.move(self.dx, self.dy)
@@ -36,7 +39,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.Move_set()                                             #HPが５以下になるとボスの位置を戻す
         
         if R_time.get_ticks() - self.gun_start >= 140 and self.summon_flag == 1:
-            Stage1_sub(610, 600, self.machines, self.score, self.load_count, self)
+            Stage1_sub(580, 600, self.machines, self.score, self.load_count, self)
             self.load_count += 1
             self.gun_start = R_time.get_ticks()
         if self.load_count == 18:
@@ -54,11 +57,14 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         
         if R_time.get_ticks() - self.gun_start >= 3500 and self.load_count == 18:
             self.move_flag = 0
-        if self.move_flag == 0 and self.summon_flag == None and R_time.get_ticks() - self.gun_start >= 1200:
-            self.shot_list = random.sample(range(18), k=4)
-            self.gun_start = R_time.get_ticks() 
-
+        
+        self.Cpu_shot_rule()
         self.Shield_loop()                                      #シールドを再配置する
+
+        if R_time.get_ticks() - self.shot_time >= 4000 and self.shot_flag:
+            self.Shot_rule()
+            super().shoot(self.rect.right, self.rect.centery)
+            self.shot_time = R_time.get_ticks()
                
         #print(self.groups()[1])
         #print(self.move_flag)
@@ -66,6 +72,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         #print(self.rect.left,self.rect.top)
         #print(mg.centerx,mg.centery)
         #print(self.clear_flag)
+        print(self.invincible_flag)
         print(self.hp.hp)
         
     def move_rule(self):
@@ -112,18 +119,18 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.move_save = [[640,280],4]
 
     def Invincible(self):
-        if R_time.get_ticks() - self.invin_start >= 3000 and self.invincible_flag == 0:
-            self.shield.value.hp.__init__(5)
-            self.hp.__init__(10)
+        if self.shield.value != None and self.invincible_flag == 0:
+            Timer(3000,self.shield.value.hp.__init__,5)
+            Timer(3000,self.hp.__init__,10)
+            Timer(3000,self.Change_flag)
             self.invincible_flag = 1
     
     def Invincible2(self):
         if self.hp.hp <= 5 and self.invincible_flag == 1:
             self.hp.__init__(10000)
-            self.invin_start = R_time.get_ticks()
-            self.invincible_flag = 2
-        elif R_time.get_ticks() - self.invin_start >= 10000 and self.invincible_flag == 2:
-            self.hp.__init__(5)
+            self.Change_flag()
+            Timer(10000,self.hp.__init__,5)
+            Timer(10000,self.Change_flag)
             self.invincible_flag = None
     
     def Move_set(self):
@@ -137,6 +144,23 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
                 self.shield = Timer(5000,Shield,5,self)
         elif self.invincible_flag == 2:
             self.shield.kill()
+    
+    def Shot_rule(self):                                 #ボスの銃を変更する
+        self.gun = Twist_Gun(self.machines, self, -1)
+        self.gun = Circle_Gun(self.machines, self, -1)
+        self.gun = Beam_Gun(self.machines, self, -1)
+    
+    def Cpu_shot_rule(self):
+        if self.move_flag == 0 and self.summon_flag == None and R_time.get_ticks() - self.gun_start >= 1200:
+            self.shot_list = random.sample(range(18), k=4)
+            self.shot_list2 = random.sample(range(18), k=2)
+            self.gun_start = R_time.get_ticks()
+
+    def Change_flag(self):
+        if self.shot_flag == False:
+            self.shot_flag = True
+        elif self.shot_falg == True:
+            self.shot_flag = False 
 
 class Stage1_sub(Boss):                                  #ボス付属品の機体
     def __init__(self, x, y, players, score, sub_number, boss):              
@@ -150,7 +174,7 @@ class Stage1_sub(Boss):                                  #ボス付属品の機�
         self.rad = 0
         self.move_flag = 0
         self.dx,self.dy = 0,-4
-        self.gun = Opposite_Gun(self.machines, self, 100)
+        #self.gun = Opposite_Gun(self.machines, self, 100)
 
     def update(self):
         self.Invincible()                           #サブマシンのHPを再設定する
@@ -165,9 +189,15 @@ class Stage1_sub(Boss):                                  #ボス付属品の機�
             self.rad = 0
         if self.rect.top <= 280:
             self.move_flag =1
-        if self.sub_number in self.boss.shot_list and R_time.get_ticks() - self.gun_start >= 4000:
-            super().shoot(self.rect.centerx, self.rect.centery)
-            self.gun_start = R_time.get_ticks()
+        if  R_time.get_ticks() - self.gun_start >= 4000:
+            if self.sub_number in self.boss.shot_list:
+                self.gun = Opposite_Gun(self.machines, self, 100)
+                super().shoot(self.rect.centerx, self.rect.centery)
+                self.gun_start = R_time.get_ticks()
+            elif self.sub_number in self.boss.shot_list2:
+                self.gun = Tracking_Gun(self.machines, self, 100)
+                super().shoot(self.rect.centerx, self.rect.centery)
+                self.gun_start = R_time.get_ticks()
 
     def Invincible(self):
         if R_time.get_ticks() - self.invin_start >= 250*self.sub_number and self.invincible_flag == 0:
