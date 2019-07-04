@@ -131,7 +131,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.Change_flag()
             Timer(10000,self.hp.__init__,5)
             Timer(10000,self.Change_flag)
-            self.invincible_flag = None
+            self.invincible_flag = 2
     
     def Move_set(self):
         if self.invincible_flag == 2 and self.clear_flag == 0:
@@ -146,9 +146,9 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.shield.kill()
     
     def Shot_rule(self):                                 #ボスの銃を変更する
-        self.gun = Twist_Gun(self.machines, self, -1)
-        """self.gun = Circle_Gun(self.machines, self, -1)
-        self.gun = Beam_Gun(self.machines, self, -1)"""
+        #self.gun = Twist_Gun(self.machines, self, -1)
+        #self.gun = Circle_Gun(self.machines, self, 100)
+        self.gun = Beam_Gun(self.machines, self, -1)
     
     def Cpu_shot_rule(self):
         if self.move_flag == 0 and self.summon_flag == None and R_time.get_ticks() - self.gun_start >= 1200:
@@ -160,7 +160,10 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         if self.shot_flag == False:
             self.shot_flag = True
         elif self.shot_flag == True:
-            self.shot_flag = False 
+            self.shot_flag = False
+
+        if self.invincible_flag == 2:
+            self.invincible_flag = None 
 
 class Stage1_sub(Boss):                                  #ボス付属品の機体
     def __init__(self, x, y, players, score, sub_number, boss):              
