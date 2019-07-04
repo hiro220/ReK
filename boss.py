@@ -63,7 +63,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
 
         if R_time.get_ticks() - self.shot_time >= 4000 and self.shot_flag:
             self.Shot_rule()
-            super().shoot(self.rect.right, self.rect.centery)
+            super().shoot(self.rect.left, self.rect.centery)
             self.shot_time = R_time.get_ticks()
                
         #print(self.groups()[1])
@@ -147,8 +147,8 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
     
     def Shot_rule(self):                                 #ボスの銃を変更する
         self.gun = Twist_Gun(self.machines, self, -1)
-        self.gun = Circle_Gun(self.machines, self, -1)
-        self.gun = Beam_Gun(self.machines, self, -1)
+        """self.gun = Circle_Gun(self.machines, self, -1)
+        self.gun = Beam_Gun(self.machines, self, -1)"""
     
     def Cpu_shot_rule(self):
         if self.move_flag == 0 and self.summon_flag == None and R_time.get_ticks() - self.gun_start >= 1200:
@@ -159,7 +159,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
     def Change_flag(self):
         if self.shot_flag == False:
             self.shot_flag = True
-        elif self.shot_falg == True:
+        elif self.shot_flag == True:
             self.shot_flag = False 
 
 class Stage1_sub(Boss):                                  #ボス付属品の機体
