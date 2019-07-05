@@ -4,19 +4,22 @@
 import pygame
 from pygame.locals import *
 import sys
-from stage import *
-from initial_screen import *
-from menu import *
-from  score import *
+from stage import Stage
+from initial_screen import Initial_Screen
+from menu import Menu
+from  score import Score
 import pygame.mixer
 import database as db
-from help_explain import *
+from define import *
+from help_explain import Help_a, Help_print
 
 class Main(pygame.sprite.Sprite):
 
     def __init__(self):
         """pygame、ウィンドウなどの初期化処理"""
         pygame.init()   # pygameの初期化
+        self.data = db.load()
+        self.data_check()
 
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
         
@@ -37,8 +40,7 @@ class Main(pygame.sprite.Sprite):
                 help_c = Help_a(self.screen)
                 help_b = help_c.draw()
             elif init_num == End:
-                pygame.quit()
-                sys.exit()
+                self.exit()
 
     def Stage_draw(self, stage_id, stageTxt):
         stage = Stage(self.screen, "stage/" + stageTxt)
@@ -46,12 +48,11 @@ class Main(pygame.sprite.Sprite):
         pygame.mixer.music.play(-1)                     # 音楽の再生回数(ループ再生)
         result = stage.loop()
         if result[0] == EXIT:
-            pygame.quit()
-            sys.exit()
+            self.exit()
 
         elif result[0] == RETIRE:
             return
-        select_num = self.StageResult_draw(stage_id, result)
+        self.StageResult_draw(stage_id, result)
         return
 
     def StageResult_draw(self, stage_id, result):
@@ -67,9 +68,10 @@ class Main(pygame.sprite.Sprite):
         self.screen.blit(Score_text, [460, 470])
         self.screen.blit(Enter_text, [5, 5])
 
-        if result[0] ==  GAMECLEAR:
+        if result[0] == GAMECLEAR:
             image = pygame.image.load("img/gameclear.jpg").convert_alpha()
             self.screen.blit(image, [255, 50])
+            self.data["money"] += result[2]
             db.insert_score(stage_id, result[1])
             print(sorted(db.load_ranking(stage_id), key=lambda x:x[1], reverse=True))
         elif result[0] == GAMEOVER:
@@ -84,9 +86,19 @@ class Main(pygame.sprite.Sprite):
                     if event.key == K_RETURN:
                         return 
                 if event.type == QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    self.exit()
+        
+    def data_check(self):
+        for key, cast in data_key.items():
+            if key in self.data:
+                self.data[key] = cast(self.data[key])
+            else:
+                self.data[key] = cast()
 
+    def exit(self):
+        db.save(self.data)
+        pygame.quit()
+        sys.exit()
 
 if __name__=='__main__':
 

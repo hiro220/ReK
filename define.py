@@ -66,4 +66,4 @@ STAR = "STAR"
 # timer
 R_time = ReK_time()
 
-data_key = ["money", "stage_progress"]
+data_key = {"money":int, "stage_progress":int}

@@ -11,7 +11,7 @@ from item import *
 from define import *
 from out_range import *
 from timer import Timer
-from score import *
+from score import Score
 from boss import *
 from money import *
 import pygame.mixer
@@ -77,7 +77,7 @@ class Stage:
             self.draw()
             if not result == CONTINUE:
                 break            
-        return result
+        return result, self.score.return_score(), self.money.money
 
     def stage_process(self):
         # 1フレームごとの処理
@@ -92,10 +92,10 @@ class Stage:
 
         if self.isGameOver():
             pygame.mixer.music.stop()
-            return GAMEOVER, self.score.return_score()                 # ゲームオーバー条件が満たされた
+            return GAMEOVER                 # ゲームオーバー条件が満たされた
         if self.isClear():
             pygame.mixer.music.stop()
-            return GAMECLEAR, self.score.return_score()                # ゲームクリア条件が満たされた
+            return GAMECLEAR                # ゲームクリア条件が満たされた
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
                 return EXIT, -1
