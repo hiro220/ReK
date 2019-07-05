@@ -42,7 +42,7 @@ def load_ranking(stage_id):
     conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
-    ranking = [data for data in cur.execute('SELECT * FROM ranking WHERE stage=?', str(stage_id))]
+    ranking = [data for data in cur.execute('SELECT score FROM ranking WHERE stage=?', str(stage_id))]
     # データベースへのコネクションを閉じる
     conn.close()
     return ranking
@@ -79,3 +79,17 @@ def load():
     # データベースへのコネクションを閉じる
     conn.close()
     return data_dic
+
+if __name__=='__main__':
+    # データベース
+    conn = sqlite3.connect(db)
+    # sqliteを操作するカーソルオブジェクトを作成
+    cur = conn.cursor()
+    cur.execute("DROP TABLE ranking")
+    cur.execute("DROP TABLE data")
+    cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='ranking'")
+    print("ranking table deleted :", cur.fetchone()[0] == 0)
+    cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='data'")
+    print("data table deleted :", cur.fetchone()[0] == 0)
+    conn.commit()
+    conn.close()
