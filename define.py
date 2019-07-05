@@ -58,8 +58,12 @@ SCORE_BASED = "SCORE_BASED"
 Move_range = Rect(440,40,480,480)
 mg = Move_range
 Correction = 10
+
 # stage background
 SKY = "SKY"
 STAR = "STAR"
 
+# timer
 R_time = ReK_time()
+
+data_key = ["money", "stage_progress"]
