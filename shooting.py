@@ -7,7 +7,6 @@ import sys
 from stage import Stage
 from initial_screen import Initial_Screen
 from menu import Menu
-from  score import Score
 import pygame.mixer
 import database as db
 from define import *
@@ -65,7 +64,7 @@ class Main(pygame.sprite.Sprite):
         Score_text = Score_font.render("SCORE: " + str(result[1]), True, (255,255,255))
         Enter_text = Enter_font.render("ENTER:RETURN", True, (255,255,255))
 
-        self.screen.blit(Score_text, [460, 470])
+        self.screen.blit(Score_text, [460, 500])
         self.screen.blit(Enter_text, [5, 5])
 
         if result[0] == GAMECLEAR:
@@ -73,7 +72,7 @@ class Main(pygame.sprite.Sprite):
             self.screen.blit(image, [255, 50])
             self.data["money"] += result[2]
             db.insert_score(stage_id, result[1])
-            print(sorted(db.load_ranking(stage_id), key=lambda x:x[1], reverse=True))
+            self.draw_ranking(sorted(db.load_ranking(stage_id)))
         elif result[0] == GAMEOVER:
             image = pygame.image.load("img/gameover.jpg").convert_alpha()
             self.screen.blit(image, [270, 10])
@@ -88,6 +87,13 @@ class Main(pygame.sprite.Sprite):
                 if event.type == QUIT:
                     self.exit()
         
+    def draw_ranking(self, ranking):
+        for i, data in enumerate(ranking):
+            score = pygame.font.Font("freesansbold.ttf", 50).render(str(i+1) + " : " + str(data[0]), True, (255,255,255))
+            self.screen.blit(score, [550, 180+50*(i+1)])
+            if i == 4:
+                break
+
     def data_check(self):
         for key, cast in data_key.items():
             if key in self.data:
