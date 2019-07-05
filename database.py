@@ -4,6 +4,7 @@ import sqlite3
 
 db = 'data/savedata.db'
 
+
 # データベース
 conn = sqlite3.connect(db)
 # sqliteを操作するカーソルオブジェクトを作成
@@ -54,7 +55,7 @@ def save(data_dic):
 
     for key, value in data_dic.items():
         # keyがテーブル内に存在するなら更新、存在しないなら追加する。
-        cur.execute("SELECT COUNT(*) FROM data WHERE key=?", key)
+        cur.execute("SELECT COUNT(*) FROM data WHERE key=?", [key])
         if cur.fetchone()[0] == 0:
             cur.execute("INSERT INTO data(key, value) values(?, ?)", [key, value])
         else:
