@@ -13,7 +13,7 @@ cur = conn.cursor()
 # rankingテーブルが存在しないとき、作成する
 cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='ranking'")
 if cur.fetchone()[0] == 0:
-    cur.execute('CREATE TABLE ranking(stage INTEGER, score INTEGER)')
+    cur.execute('CREATE TABLE ranking(id INTEGER PRIMARY KEY, stage INTEGER, score INTEGER)')
 
 # dataテーブルが存在しないとき、作成する
 cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='data'")
@@ -42,7 +42,7 @@ def load_ranking(stage_id):
     conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
-    ranking = [data for data in cur.execute('SELECT score FROM ranking WHERE stage=?', str(stage_id))]
+    ranking = [data for data in cur.execute('SELECT id, score FROM ranking WHERE stage=?', str(stage_id))]
     # データベースへのコネクションを閉じる
     conn.close()
     return ranking
