@@ -74,7 +74,7 @@ class Stage:
 |`Circle_Gun`|周囲へ同時に通常弾を撃つ|
 |`Twist_Gun`|左方向へ周期的に弾を撃つ|
 |`Beam_Gun`|左方向へビームを撃つ|
-
+|`Missile_Gun`|相手を追尾するミサイルを撃つ|
 
 
 ## アイテムの作成
