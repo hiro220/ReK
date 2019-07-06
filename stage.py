@@ -43,6 +43,8 @@ class Stage:
         self.clock = pygame.time.Clock()        # 時間管理用
         R_time.restart()
 
+        self.continue_num = 1
+
         self.process = self.stage_process
         self.draw = self.stage_draw
         
@@ -91,8 +93,9 @@ class Stage:
         pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
 
         if self.isGameOver():
-            pygame.mixer.music.stop()
-            return GAMEOVER, self.score.return_score()                 # ゲームオーバー条件が満たされた
+            if not self.select_continued():
+                pygame.mixer.music.stop()
+                return GAMEOVER, self.score.return_score()                 # ゲームオーバー条件が満たされた
         if self.isClear():
             pygame.mixer.music.stop()
             return GAMECLEAR, self.score.return_score()                # ゲームクリア条件が満たされた
@@ -142,6 +145,14 @@ class Stage:
         pygame.draw.rect(self.screen, (100, 0, 150), Rect(120, HEIGHT-80-length, 30, length))   # Bulletバー
         pygame.draw.rect(self.screen, (255, 255, 255), Rect(120, HEIGHT-380, 30, 300), 3)       # 枠線
 
+    def select_continued(self):
+        if self.continue_num:
+            pass    # コンティニュー可能なときの処理
+            while True:
+                
+                self.stage_draw()
+        else:
+            return False
 
     def pause_process(self):
         for event in pygame.event.get():
