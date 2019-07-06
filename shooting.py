@@ -48,7 +48,6 @@ class Main(pygame.sprite.Sprite):
         result = stage.loop()
         if result[0] == EXIT:
             self.exit()
-
         elif result[0] == RETIRE:
             return
         self.StageResult_draw(stage_id, result)
@@ -72,7 +71,7 @@ class Main(pygame.sprite.Sprite):
             self.screen.blit(image, [255, 50])
             self.data["money"] += result[2]
             db.insert_score(stage_id, result[1])
-            self.draw_ranking(sorted(db.load_ranking(stage_id)))
+            self.draw_ranking(sorted(db.load_ranking(stage_id), key=lambda x:x[1], reverse=True))
         elif result[0] == GAMEOVER:
             image = pygame.image.load("img/gameover.jpg").convert_alpha()
             self.screen.blit(image, [270, 10])
@@ -88,12 +87,19 @@ class Main(pygame.sprite.Sprite):
                     self.exit()
         
     def draw_ranking(self, ranking):
+        this_score = max(ranking, key=lambda x:x[0])
+        ranking = ranking[:6]
+        pre_score = -1
+        rank = 0
         for i, data in enumerate(ranking):
-            score = pygame.font.Font("freesansbold.ttf", 50).render(str(i+1) + " : " + str(data[0]), True, (255,255,255))
+            if pre_score != data[1]:
+                rank += 1
+            color = (255,255,255)
+            if this_score[0] == data[0]:
+                color = (255,0,0)
+            score = pygame.font.Font("freesansbold.ttf", 50).render(str(rank+1) + " : " + str(data[1]), True, color)
             self.screen.blit(score, [550, 180+50*(i+1)])
-            if i == 4:
-                break
-
+            
     def data_check(self):
         for key, cast in data_key.items():
             if key in self.data:
