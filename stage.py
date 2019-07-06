@@ -98,7 +98,7 @@ class Stage:
             return GAMECLEAR                # ゲームクリア条件が満たされた
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
-                return EXIT, -1
+                return EXIT
             if event.type == KEYDOWN:       # キー入力があった時
                 if event.key == K_SPACE:
                     R_time.stop()
@@ -146,14 +146,14 @@ class Stage:
     def pause_process(self):
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
-                return EXIT, -1
+                return EXIT
             if event.type == KEYDOWN:
                 if event.key == K_SPACE:
                     pygame.mixer.music.unpause()
                     R_time.restart()
                     self.process, self.draw = self.stage_process, self.stage_draw
                 elif event.key == K_q:
-                    return RETIRE, -1
+                    return RETIRE
         return CONTINUE
 
     def pause_draw(self):
