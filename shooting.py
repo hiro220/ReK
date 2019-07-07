@@ -97,7 +97,7 @@ class Main(pygame.sprite.Sprite):
             color = (255,255,255)
             if this_score[0] == data[0]:
                 color = (255,0,0)
-            score = pygame.font.Font("freesansbold.ttf", 50).render(str(rank+1) + " : " + str(data[1]), True, color)
+            score = pygame.font.Font("freesansbold.ttf", 50).render(str(rank) + " : " + str(data[1]), True, color)
             self.screen.blit(score, [550, 180+50*(i+1)])
             
     def data_check(self):
