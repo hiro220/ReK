@@ -93,21 +93,26 @@ class Main(pygame.sprite.Sprite):
                     self.exit()
         
     def draw_ranking(self, ranking):
+        # 新しいデータ順にソート
         ranking = sorted(ranking, key=lambda x:x[0], reverse=True)
+        # スコアの高い順にソート
         ranking = sorted(ranking, key=lambda x:x[1], reverse=True)
+        # 今回の結果データを抽出
         this_score = max(ranking, key=lambda x:x[0])
-        ranking = ranking[:6]
         pre_score = -1
         rank = 0
+        pos = 0
         for i, data in enumerate(ranking):
             if pre_score != data[1]:
                 pre_score = data[1]
-                rank += 1
+                rank = i+1
             color = (255,255,255)
             if this_score[0] == data[0]:
                 color = (255,0,0)
-            score = pygame.font.Font("freesansbold.ttf", 50).render(str(rank) + " : " + str(data[1]), True, color)
-            self.screen.blit(score, [550, 180+50*(i+1)])
+            if i < 5 or this_score[0]==data[0]:
+                score = pygame.font.Font("freesansbold.ttf", 50).render(str(rank) + " : " + str(data[1]), True, color)
+                self.screen.blit(score, [550, 180+50*(pos+1)])
+                pos += 1
             
     def data_check(self):
         for key, cast in data_key.items():
