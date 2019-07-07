@@ -70,6 +70,8 @@ class Main(pygame.sprite.Sprite):
         result, score, money = result
 
         if result == GAMECLEAR:
+            if self.data["stage_progress"] < stage_id:
+                self.data["stage_progress"] = stage_id
             image = pygame.image.load("img/gameclear.jpg").convert_alpha()
             self.screen.blit(image, [255, 50])
             self.data["money"] += money
