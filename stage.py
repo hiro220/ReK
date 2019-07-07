@@ -63,9 +63,8 @@ class Stage:
         
         PlayerMachine.containers = self.group, self.players2, self.players     # プレイヤーマシンにグループを割り当てる
         CpuMachine.containers = self.group, self.cpus2, self.cpus           # cpuマシンにグループを割り当てる
-        Bullet.containers = self.group                          # 弾にグループを割り当てる
         Item.containers = self.group
-        Bullet.containers = self.group, self.bullets            # 弾にグループを割り当てる
+        Bullet.containers = self.bullets            # 弾にグループを割り当てる
         Beam.containers = self.group, self.beams
         Range.containers = self.ranges                          # 範囲にグループを割り当てる
         Range2.containers = self.ranges2                        # 範囲にグループを割り当てる
@@ -87,13 +86,21 @@ class Stage:
         self.moveStage()                    # ステージを動かす
         self.player.move()     # 入力に応じてプレイヤーの機体を動かす
         self.group.update()                 # groupに割り当てられたすべてのスプライトを更新する
+        self.bullet.update()
         self.timers.update()
 
         pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にでるとグループから削除される
         pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
 
         if self.isGameOver():
-            if not self.select_continued():
+            pygame.mixer.music.pause()
+            R_time.stop()
+            if self.select_continued():
+                R_time.restart()
+                pygame.mixer.music.unpause()
+                self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20))
+                self.continue_num -= 1
+            else:
                 pygame.mixer.music.stop()
                 return GAMEOVER, self.score.return_score()                 # ゲームオーバー条件が満たされた
         if self.isClear():
@@ -127,6 +134,7 @@ class Stage:
         self.screen.blit(self.image, (-self.x, 0))                      # 背景画像の描画
         self.screen.blit(self.sub_image, (-self.x+self.width, 0))       # 対になる背景画像を繋げて描画
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
+        self.bullets.draw(self.screen)
         self.draw_info()
         self.score.draw(self.screen)
         self.money.draw(self.screen)
@@ -146,11 +154,27 @@ class Stage:
         pygame.draw.rect(self.screen, (255, 255, 255), Rect(120, HEIGHT-380, 30, 300), 3)       # 枠線
 
     def select_continued(self):
+        self.stage_draw()
         if self.continue_num:
             pass    # コンティニュー可能なときの処理
+            text = "Continuable " + str(self.continue_num) + " Times"
+            text = pygame.font.Font("freesansbold.ttf", 60).render(text, True, (255,255,255))
+            yes_text = pygame.font.Font("freesansbold.ttf", 40).render("Yes", True, (255,255,255))
+            no_text = pygame.font.Font("freesansbold.ttf", 40).render("No", True, (255,255,255))
+            select = 0
             while True:
-                
                 self.stage_draw()
+                self.screen.blit(text,[WIDTH/2-200, HEIGHT/4-50])
+                self.screen.blit(yes_text,[WIDTH/2-150, HEIGHT/4+80])
+                self.screen.blit(no_text,[WIDTH/2+100, HEIGHT/4+80])
+                pygame.draw.rect(self.screen, (0,255,255), Rect(WIDTH/2+80-250*select, HEIGHT/4+75, 100, 50), 3)
+                pygame.display.update()
+                for event in pygame.event.get():
+                    if event.type == KEYDOWN:       # キー入力があった時
+                        if event.key == K_RETURN:
+                            return select
+                        if event.key in [K_RIGHT, K_LEFT]:
+                            select ^= 1
         else:
             return False
 
