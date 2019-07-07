@@ -86,7 +86,7 @@ class Stage:
         self.moveStage()                    # ステージを動かす
         self.player.move()     # 入力に応じてプレイヤーの機体を動かす
         self.group.update()                 # groupに割り当てられたすべてのスプライトを更新する
-        self.bullet.update()
+        self.bullets.update()
         self.timers.update()
 
         pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にでるとグループから削除される
