@@ -18,10 +18,13 @@ import pygame.mixer
 
 class Stage:
 
-    def __init__(self, screen, filename):
+    def __init__(self, screen, filename, data):
         """screenは描画対象。filenameはステージ内容を記述したテキストファイル"""
         self.screen = screen                    # 描画対象
         self.speed = 1                          # 背景の移動速度
+        self.data = data
+
+        CpuMachine.killed = self.data["kill"]
         
         self.initGroup()                        # グループを初期化する
 
@@ -76,7 +79,8 @@ class Stage:
             result = self.process()
             self.draw()
             if not result == CONTINUE:
-                break            
+                break
+        self.data["kill"] = CpuMachine.killed_count
         return result, self.score.return_score(), self.money.money
 
     def stage_process(self):
@@ -91,6 +95,7 @@ class Stage:
         pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
 
         if self.isGameOver():
+            self.data["death"] += 1
             pygame.mixer.music.stop()
             return GAMEOVER                 # ゲームオーバー条件が満たされた
         if self.isClear():

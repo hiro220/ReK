@@ -5,6 +5,8 @@ from rek_time import ReK_time
 
 """Rekでの、それぞれのファイルに共通の定数を定義している"""
 
+version = "1.0.0"
+
 # ウィンドウのサイズ
 WIDTH = 1160
 HEIGHT = 600
@@ -66,4 +68,4 @@ STAR = "STAR"
 # timer
 R_time = ReK_time()
 
-data_key = {"money":int, "stage_progress":int}
+data_key = {"money":int, "stage_progress":int, "version":str, "death":int, "kill":int, "sum_money":int, "play_time":float}

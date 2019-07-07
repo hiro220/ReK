@@ -18,6 +18,7 @@ class Main(pygame.sprite.Sprite):
         """pygame、ウィンドウなどの初期化処理"""
         pygame.init()   # pygameの初期化
         self.data = db.load()
+        print(self.data)
         self.data_check()
 
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
@@ -42,7 +43,8 @@ class Main(pygame.sprite.Sprite):
                 self.exit()
 
     def Stage_draw(self, stage_id, stageTxt):
-        stage = Stage(self.screen, "stage/" + stageTxt)
+        stage_file = "stage/" + stageTxt
+        stage = Stage(self.screen, stage_file, self.data)
         pygame.mixer.music.load("sound/sound1.mp3")     # 音楽ファイルの読み込み
         pygame.mixer.music.play(-1)                     # 音楽の再生回数(ループ再生)
         result = stage.loop()
@@ -65,14 +67,16 @@ class Main(pygame.sprite.Sprite):
 
         self.screen.blit(Score_text, [460, 500])
         self.screen.blit(Enter_text, [5, 5])
+        result, score, money = result
 
-        if result[0] == GAMECLEAR:
+        if result == GAMECLEAR:
             image = pygame.image.load("img/gameclear.jpg").convert_alpha()
             self.screen.blit(image, [255, 50])
-            self.data["money"] += result[2]
-            db.insert_score(stage_id, result[1])
+            self.data["money"] += money
+            self.data["sum_money"] += money
+            db.insert_score(stage_id, score)
             self.draw_ranking(sorted(db.load_ranking(stage_id), key=lambda x:x[1], reverse=True))
-        elif result[0] == GAMEOVER:
+        elif result == GAMEOVER:
             image = pygame.image.load("img/gameover.jpg").convert_alpha()
             self.screen.blit(image, [270, 10])
 
@@ -106,8 +110,10 @@ class Main(pygame.sprite.Sprite):
                 self.data[key] = cast(self.data[key])
             else:
                 self.data[key] = cast()
+        self.data['version'] = version
 
     def exit(self):
+        self.data["play_time"] += pygame.time.get_ticks()
         db.save(self.data)
         pygame.quit()
         sys.exit()

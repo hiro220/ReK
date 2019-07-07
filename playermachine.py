@@ -37,3 +37,6 @@ class PlayerMachine(Machine):
     
     def isGameOver(self):
         return not self.alive()
+
+    def death(self):
+        pass
