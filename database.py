@@ -30,8 +30,16 @@ def insert_score(stage_id, score):
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
 
+    # そのステージのスコアが1000を超えているならdeleteする
+    ranking = [data for data in cur.execute('SELECT id, score FROM ranking WHERE stage=?', str(stage_id))]
+    if len(ranking) > 1000:
+        ranking = sorted(ranking, lambda x:x[1])
+        data_id = ranking[0][0]
+        cur.execute("DELETE FROM ranking WHERE id=?", [data_id])
+
     cur.execute('INSERT INTO ranking(stage, score) values(?, ?)', [stage_id, score])
-        
+
+
     # データベースへの変更をコミット
     conn.commit()
     # データベースへのコネクションを閉じる
