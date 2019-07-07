@@ -63,7 +63,7 @@ class Shield(pygame.sprite.Sprite):
             self.machine.remove(self.group)
             self.flag = True
 
-    def hit(self, attack):
+    def hit(self, attack, lasting=False):
         if self.hp.damage(attack):                  # ダメージ計算
             self.kill()
             if self.flag:
