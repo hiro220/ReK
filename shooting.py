@@ -18,8 +18,8 @@ class Main(pygame.sprite.Sprite):
         """pygame、ウィンドウなどの初期化処理"""
         pygame.init()   # pygameの初期化
         self.data = db.load()
-        print(self.data)
         self.data_check()
+        print(self.data)
 
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
         
@@ -62,10 +62,10 @@ class Main(pygame.sprite.Sprite):
         Score_font = pygame.font.Font("freesansbold.ttf", 50)
         Enter_font = pygame.font.Font("freesansbold.ttf", 20)
 
-        Score_text = Score_font.render("SCORE: " + str(result[1]), True, (255,255,255))
+        #Score_text = Score_font.render("SCORE: " + str(result[1]), True, (255,255,255))
         Enter_text = Enter_font.render("ENTER:RETURN", True, (255,255,255))
 
-        self.screen.blit(Score_text, [460, 500])
+        #self.screen.blit(Score_text, [460, 500])
         self.screen.blit(Enter_text, [5, 5])
         result, score, money = result
 
@@ -99,6 +99,7 @@ class Main(pygame.sprite.Sprite):
         rank = 0
         for i, data in enumerate(ranking):
             if pre_score != data[1]:
+                pre_score = data[1]
                 rank += 1
             color = (255,255,255)
             if this_score[0] == data[0]:
