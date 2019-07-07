@@ -92,20 +92,25 @@ class Stage:
         pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にでるとグループから削除される
         pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
 
+        # ゲームオーバー条件が満たされた
         if self.isGameOver():
             pygame.mixer.music.pause()
             R_time.stop()
+            # コンティニューするか
             if self.select_continued():
                 R_time.restart()
                 pygame.mixer.music.unpause()
-                self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20))
+                self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20))  # 初期値にプレイヤー機を生成
                 self.continue_num -= 1
             else:
                 pygame.mixer.music.stop()
-                return GAMEOVER, self.score.return_score()                 # ゲームオーバー条件が満たされた
+                return GAMEOVER, self.score.return_score()
+
+        # ゲームクリア条件が満たされた
         if self.isClear():
             pygame.mixer.music.stop()
-            return GAMECLEAR, self.score.return_score()                # ゲームクリア条件が満たされた
+            return GAMECLEAR, self.score.return_score()
+
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
                 return EXIT, -1
@@ -121,7 +126,6 @@ class Stage:
         self.keyx += self.speed
         if self.keyx > self.size:         # 画面がステージサイズ分移動しているなら早期リターン
             return
-
         self.x += self.speed                # ステージの位置を移動させる
         if self.x - 1 >= self.width:        # 画像が端までいったとき、背景画像と反転画像を入れ替えて、位置を初期化する
             self.x = 0
@@ -155,14 +159,16 @@ class Stage:
 
     def select_continued(self):
         self.stage_draw()
+        # コンティニューできるか
         if self.continue_num:
-            pass    # コンティニュー可能なときの処理
+            # 表示する文字の設定
             text = "Continue? : " + str(self.continue_num) + " Times"
             text = pygame.font.Font("freesansbold.ttf", 60).render(text, True, (255,255,255))
             text_width = text.get_rect().centerx
             yes_text = pygame.font.Font("freesansbold.ttf", 40).render("Yes", True, (255,255,255))
             no_text = pygame.font.Font("freesansbold.ttf", 40).render("No", True, (255,255,255))
             select = 0
+            # Enterが押されるまで無限ループ
             while True:
                 self.stage_draw()
                 self.screen.blit(text,[WIDTH/2-text_width, HEIGHT/4-50])
@@ -175,8 +181,9 @@ class Stage:
                         if event.key == K_RETURN:
                             return select
                         if event.key in [K_RIGHT, K_LEFT]:
-                            select ^= 1
+                            select ^= 1         # xor演算(1, 0の反転)
         else:
+            # コンティニューできない
             return False
 
     def pause_process(self):
