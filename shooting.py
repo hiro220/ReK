@@ -77,7 +77,7 @@ class Main(pygame.sprite.Sprite):
             self.data["money"] += money
             self.data["sum_money"] += money
             db.insert_score(stage_id, score)
-            self.draw_ranking(sorted(db.load_ranking(stage_id), key=lambda x:x[1], reverse=True))
+            self.draw_ranking(db.load_ranking(stage_id))
         elif result == GAMEOVER:
             image = pygame.image.load("img/gameover.jpg").convert_alpha()
             self.screen.blit(image, [270, 10])
@@ -93,6 +93,8 @@ class Main(pygame.sprite.Sprite):
                     self.exit()
         
     def draw_ranking(self, ranking):
+        ranking = sorted(ranking, key=lambda x:x[0], reverse=True)
+        ranking = sorted(ranking, key=lambda x:x[1], reverse=True)
         this_score = max(ranking, key=lambda x:x[0])
         ranking = ranking[:6]
         pre_score = -1
