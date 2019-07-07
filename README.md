@@ -235,6 +235,7 @@ python database.py
 ```
 
 現在のバージョンでセーブされる項目は以下
+
 |data|Dictionary Key Name|veriable type|
 |:-:|:-:|:-:|
 |バージョン|`version`|`str`|
