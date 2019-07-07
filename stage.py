@@ -157,17 +157,18 @@ class Stage:
         self.stage_draw()
         if self.continue_num:
             pass    # コンティニュー可能なときの処理
-            text = "Continuable " + str(self.continue_num) + " Times"
+            text = "Continue? : " + str(self.continue_num) + " Times"
             text = pygame.font.Font("freesansbold.ttf", 60).render(text, True, (255,255,255))
+            text_width = text.get_rect().centerx
             yes_text = pygame.font.Font("freesansbold.ttf", 40).render("Yes", True, (255,255,255))
             no_text = pygame.font.Font("freesansbold.ttf", 40).render("No", True, (255,255,255))
             select = 0
             while True:
                 self.stage_draw()
-                self.screen.blit(text,[WIDTH/2-200, HEIGHT/4-50])
+                self.screen.blit(text,[WIDTH/2-text_width, HEIGHT/4-50])
                 self.screen.blit(yes_text,[WIDTH/2-150, HEIGHT/4+80])
                 self.screen.blit(no_text,[WIDTH/2+100, HEIGHT/4+80])
-                pygame.draw.rect(self.screen, (0,255,255), Rect(WIDTH/2+80-250*select, HEIGHT/4+75, 100, 50), 3)
+                pygame.draw.rect(self.screen, (0,255,255), Rect(WIDTH/2+80-240*select, HEIGHT/4+75, 100, 50), 3)
                 pygame.display.update()
                 for event in pygame.event.get():
                     if event.type == KEYDOWN:       # キー入力があった時
