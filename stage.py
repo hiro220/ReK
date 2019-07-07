@@ -24,7 +24,7 @@ class Stage:
         self.speed = 1                          # 背景の移動速度
         self.data = data
 
-        CpuMachine.killed = self.data["kill"]
+        CpuMachine.killed_count = self.data["kill"]
         
         self.initGroup()                        # グループを初期化する
 
