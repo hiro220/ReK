@@ -47,7 +47,7 @@ class Stage:
 
         self.process = self.stage_process
         self.draw = self.stage_draw
-        
+
 
     def initGroup(self):
         self.group = pygame.sprite.RenderUpdates()  # 描画する機体や弾用のグループ

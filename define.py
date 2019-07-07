@@ -18,7 +18,7 @@ Stage2 = "Stage2.txt"
 Stage3 = "Stage3.txt" 
 
 # 各ステージにおけるプレイヤー機体の初期位置
-PLAYER_X = 100
+PLAYER_X = 0
 PLAYER_Y = 300
 
 # stageにおける処理結果
