@@ -8,16 +8,16 @@ import random
 import math
 
 class Boss(Machine):
-    def __init__(self, hp, x, y, image, players, score):
-        super().__init__(hp, x, y, image, players, score) #superクラス(machine)を呼び出す
+    def __init__(self, hp, x, y, image, players, score, money):
+        super().__init__(hp, x, y, image, players, score, money) #superクラス(machine)を呼び出す
         self.dx, self.dy = 5, 5                           #bulletの移動量を指定する
         self.x, self.y = x, y                             #機体自身の位置を入力
         self.gun_start = R_time.get_ticks()               #Bossが呼ばれた時のクロック数を入力
 
 class Stage1_boss(Boss):                                 #ボス本体の機体
-    def __init__(self, x, y, players, score):
+    def __init__(self, x, y, players, score, money):
         image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
-        super().__init__(10000, x, y, image, players, score)         #superクラス(Boss)を呼び出す
+        super().__init__(10000, x, y, image, players, score, money)         #superクラス(Boss)を呼び出す
         self.shield  = Timer(0,Shield,10000,self)
         self.summon_flag = 0
         self.load_count = 0
@@ -27,10 +27,11 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.shot_flag = False
         self.invin_start = R_time.get_ticks()
         self.shot_time = R_time.get_ticks()
-        self.move_save = [[640,280],4]
+        self.move_save = [[mg.centerx,mg.centery],4]
         self.dx,self.dy = -2,0
         self.shot_list = []
         self.shot_list2 = []
+        self.money = money
 
     def update(self):
         self.move(self.dx, self.dy)
@@ -39,7 +40,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.Move_set()                                             #HPが５以下になるとボスの位置を戻す
         
         if R_time.get_ticks() - self.gun_start >= 140 and self.summon_flag == 1:
-            Stage1_sub(580, 600, self.machines, self.score, self.load_count, self)
+            Stage1_sub(mg.centerx-60, 600, self.machines, self.score, self.load_count, self, self.money)
             self.load_count += 1
             self.gun_start = R_time.get_ticks()
         if self.load_count == 18:
@@ -61,31 +62,31 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.Cpu_shot_rule()
         self.Shield_loop()                                      #シールドを再配置する
 
-        if R_time.get_ticks() - self.shot_time >= 4000 and self.shot_flag:
+        """if R_time.get_ticks() - self.shot_time >= 4000 and self.shot_flag:
             self.Shot_rule()
             super().shoot(self.rect.left, self.rect.centery)
-            self.shot_time = R_time.get_ticks()
+            self.shot_time = R_time.get_ticks()"""
                
         #print(self.groups()[1])
         #print(self.move_flag)
         #print(self.dx,self.dy)
-        #print(self.rect.left,self.rect.top)
+        print(self.rect.left,self.rect.top)
         #print(mg.centerx,mg.centery)
         #print(self.clear_flag)
-        print(self.invincible_flag)
+        #print(self.invincible_flag)
         print(self.hp.hp)
         
     def move_rule(self):
-        rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[440, 40]
-        rule1 = [[mg.left,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.left,mg.bottom]]     #[440,280]
-        rule2 = [[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.centerx,mg.bottom]]                                         #[440,520]
-        rule3 = [[mg.left,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.top]]       #[680, 40]
-        rule4 = [[mg.left,mg.top],[mg.left,mg.centery],[mg.left,mg.bottom],[mg.centerx,mg.bottom],[mg.right,mg.bottom],[mg.right,mg.centery],[mg.right,mg.top],[mg.centerx,mg.top]] #[720,300]
-        rule5 = [[mg.left,mg.bottom],[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.bottom]] #[680,520]
-        rule6 = [[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                           #[920, 40]
-        rule7 = [[mg.right,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.right,mg.bottom]]   #[960,300]
-        rule8 = [[mg.centerx,mg.bottom],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                        #[960,600]
-        point_list = [[400,40],[400,280],[400,520],[640,40],[640,280],[640,520],[880,40],[880,280],[880,520]]
+        rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[600, 40]
+        rule1 = [[mg.left,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.left,mg.bottom]]     #[600,280]
+        rule2 = [[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.centerx,mg.bottom]]                                         #[600,520]
+        rule3 = [[mg.left,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.top]]       #[840, 40]
+        rule4 = [[mg.left,mg.top],[mg.left,mg.centery],[mg.left,mg.bottom],[mg.centerx,mg.bottom],[mg.right,mg.bottom],[mg.right,mg.centery],[mg.right,mg.top],[mg.centerx,mg.top]] #[840,280]
+        rule5 = [[mg.left,mg.bottom],[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.bottom]] #[840,520]
+        rule6 = [[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                           #[1080, 40]
+        rule7 = [[mg.right,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.right,mg.bottom]]   #[1080,280]
+        rule8 = [[mg.centerx,mg.bottom],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                        #[1080,520]
+        point_list = [[mg.left,mg.top],[mg.left,mg.centery],[mg.left,mg.bottom],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.right,mg.top],[mg.right,mg.centery],[mg.right,mg.bottom]]
         move_list = [rule0,rule1,rule2,rule3,rule4,rule5,rule6,rule7,rule8]
 
         self.moving(move_list[self.move_save[1]],point_list)
@@ -116,7 +117,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.dx,self.dy = -2,2
         elif x < 0 and x < 0:
             self.dx,self.dy = -2,-2
-        self.move_save = [[640,280],4]
+        self.move_save = [[mg.centerx,mg.centery],4]
 
     def Invincible(self):
         if self.shield.value != None and self.invincible_flag == 0:
@@ -145,10 +146,10 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         elif self.invincible_flag == 2:
             self.shield.kill()
     
-    def Shot_rule(self):                                 #ボスの銃を変更する
+    """def Shot_rule(self):                                 #ボスの銃を変更する
         #self.gun = Twist_Gun(self.machines, self, -1)
         #self.gun = Circle_Gun(self.machines, self, 100)
-        self.gun = Beam_Gun(self.machines, self, -1)
+        self.gun = Beam_Gun(self.machines, self, -1)"""
     
     def Cpu_shot_rule(self):
         if self.move_flag == 0 and self.summon_flag == None and R_time.get_ticks() - self.gun_start >= 1200:
@@ -166,9 +167,9 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.invincible_flag = None 
 
 class Stage1_sub(Boss):                                  #ボス付属品の機体
-    def __init__(self, x, y, players, score, sub_number, boss):              
+    def __init__(self, x, y, players, score, sub_number, boss, money):              
         image = pygame.image.load("img/boss1_sub.png").convert_alpha()
-        super().__init__(10000, x, y, image, players, score)
+        super().__init__(10000, x, y, image, players, score, money)
         self.sub_number = sub_number                     #付属品のID
         self.boss = boss
         self.invincible_flag = 0

@@ -55,7 +55,7 @@ NORMAL = "NORMAL"
 SCORE_BASED = "SCORE_BASED"
 
 #bossの座標調整のための設定
-Move_range = Rect(400,40,WIDTH/2,WIDTH/2)
+Move_range = Rect(600,40,STAGE_WIDTH/2,STAGE_WIDTH/2)
 mg = Move_range
 Correction = 10
 # stage background
