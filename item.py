@@ -50,8 +50,7 @@ class Shield(pygame.sprite.Sprite):
         self.hp = Hp(firmness)                      # 引数で指定した堅さをhpとして保持
         self.rect = self.image.get_rect()           # 画像からrectを生成
         self.machine = machine                      # このシールドが守る機体の情報を保持
-        self.group = self.machine.groups()[1]
-        self.machine.remove(self.group)
+        self.flag = False
         self.update()                               # 更新する
 
     def update(self):
@@ -59,11 +58,16 @@ class Shield(pygame.sprite.Sprite):
         x1, y1 = self.rect.center                   # rectの中心を取得
         x2, y2 = rect.center                        # このシールドのrectの中心を取得
         self.rect.move_ip(x2-x1,y2-y1)              # 機体の移動分シールドを移動
+        if len(self.machine.groups()) == 3:
+            self.group = self.machine.groups()[2]
+            self.machine.remove(self.group)
+            self.flag = True
 
-    def hit(self, attack):
+    def hit(self, attack, lasting=False):
         if self.hp.damage(attack):                  # ダメージ計算
             self.kill()
-            self.machine.add(self.group)
+            if self.flag:
+                self.machine.add(self.group)
 
     def isMachine(self):
         # このクラスは機体ではない

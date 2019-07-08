@@ -3,6 +3,7 @@
 from machine import Machine
 import pygame
 from pygame.locals import *
+from gun import *
 from define import INFO_WIDTH, WIDTH, HEIGHT
 
 class PlayerMachine(Machine):
@@ -12,6 +13,8 @@ class PlayerMachine(Machine):
         image = pygame.image.load("img/player.png").convert_alpha()
         super().__init__(2, x, y, image, cpus, score, money)
         self.dx, self.dy = 7, 7                         # 移動量
+        self.cop_flag = True
+        self.gun = Beam_Gun(self.machines, self, 100)
 
     def move(self):
         key = pygame.key.get_pressed()      # 押されたキーを受け取る
