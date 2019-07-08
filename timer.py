@@ -23,3 +23,18 @@ class Timer(pygame.sprite.Sprite):
         if R_time.get_ticks() - self.init_time >= self.time:       # このインスタンスが生成されたときからの経過時間が設定した時間より長い
             self.value = self.process(*self.args)                                      # processを実行
             self.kill()                                         # このスプライトをグループから削除
+
+class FlagTimer(Timer):
+
+    def __init__(self, process, *args, flag=False):
+        pygame.sprite.Sprite.__init__(self, self.containers)
+        self.process = process
+        self.args = args
+        self.flag = flag
+
+    def update(self):
+        if self.flag:
+            self.flag = False
+        else:
+            self.process(*self.args)
+            self.kill()
