@@ -6,7 +6,6 @@ from gun import *
 from timer import *
 import random
 import math
-import sys
 
 class Boss(Machine):
     def __init__(self, hp, x, y, image, players, score, money):

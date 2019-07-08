@@ -7,6 +7,7 @@ import pygame
 from pygame.locals import *
 import math
 import random
+from timer import *
 
 class Gun:
 
@@ -90,24 +91,46 @@ class Twist_Gun(Gun):
         super().__init__(machines, principal, max)   #superクラス(Gun）を呼び出す
         self.standard_parameter = -10.0              #飛ばす弾の速度と角度を格納
         self.standard_angle = 0                      #飛ばす弾の角度を格納(例１５）
+        self.shot_flag = True
+        self.angle_count = 0
+        self.shot_count = 0
         if self.principal.cop_flag:
             self.standard_parameter *= -1
             
     def shoot(self, x, y):
-        dx = self.standard_parameter*math.cos(math.radians(self.standard_angle)) #飛ばす角度を指定してdxの値を変化させる
-        dy = self.standard_parameter*math.sin(math.radians(self.standard_angle)) #飛ばす角度を指定してdyの値を変化させる
-        Bullet(x, y, dx, dy, self.machines)
-        if self.standard_angle >= 45:                                            #角度が45度以上になると角度の変化が反時計回りになる
-            self.count = 1
+        while self.shot_flag:
+            self.count_angle()
+            dx = self.standard_parameter*math.cos(math.radians(self.standard_angle)) #飛ばす角度を指定してdxの値を変化させる
+            dy = self.standard_parameter*math.sin(math.radians(self.standard_angle)) #飛ばす角度を指定してdyの値を変化させる
+            Timer(100*self.shot_count,Bullet,x, y, dx, dy, self.machines)
+            self.shot_count += 1
+            if self.standard_angle >= 45:                                            #角度が45度以上になると角度の変化が反時計回りになる
+                self.count = 1
 
-        if self.standard_angle <= -45:                                           #角度が-45度以下になると角度の変化が時計回りになる
-            self.count = 0
+            if self.standard_angle <= -45:                                           #角度が-45度以下になると角度の変化が時計回りになる
+                self.count = 0
 
-        if self.count == 0:
-            self.standard_angle += 10                                            #変化角度を+10度する  
-        if self.count == 1:
-            self.standard_angle -= 10                                            #変化角度を-10度する
+            if self.count == 0:
+                self.standard_angle += 10                                            #変化角度を+10度する  
+            if self.count == 1:
+                self.standard_angle -= 10                                            #変化角度を-10度する
+            if self.angle_count == 3:
+                self.change_flag()
+                #Timer(2000,self.change_flag)
+                self.angle_count = 0
+                self.shot_count = 0
+            print(self.angle_count)
         self.num -= 1
+    
+    def change_flag(self):
+        if self.shot_flag:
+            self.shot_flag = False
+        else:
+            self.shot_flag = True
+
+    def count_angle(self):
+        if self.standard_angle == 0:
+            self.angle_count += 1
 
 class Beam_Gun(Gun):
     def __init__(self, machines, principal, max):
