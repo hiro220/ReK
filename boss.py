@@ -6,6 +6,7 @@ from gun import *
 from timer import *
 import random
 import math
+import sys
 
 class Boss(Machine):
     def __init__(self, hp, x, y, image, players, score, money):
@@ -32,6 +33,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.shot_list = []
         self.shot_list2 = []
         self.money = money
+        self.gun_list = [Twist_Gun(self.machines, self, -1),Circle_Gun(self.machines, self, -1),Beam_Gun(self.machines, self, -1)]
 
     def update(self):
         self.move(self.dx, self.dy)
@@ -62,19 +64,20 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.Cpu_shot_rule()
         self.Shield_loop()                                      #シールドを再配置する
 
-        """if R_time.get_ticks() - self.shot_time >= 4000 and self.shot_flag:
+        if R_time.get_ticks() - self.shot_time >= 4000 and self.shot_flag:
             self.Shot_rule()
             super().shoot(self.rect.left, self.rect.centery)
-            self.shot_time = R_time.get_ticks()"""
+            self.shot_time = R_time.get_ticks()
                
         #print(self.groups()[1])
         #print(self.move_flag)
         #print(self.dx,self.dy)
-        print(self.rect.left,self.rect.top)
+        #print(self.rect.left,self.rect.top)
         #print(mg.centerx,mg.centery)
         #print(self.clear_flag)
         #print(self.invincible_flag)
-        print(self.hp.hp)
+        #print()
+        #print(self.hp.hp)
         
     def move_rule(self):
         rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[600, 40]
@@ -146,10 +149,9 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         elif self.invincible_flag == 2:
             self.shield.kill()
     
-    """def Shot_rule(self):                                 #ボスの銃を変更する
-        #self.gun = Twist_Gun(self.machines, self, -1)
-        #self.gun = Circle_Gun(self.machines, self, 100)
-        self.gun = Beam_Gun(self.machines, self, -1)"""
+    def Shot_rule(self):                                 #ボスの銃を変更する
+        self.gun = self.gun_list[random.randint(0,2)]
+
     
     def Cpu_shot_rule(self):
         if self.move_flag == 0 and self.summon_flag == None and R_time.get_ticks() - self.gun_start >= 1200:
