@@ -103,7 +103,9 @@ class Stage:
                     R_time.stop()
                     pygame.mixer.music.pause()
                     self.process, self.draw = self.pause_process, self.pause_draw
-                self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
+                if event.key == K_x or event.key == K_v:
+                    self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
+                self.player.change(event.key)
         return CONTINUE
 
     def moveStage(self):

@@ -12,7 +12,7 @@ class PlayerMachine(Machine):
         image = pygame.image.load("img/player.png").convert_alpha()
         super().__init__(2, x, y, image, cpus, score)
         self.dx, self.dy = 7, 7                         # 移動量
-        gunpack = [None for i range(3)]
+        self.set = 0
 
     def move(self, height, width):
         key = pygame.key.get_pressed()      # 押されたキーを受け取る
@@ -35,6 +35,11 @@ class PlayerMachine(Machine):
 
     def change(self, key):
         if key == K_a:
+            self.gun = Circle_Gun(self.machines, self, 10)   
+        elif key == K_s:
+            self.gun = Reflection_Gun(self.machines, self, 10)
+        elif key == K_d:
+            super().change(2)
     
     def isGameOver(self):
         return not self.alive()
