@@ -45,7 +45,7 @@ class Initial_Screen:
          elif self.select_num == Help:                       
             screen.blit(self.choice_text, [505, 330])    #選択矢印->をHelpの横へ描画
          elif self.select_num == End:
-            screen.blit(self.choice_text, [505, 330])    #選択矢印->をHelpの横へ描画
+            screen.blit(self.choice_text, [505, 360])    #選択矢印->をHelpの横へ描画
 
     def Key_Event(self, event):     
             if event.key == K_UP:       #↑が押されたとき選択矢印->を上方向に移動（但し、一番上なら一番下に移動）
