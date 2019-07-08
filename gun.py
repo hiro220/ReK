@@ -6,6 +6,7 @@ from define import R_time
 import pygame
 from pygame.locals import *
 import math
+import random
 
 class Gun:
 
@@ -13,12 +14,11 @@ class Gun:
         """引数は、発射する弾の当たり判定対象となる機体グループ。発射できる弾の上限値max(初期値は無限を意味する-1)"""
         self.max = self.num = max       # インスタンス変数max, numに引数の値をセットする
         self.machines = machines
-        self.rect = Rect(0,0,960,600)                         #画面の大きさのrect
         self.principal = principal                               #弾を打つ本人の位置情報
         self.count = 0
         self.gun_start = R_time.get_ticks()
+        self.dx,self.dy = -10,0
         
-
     def isBulletZero(self):
         """銃弾数が0ならTrue
         そうでないならFalseを返す"""
@@ -29,15 +29,16 @@ class Gun:
 
     def shoot(self, x, y):
         """引数は弾の発射位置(x, y)"""
-        Bullet(x, y, 10, 0, self.machines)      # 弾を生成する(BulletクラスはMainクラスでグループ化されているため、返却する必要はない)
+        if self.principal.cop_flag:
+            Bullet(x, y, self.dx*-1, self.dy, self.machines)      # 弾を生成する(BulletクラスはMainクラスでグループ化されているため、返却する必要はない)
+        else:
+            Bullet(x+self.principal.rect.width, y, self.dx*-1, self.dy, self.machines)
         self.num -= 1
 
     def reload(self):
         self.num = self.max                     #bulletの玉数を上限に戻す
     
-    
 class Tracking_Gun(Gun):
-
     def shoot(self, x, y):
         play_list = self.machines.sprites()    #相手の設定情報を入手
         for play in play_list:   
@@ -48,15 +49,21 @@ class Tracking_Gun(Gun):
         self.num -= 1     #弾の残弾数を減らす                                                                       
 
 class Opposite_Gun(Gun): #右から左に弾を飛ばす
-
     def shoot(self, x, y):
-        Bullet(x, y, -10, 0, self.machines)
+        if self.principal.cop_flag:
+            Bullet(x-self.principal.rect.width, y, self.dx, self.dy, self.machines)
+        else:
+            Bullet(x, y, self.dx, self.dy, self.machines)
         self.num -= 1
         
-class Reflection_Gun(Gun): #反射弾を飛ばす
+class Reflection_Gun(Gun): #左から右に弾を飛ばす
+    def __init__(self, machines,principal, max):
+        super().__init__(machines,principal, max)
+        if principal.cop_flag:
+            self.dx = self.dx*-1
 
     def shoot(self, x, y):
-        Reflection_Bullet(x, y, -10, 0, self.machines)
+        Reflection_Bullet(x, y, self.dx, self.dy, self.machines)
         self.num -= 1
 
 class Circle_Gun(Gun):
@@ -69,12 +76,13 @@ class Circle_Gun(Gun):
                 Bullet(x, y, bullet_list[0],bullet_list[1], self.machines)
             self.gun_start = R_time.get_ticks()
             self.count = 1
+            self.num -= 1
         if  R_time.get_ticks() - self.gun_start >= 1200 and self.count == 1:
             for bullet_list in Bullet_list2:
                 Bullet(x, y, bullet_list[0], bullet_list[1], self.machines)
             self.gun_start = R_time.get_ticks()
             self.count = 0
-        self.num -= 1
+            self.num -= 1
 
 class Twist_Gun(Gun):
 
@@ -82,8 +90,10 @@ class Twist_Gun(Gun):
         super().__init__(machines, principal, max)   #superクラス(Gun）を呼び出す
         self.standard_parameter = -10.0              #飛ばす弾の速度と角度を格納
         self.standard_angle = 0                      #飛ばす弾の角度を格納(例１５）
+        if self.principal.cop_flag:
+            self.standard_parameter *= -1
+            
     def shoot(self, x, y):
-        
         dx = self.standard_parameter*math.cos(math.radians(self.standard_angle)) #飛ばす角度を指定してdxの値を変化させる
         dy = self.standard_parameter*math.sin(math.radians(self.standard_angle)) #飛ばす角度を指定してdyの値を変化させる
         Bullet(x, y, dx, dy, self.machines)

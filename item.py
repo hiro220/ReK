@@ -63,7 +63,7 @@ class Shield(pygame.sprite.Sprite):
             self.machine.remove(self.group)
             self.flag = True
 
-    def hit(self, attack):
+    def hit(self, attack, lasting=False):
         if self.hp.damage(attack):                  # ダメージ計算
             self.kill()
             if self.flag:
@@ -72,6 +72,10 @@ class Shield(pygame.sprite.Sprite):
     def isMachine(self):
         # このクラスは機体ではない
         return False
+
+    def __del__(self):
+        if len(self.machine.groups()) != 3:
+            self.machine.add(self.group)
 
 class ShieldItem(Item):
     """取得した機体にシールドを与えるアイテム"""
