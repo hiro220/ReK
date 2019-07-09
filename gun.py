@@ -132,5 +132,8 @@ class Beam_Gun(Gun):
 
 class Missile_Gun(Gun):
     def shoot(self, x, y):
-        Missile_Bullet(x, y, -10, 0, self.machines)
+        if self.principal.cop_flag:
+            Missile_Bullet(x, y, self.dx*-1, self.dy, self.machines, 1)
+        else:
+            Missile_Bullet(x, y, self.dx, self.dy, self.machines, 0)
         self.num -= 1

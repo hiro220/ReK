@@ -58,37 +58,67 @@ class Reflection_Bullet(Bullet):
                 machine.hit(1)
 
 class Missile_Bullet(Bullet):
-    def __init__(self, x, y, dx, dy, machines):
+
+    def __init__(self, x, y, dx, dy, machines, flag):
         super().__init__(x, y, dx, dy, machines)
         self.gun_start = R_time.get_ticks()
-        self.image = pygame.image.load("img/missile.png").convert_alpha()
-        self.flag = 0
+        self.cop_flag = flag
+        self.tracking_flag = 0
+
+        if self.cop_flag:
+            self.image = pygame.image.load("img/Pmissile.png").convert_alpha()
+        else:
+            self.image = pygame.image.load("img/missile.png").convert_alpha()
+
+        self.rect = self.image.get_rect()
+        self.rect.move_ip(x, y)
 
     def move(self):
-        self.rect.move_ip(self.dx, self.dy)
-        if R_time.get_ticks() - self.gun_start >= 600:
+        if self.cop_flag == 0:
+            self.rect.move_ip(self.dx, self.dy)
             play_list = self.machines.sprites()
-            x, y = self.rect.midleft
+            x, y = self.rect.center
             for play in play_list:
                 distance = math.sqrt((play.rect.centerx - x)**2 + (play.rect.centery - y)**2)
                 angle = math.degrees(math.atan2(play.rect.centery - y, x - play.rect.centerx))
-                if distance >= 150 and self.flag == 0:
+                if distance >= 150 and self.rect.centerx >= play.rect.centerx:
                     self.image = pygame.image.load("img/missile.png").convert_alpha()
                     distance2 = distance / 5
                     self.dx, self.dy = (play.rect.centerx - x) / distance2, (play.rect.centery - y) / distance2
                     self.rect.move_ip(self.dx, self.dy)
                     self.image = pygame.transform.rotate(self.image, angle)
                 else:
-                    self.flag = 1
                     self.rect.move_ip(self.dx, self.dy)
                     break
-                    
+        else:
+            self.rect.move_ip(self.dx, self.dy)
+            play_list = self.machines.sprites()
+            x, y = self.rect.center
+
+            mindistance = 1000
+            for play in play_list:
+                    distance = math.sqrt((play.rect.centerx - x)**2 + (play.rect.centery - y)**2)
+                    if distance < mindistance:
+                        mindistance = distance
+                        target = play
+
+            distance = math.sqrt((target.rect.centerx - x)**2 + (target.rect.centery - y)**2)
+            if distance >= 150:
+                self.image = pygame.image.load("img/Pmissile.png").convert_alpha()
+                distance2 = distance / 5
+                angle = math.degrees(math.atan2(y - target.rect.centery, target.rect.centerx - x))
+                self.dx, self.dy = (target.rect.centerx - x) / distance2, (target.rect.centery - y) / distance2
+                self.rect.move_ip(self.dx, self.dy)
+                self.image = pygame.transform.rotate(self.image, angle)
+            else:
+                self.rect.move_ip(self.dx, self.dy)
+                        
         collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
         if collide_list:                        # リストがあるか
             self.kill()                         # このスプライトを所属するすべてのグループから削除
             for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
                 machine.hit(1)
-
+    
 
 class Meteorite(Bullet):
 
