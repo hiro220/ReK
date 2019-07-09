@@ -27,6 +27,8 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.shot_flag = False
         self.invin_start = R_time.get_ticks()
         self.shot_time = R_time.get_ticks()
+        self.shot_number = 0
+        self.choice_time = R_time.get_ticks()
         self.move_save = [[mg.centerx,mg.centery],4]
         self.dx,self.dy = -2,0
         self.shot_list = []
@@ -63,10 +65,12 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.Cpu_shot_rule()
         self.Shield_loop()                                      #シールドを再配置する
 
-        if R_time.get_ticks() - self.shot_time >= 4000 and self.shot_flag:
+        if self.shot_flag:
             self.Shot_rule()
+            #if self.shot_number == 0:
+            #self.shot_time = R_time.get_ticks()
             super().shoot(self.rect.left, self.rect.centery)
-            self.shot_time = R_time.get_ticks()
+            
                
         #print(self.groups()[1])
         #print(self.move_flag)
@@ -149,7 +153,10 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.shield.kill()
     
     def Shot_rule(self):                                 #ボスの銃を変更する
-        self.gun = self.gun_list[random.randint(0,2)]
+        if R_time.get_ticks() - self.choice_time >= 500:
+            self.shot_number = random.randint(0,1)
+            self.gun = self.gun_list[self.shot_number]
+            self.choice_time = R_time.get_ticks()
 
     
     def Cpu_shot_rule(self):
