@@ -25,6 +25,7 @@ class Stage:
         self.data = data
 
         CpuMachine.killed_count = self.data["kill"]
+        PlayerMachine.killed_count = self.data["death"]
         
         self.initGroup()                        # グループを初期化する
 
@@ -81,6 +82,7 @@ class Stage:
             if not result == CONTINUE:
                 break
         self.data["kill"] = CpuMachine.killed_count
+        self.data["death"] = PlayerMachine.killed_count
         return result, self.score.return_score(), self.money.money
 
     def stage_process(self):
@@ -95,7 +97,6 @@ class Stage:
         pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
 
         if self.isGameOver():
-            self.data["death"] += 1
             pygame.mixer.music.stop()
             return GAMEOVER                 # ゲームオーバー条件が満たされた
         if self.isClear():
