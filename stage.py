@@ -103,6 +103,7 @@ class Stage:
                 pygame.mixer.music.unpause()
                 self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20))  # 初期値にプレイヤー機を生成
                 self.continue_num -= 1
+                self.player.invincible(2000)
             else:
                 pygame.mixer.music.stop()
                 return GAMEOVER, self.score.return_score()
