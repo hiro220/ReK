@@ -18,10 +18,11 @@ import pygame.mixer
 
 class Stage:
 
-    def __init__(self, screen, filename):
+    def __init__(self, screen, filename, continue_num=0):
         """screenは描画対象。filenameはステージ内容を記述したテキストファイル"""
         self.screen = screen                    # 描画対象
         self.speed = 1                          # 背景の移動速度
+        self.continue_num = continue_num
         
         self.initGroup()                        # グループを初期化する
 
@@ -42,8 +43,6 @@ class Stage:
 
         self.clock = pygame.time.Clock()        # 時間管理用
         R_time.restart()
-
-        self.continue_num = 1
 
         self.process = self.stage_process
         self.draw = self.stage_draw
