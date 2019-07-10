@@ -31,6 +31,8 @@ class Main(pygame.sprite.Sprite):
                     stageTxt = menu.draw()
                     if stageTxt == "0":
                         break
+                    elif stageTxt == "1":
+                        break
                     self.Stage_draw(stageTxt)                
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 help_c = Help_a(self.screen)

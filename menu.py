@@ -12,7 +12,7 @@ class Menu:
         self.stage_num = 1
         self.select_num = 0
         self.back_num = 0
-
+        self.shop_num = 0
 
         StageSelect_font = pygame.font.Font("freesansbold.ttf", 55)
         LeftArrow_font = pygame.font.Font("freesansbold.ttf", 150)      
@@ -21,6 +21,7 @@ class Menu:
         Stage2_font = pygame.font.Font("freesansbold.ttf", 45)
         Stage3_font = pygame.font.Font("freesansbold.ttf", 45)
         back_font = pygame.font.Font("freesansbold.ttf", 55)
+        shop_font = pygame.font.Font("freesansbold.ttf", 55)
 
         self.StageSelect_text = StageSelect_font.render("Stage Select", True, (255,255,255)) 
         self.RightArrow_text = RightArrow_font.render(">", True, (255,255,255))
@@ -29,6 +30,7 @@ class Menu:
         self.Stage2_text = Stage2_font.render("Stage2", True, (255,255,255))
         self.Stage3_text = Stage3_font.render("Stage3", True, (255,255,255))
         self.back_text = back_font.render("Back", True, (255,255,255))
+        self.shop_text = shop_font.render("Shop", True, (255,255,255))
 
 
     def draw(self):
@@ -39,11 +41,15 @@ class Menu:
             self.screen.blit(self.RightArrow_text, [965, 220])  #テキスト ＞ を描画
             self.screen.blit(self.LeftArrow_text, [105, 220])     #テキスト ＞ を描画
             self.screen.blit(self.back_text,[900, 5])
+            self.screen.blit(self.shop_text,[600, 5])
 
             self.Select_Stage()     #ステージ選択処理
 
             if self.back_num == 1:
                 pygame.draw.rect(self.screen,(255,255,0),Rect(890,3,155,60),5)
+            
+            if self.shop_num == 1:
+                pygame.draw.rect(self.screen,(255,255,0),Rect(593,3,155,60),5)
 
             pygame.display.update()
 
@@ -54,6 +60,8 @@ class Menu:
                     if event.key == K_RETURN:
                         if self.back_num == 1:
                             return "0"
+                        elif self.shop_num == 1:
+                            return "1"
                         return self.Return_Stage()
                 if event.type == QUIT:
                     pygame.quit()
@@ -69,17 +77,27 @@ class Menu:
         pygame.draw.rect(self.screen,color[self.stage_num-1],Rect(200,70,760,460),5)
     
     def Key_Event(self,event):
-        if self.back_num == 0:
+        if self.back_num == 0 and self.shop_num == 0:
             if event.key == K_RIGHT:        #→が押されたなら次のステージへ移動
                 if self.stage_num != 3:
                     self.stage_num += 1
             elif event.key == K_LEFT:       #←矢印が押されたなら前のステージへ移動
                 if self.stage_num != 1:
                     self.stage_num -= 1
+        elif self.back_num == 1:
+            if event.key == K_LEFT:
+                self.back_num = 0
+                self.shop_num = 1
+        elif self.shop_num == 1:
+            if event.key == K_RIGHT:
+                self.shop_num = 0
+                self.back_num = 1
+
         if event.key == K_UP:
-            self.back_num = 1
+            self.shop_num = 1
         elif event.key == K_DOWN:
             self.back_num = 0
+            self.shop_num = 0
     
     def Return_Stage(self):
         if self.stage_num == 1:
