@@ -76,6 +76,7 @@ class Stage:
             self.clock.tick(30)         # フレームレート(30fps)
             result = self.process()
             self.draw()
+            pygame.display.update()     # 画面更新
             if not result == CONTINUE:
                 break            
         return result
@@ -142,7 +143,6 @@ class Stage:
         self.draw_info()
         self.score.draw(self.screen)
         self.money.draw(self.screen)
-        pygame.display.update()             # 画面を更新する
 
     def draw_info(self):
         pygame.draw.rect(self.screen, (0,0,0),Rect(0,0,INFO_WIDTH, HEIGHT))     # infoエリアの描画
@@ -158,7 +158,8 @@ class Stage:
         pygame.draw.rect(self.screen, (255, 255, 255), Rect(120, HEIGHT-380, 30, 300), 3)       # 枠線
 
     def select_continued(self):
-        self.stage_draw()
+        self.draw()
+        pygame.display.update()
         # コンティニューできるか
         if self.continue_num:
             # 表示する文字の設定
@@ -170,7 +171,7 @@ class Stage:
             select = 0
             # Enterが押されるまで無限ループ
             while True:
-                self.stage_draw()
+                self.draw()
                 self.screen.blit(text,[WIDTH/2-text_width, HEIGHT/4-50])
                 self.screen.blit(yes_text,[WIDTH/2-150, HEIGHT/4+80])
                 self.screen.blit(no_text,[WIDTH/2+100, HEIGHT/4+80])
@@ -203,7 +204,6 @@ class Stage:
         self.screen.blit(self.pause_text, [WIDTH/2-80, HEIGHT/4])
         self.screen.blit(self.restart_text, [WIDTH/2-80, HEIGHT/4+100])
         self.screen.blit(self.retire_text, [WIDTH/2-80, HEIGHT/4+150])
-        pygame.display.update()
 
     def readStage(self, file):
         """引数に指定したテキストファイルからステージ情報を読み込み、cpu情報をx座標がkeyとなる辞書型に格納する。（同様にアイテムの読み込みもできるはず）
