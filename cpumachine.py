@@ -4,6 +4,7 @@ from machine import Machine
 import pygame
 from define import *
 from gun import *
+from cpumove import *
 
 
 #comment
@@ -46,7 +47,7 @@ class cpu(CpuMachine):
         self.gun = Opposite_Gun(self.machines, self, 10)
     
     def update(self):
-        self.dx, self.dy = -2.5, 0
+        self.dx, self.dy = Sample1()
         self.rect.move_ip(self.dx, self.dy)
         x, y = self.rect.midleft
         if R_time.get_ticks() - self.gun_start >= 1200:
@@ -64,17 +65,8 @@ class cpu2(CpuMachine):
         self.gun = Reflection_Gun(self.machines, self, 10)
     
     def update(self):
-        if 0 <= self.count <= 14:
-            self.dx, self.dy = -2.5, 3
-            self.rect.move_ip(self.dx,self.dy)
-            self.count += 1
-        elif 15 <= self.count <= 30:
-            self.dx, self.dy = -2.5, -3
-            self.rect.move_ip(self.dx, self.dy)
-            self.count += 1
-            if self.count == 31:
-                self.count = 0
-
+        self.dx, self.dy, self.count = Sample2(self.count)
+        self.rect.move_ip(self.dx,self.dy)
         x, y = self.rect.midleft
         
         if R_time.get_ticks() - self.gun_start >= 1200:
@@ -104,13 +96,14 @@ class cpu3(CpuMachine):
 
 
 class cpu4(CpuMachine):
-    def __init__(self, x, y, players, score):
+    def __init__(self, x, y, players, score, money):
         image = pygame.image.load("img/cpu4.png").convert_alpha()
-        super().__init__(1, x, y, image, players, score)
-        self.dx, self.dy = -2, 0 
-        self.gun = Circle_Gun(self.machines, self, 10)
+        super().__init__(1, x, y, image, players, score, money)
+        self.dx, self.dy = -1, 0
+        self.gun = Opposite_Gun(self.machines, self, 10)
 
     def update(self):
+        self.dx = Sample3(self.dx, 0.1)
         self.rect.move_ip(self.dx, self.dy)
         x, y = self.rect.midleft
         if R_time.get_ticks() - self.gun_start >= 1200:
@@ -118,13 +111,15 @@ class cpu4(CpuMachine):
             self.gun_start = R_time.get_ticks()
 
 class cpu5(CpuMachine):
-    def __init__(self, x, y, players, score):
+    def __init__(self, x, y, players, score, money):
         image = pygame.image.load("img/cpu5.png").convert_alpha()
-        super().__init__(1, x, y, image, players, score)
+        super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = -5, -2
+        self.count = 0
         self.gun = Twist_Gun(self.machines, self, 10)
 
     def update(self):
+        self.dx, self.dy, self.count = Sample4(self.dx, self.dy, self.count, 10)
         self.rect.move_ip(self.dx, self.dy)
         x, y = self.rect.midleft
         if R_time.get_ticks() - self.gun_start >= 1200:
@@ -132,9 +127,9 @@ class cpu5(CpuMachine):
             self.gun_start = R_time.get_ticks()
 
 class cpu6(CpuMachine):
-    def __init__(self, x, y, players, score):
+    def __init__(self, x, y, players, score, money):
         image = pygame.image.load("img/cpu6.png").convert_alpha()
-        super().__init__(1, x, y, image, players, score)
+        super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = -2, 0
         self.gun = Beam_Gun(self.machines, self, 10)
 

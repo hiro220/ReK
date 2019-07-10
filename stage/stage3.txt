@@ -3,9 +3,6 @@ rule    NORMAL
 bg      STAR
 
 0
-CPU1    100
-CPU2    200
-CPU3    300
-CPU4    400
-CPU5    500
-CPU6    600
+CPU4    200
+CPU5    400
+
