@@ -101,11 +101,13 @@ class Missile_Bullet(Bullet):
                     if distance < mindistance:
                         mindistance = distance
                         target = play
-
-            distance = math.sqrt((target.rect.centerx - x)**2 + (target.rect.centery - y)**2)
+            try:
+                distance = math.sqrt((target.rect.centerx - x)**2 + (target.rect.centery - y)**2)
+            except:
+                return
             if distance >= 150:
                 self.image = pygame.image.load("img/Pmissile.png").convert_alpha()
-                distance2 = distance / 5
+                distance2 = distance / 4
                 angle = math.degrees(math.atan2(y - target.rect.centery, target.rect.centerx - x))
                 self.dx, self.dy = (target.rect.centerx - x) / distance2, (target.rect.centery - y) / distance2
                 self.rect.move_ip(self.dx, self.dy)
