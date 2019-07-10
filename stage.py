@@ -54,7 +54,6 @@ class Stage:
         self.players = pygame.sprite.Group()        # playerの機体用グループ
         self.cpus = pygame.sprite.Group()           # cpuの機体用グループ
         self.bullets = pygame.sprite.Group()        # bulletのグループ
-        self.beams = pygame.sprite.Group()          # beamのグループ
         self.ranges = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
         self.ranges2 = pygame.sprite.Group()        # 画面の範囲外のspriteを格納したグループ
         self.timers = pygame.sprite.Group()
@@ -65,7 +64,7 @@ class Stage:
         CpuMachine.containers = self.group, self.cpus2, self.cpus           # cpuマシンにグループを割り当てる
         Item.containers = self.group
         Bullet.containers = self.bullets            # 弾にグループを割り当てる
-        Beam.containers = self.group, self.beams
+        Beam.containers = self.bullets
         Range.containers = self.ranges                          # 範囲にグループを割り当てる
         Range2.containers = self.ranges2                        # 範囲にグループを割り当てる
         Timer.containers = self.timers
