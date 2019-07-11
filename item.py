@@ -5,6 +5,8 @@ from pygame.locals import *
 from machine import Hp
 from timer import Timer
 
+path = "img/item/"
+
 class Item(pygame.sprite.Sprite):
     """アイテム処理の基底となるクラス。継承するクラスは、メソッドeffect(self, machine)を定義する。
     effectメソッドでは、アイテムを取得した機体machineに対して、そのアイテムに応じた処理を行うよう記述する。"""
@@ -36,7 +38,7 @@ class Item(pygame.sprite.Sprite):
 class Recovery(Item):
     """取得した機体の体力を1回復するアイテム"""
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/recovery.png").convert_alpha()
+        image = pygame.image.load(path+"recovery.png").convert_alpha()
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
@@ -46,7 +48,7 @@ class Shield(pygame.sprite.Sprite):
     """機体を守るシールド"""
     def __init__(self, firmness, machine):
         pygame.sprite.Sprite.__init__(self, machine.containers)
-        self.image = pygame.image.load("img/shield.png").convert_alpha()
+        self.image = pygame.image.load(path+"shield.png").convert_alpha()
         self.hp = Hp(firmness)                      # 引数で指定した堅さをhpとして保持
         self.rect = self.image.get_rect()           # 画像からrectを生成
         self.machine = machine                      # このシールドが守る機体の情報を保持
@@ -80,7 +82,7 @@ class Shield(pygame.sprite.Sprite):
 class ShieldItem(Item):
     """取得した機体にシールドを与えるアイテム"""
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/item_shield.png").convert_alpha()
+        image = pygame.image.load(path+"item_shield.png").convert_alpha()
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
@@ -88,7 +90,7 @@ class ShieldItem(Item):
 
 class SpeedDownItem(Item):
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/weight.png").convert_alpha()
+        image = pygame.image.load(path+"weight.png").convert_alpha()
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
@@ -98,7 +100,7 @@ class SpeedDownItem(Item):
 class ScoreGetItem(Item):
     # CPU側が取得しても効果はない
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/scoreget.png").convert_alpha()
+        image = pygame.image.load(path+"scoreget.png").convert_alpha()
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
@@ -108,7 +110,7 @@ class ScoreGetItem(Item):
 class MeteoriteItem(Item):
 
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/meteorite_item.png").convert_alpha()
+        image = pygame.image.load(path+"meteorite_item.png").convert_alpha()
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
