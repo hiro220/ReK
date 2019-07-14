@@ -19,24 +19,22 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
         super().__init__(10000, x, y, image, players, score, money)         #superクラス(Boss)を呼び出す
         self.shield  = Timer(0,Shield,10000,self)
-        self.summon_flag = 0
-        self.load_count = 0
-        self.move_flag = 0
-        self.clear_flag = 0
-        self.invincible_flag = 0
-        self.shot_flag = False
-        self.invin_start = R_time.get_ticks()
-        self.shot_time = R_time.get_ticks()
-        self.shoot_number = 0
-        self.shoot_count = 0
-        self.choice_time = R_time.get_ticks()
-        self.move_save = [[mg.centerx,mg.centery],1]
-        self.dx,self.dy = -2,0
-        self.shot_list = []
-        self.shot_list2 = []
+        self.summon_flag = False                         #subをロードしていいかの判定フラグ
+        self.load_count = 0                              #何回subをロードかを確かめるためのフラグ
+        self.move_flag = 0                               #動きていいか判定するためのフラグ
+        self.clear_flag = 0                              #本体の第二形態移行時、中央戻るためのフラグ
+        self.invincible_flag = 0                         #無敵時間のフラグ
+        self.shot_flag = False                           #本体が打つか打たないかの判定
+        self.shoot_number = 0                            #打った銃のナンバー保存場所
+        self.shoot_count = 0                             #銃の打った回数を保存
+        self.move_save = [[mg.centerx,mg.centery],1]     #本体の次の移動場所
+        self.dx,self.dy = -2,0                           #本体の移動量
+        self.shot_list = []                              #Crile_Gunを使うSub_number保存
+        self.shot_list2 = []                             #追尾弾を使うSub_number保存
         self.money = money
-        self.gun_list = [Circle_Gun(self.machines, self, -1),Twist_Gun(self.machines, self, -1),Beam_Gun(self.machines, self, -1)]
+        self.gun_list = [Circle_Gun(self.machines, self, -1),Twist_Gun(self.machines, self, -1),Beam_Gun(self.machines, self, -1)] #本体の銃リスト
         self.shoot_timer = None
+        self.gun = Circle_Gun(self.machines, self, -1)
 
     def update(self):
         self.move(self.dx, self.dy)
@@ -44,7 +42,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.Invincible2()                                          #HPが５以下の時無敵を生成する
         self.Move_set()                                             #HPが５以下になるとボスの位置を戻す
         
-        if R_time.get_ticks() - self.gun_start >= 140 and self.summon_flag == 1:
+        if R_time.get_ticks() - self.gun_start >= 140 and self.summon_flag:
             Stage1_sub(mg.centerx-60, 600, self.machines, self.score, self.load_count, self, self.money)
             self.load_count += 1
             self.gun_start = R_time.get_ticks()
@@ -57,7 +55,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
                 self.move_rule()
             elif self.move_flag == 1:
                 self.clear_flag = 1
-                self.summon_flag = 1
+                self.summon_flag = True
                 self.move_flag = 2
                 self.gun_start = R_time.get_ticks()
         
@@ -75,10 +73,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             elif self.shoot_number == 1:
                 super().shoot(self.rect.left, self.rect.centery)
                 self.shoot_count += 1
-            #self.Change_flag()
-            #Timer(1000, self.Change_flag)
-            
-               
+       
         #print(self.groups()[1])
         #print(self.move_flag)
         #print(self.dx,self.dy)
@@ -86,7 +81,6 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         #print(mg.centerx,mg.centery)
         #print(self.clear_flag)
         #print(self.invincible_flag)
-        #print()
         #print(self.hp.hp)
         
     def move_rule(self):
@@ -173,7 +167,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.shield.kill()
     
     def Shot_rule(self):                                 #ボスの銃を変更する
-        if self.shoot_number == 0 and self.shoot_count == 3:
+        if self.shoot_number == 0 and self.shoot_count == 4:
             self.shoot_number = random.randint(0,1)
             self.gun = self.gun_list[self.shoot_number]
             self.shoot_count = 0
