@@ -30,7 +30,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.shoot_number = 0
         self.shoot_count = 0
         self.choice_time = R_time.get_ticks()
-        self.move_save = [[mg.centerx,mg.centery],4]
+        self.move_save = [[mg.centerx,mg.centery],1]
         self.dx,self.dy = -2,0
         self.shot_list = []
         self.shot_list2 = []
@@ -90,6 +90,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         #print(self.hp.hp)
         
     def move_rule(self):
+        """
         rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[600, 40]
         rule1 = [[mg.left,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.left,mg.bottom]]     #[600,280]
         rule2 = [[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.centerx,mg.bottom]]                                         #[600,520]
@@ -100,7 +101,16 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         rule7 = [[mg.right,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.right,mg.bottom]]   #[1080,280]
         rule8 = [[mg.centerx,mg.bottom],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                        #[1080,520]
         point_list = [[mg.left,mg.top],[mg.left,mg.centery],[mg.left,mg.bottom],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.right,mg.top],[mg.right,mg.centery],[mg.right,mg.bottom]]
-        move_list = [rule0,rule1,rule2,rule3,rule4,rule5,rule6,rule7,rule8]
+        move_list = [rule0,rule1,rule2,rule3,rule4,rule5,rule6,rule7,rule8]"""
+
+        rule3 = [[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.top]]                                             #[840, 40]
+        rule4 = [[mg.centerx,mg.bottom],[mg.right,mg.bottom],[mg.right,mg.centery],[mg.right,mg.top],[mg.centerx,mg.top]]     #[840,280]
+        rule5 = [[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.bottom]]                                          #[840,520]
+        rule6 = [[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                           #[1080, 40]
+        rule7 = [[mg.right,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.right,mg.bottom]]   #[1080,280]
+        rule8 = [[mg.centerx,mg.bottom],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                        #[1080,520]
+        point_list = [[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.right,mg.top],[mg.right,mg.centery],[mg.right,mg.bottom]]
+        move_list = [rule3,rule4,rule5,rule6,rule7,rule8]
 
         self.moving(move_list[self.move_save[1]],point_list)
 
