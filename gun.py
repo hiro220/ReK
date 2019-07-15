@@ -72,13 +72,13 @@ class Circle_Gun(Gun):
     def shoot(self, x, y):
         Bullet_list1 = [[-4.0,0],[-3.5,-3.5],[0,-4.0],[3.5,-3.5],[4.0,0],[3.5,3.5],[0,4.0],[-3.5,3.5]]           #弾の飛ばす方向を格納
         Bullet_list2 = [[1.9,-4.6],[4.6,-1.9],[4.6,1.9],[1.9,4.6],[-1.9,4.6],[-4.6,1.9],[-4.6,-1.9],[-1.9,-4.6]] #弾の飛ばす方向を格納
-        if R_time.get_ticks() - self.gun_start >= 1200 and self.count == 0:                  #弾をそれぞれ交互にとばすためのself.count
+        if self.count == 0:                  #弾をそれぞれ交互にとばすためのself.count
             for bullet_list in Bullet_list1:
                 Bullet(x, y, bullet_list[0],bullet_list[1], self.machines)
             self.gun_start = R_time.get_ticks()
             self.count = 1
             self.num -= 1
-        if  R_time.get_ticks() - self.gun_start >= 1200 and self.count == 1:
+        elif  self.count == 1:
             for bullet_list in Bullet_list2:
                 Bullet(x, y, bullet_list[0], bullet_list[1], self.machines)
             self.gun_start = R_time.get_ticks()

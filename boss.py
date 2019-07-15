@@ -34,6 +34,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.money = money
         self.gun_list = [Circle_Gun(self.machines, self, -1),Twist_Gun(self.machines, self, -1),Beam_Gun(self.machines, self, -1)] #本体の銃リスト
         self.shoot_timer = None
+        self.shoot_timing = R_time.get_ticks()
         self.gun = Circle_Gun(self.machines, self, -1)
 
     def update(self):
@@ -66,13 +67,14 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.Shield_loop()                                      #シールドを再配置する
 
         if self.shot_flag:
-            self.Shot_rule()
-            if self.shoot_number == 0:
+            if R_time.get_ticks() - self.shoot_timing >= 500 and self.shoot_number == 0:
                 super().shoot(self.rect.left, self.rect.centery)
                 self.shoot_count += 1
+                self.shoot_timing = R_time.get_ticks()
             elif self.shoot_number == 1:
                 super().shoot(self.rect.left, self.rect.centery)
                 self.shoot_count += 1
+            self.Shot_rule()
        
         #print(self.groups()[1])
         #print(self.move_flag)
@@ -167,7 +169,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.shield.kill()
     
     def Shot_rule(self):                                 #ボスの銃を変更する
-        if self.shoot_number == 0 and self.shoot_count == 4:
+        if self.shoot_number == 0 and self.shoot_count == 6:
             self.shoot_number = random.randint(0,1)
             self.gun = self.gun_list[self.shoot_number]
             self.shoot_count = 0
