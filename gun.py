@@ -75,13 +75,13 @@ class Circle_Gun(Gun):
         if self.count == 0:                  #弾をそれぞれ交互にとばすためのself.count
             for bullet_list in Bullet_list1:
                 Bullet(x, y, bullet_list[0],bullet_list[1], self.machines)
-            self.gun_start = R_time.get_ticks()
+            #self.gun_start = R_time.get_ticks()
             self.count = 1
             self.num -= 1
         elif  self.count == 1:
             for bullet_list in Bullet_list2:
                 Bullet(x, y, bullet_list[0], bullet_list[1], self.machines)
-            self.gun_start = R_time.get_ticks()
+            #self.gun_start = R_time.get_ticks()
             self.count = 0
             self.num -= 1
 
