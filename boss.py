@@ -52,6 +52,12 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
 
         if self.rect.left == self.move_save[0][0] and self.rect.top == self.move_save[0][1]:
             self.dx,self.dy = 0, 0
+            #ボスを一時停止するための機構
+            """
+            if random.randint(0,1) == 0:
+                self.Change_flag(1)
+                Timer(100000, self.Change_flag, 1)
+            """
             if self.move_flag == 0:
                 self.move_rule()
             elif self.move_flag == 1:
@@ -142,18 +148,18 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         if self.shield.value != None and self.invincible_flag == 0:
             Timer(3000,self.shield.value.hp.__init__,5)
             Timer(3000,self.hp.__init__,10)
-            Timer(3000,self.Change_flag)
+            Timer(3000,self.Change_flag, 0)
             self.invincible_flag = 1
     
     def Invincible2(self):
         if self.hp.hp <= 5 and self.invincible_flag == 1:
             self.hp.__init__(10000)
             if self.shot_flag:
-                self.Change_flag()
+                self.Change_flag(0)
             else:
                 self.shoot_timer.kill()
             Timer(10000,self.hp.__init__,5)
-            Timer(10000,self.Change_flag)
+            Timer(10000,self.Change_flag, 0)
             self.invincible_flag = 2
     
     def Move_set(self):
@@ -163,8 +169,9 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
 
     def Shield_loop(self):
         if self.shield.value != None:
-            if self.hp.hp > 5 and self.shield.value.hp.hp == 0:
-                self.shield = Timer(5000,Shield,5,self)
+            print(self.shield.value.hp.hp)
+            if self.hp.hp > 5 and self.shield.value.hp.hp <= 0:
+                self.shield = Timer(1000,Shield,5,self)
         elif self.invincible_flag == 2:
             self.shield.kill()
     
@@ -173,14 +180,14 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.shoot_number = random.randint(0,1)
             self.gun = self.gun_list[self.shoot_number]
             self.shoot_count = 0
-            self.Change_flag()
-            self.shoot_timer = Timer(2000,self.Change_flag)
+            self.Change_flag(0)
+            self.shoot_timer = Timer(2000,self.Change_flag, 0)
         elif self.shoot_number == 1 and self.shoot_count == 15:
             self.shoot_number = random.randint(0,1)
             self.gun = self.gun_list[self.shoot_number]
             self.shoot_count = 0
-            self.Change_flag()
-            self.shoot_timer = Timer(2000,self.Change_flag)
+            self.Change_flag(0)
+            self.shoot_timer = Timer(2000,self.Change_flag, 0)
     
     def Cpu_shot_rule(self):
         if self.move_flag == 0 and self.summon_flag == None and R_time.get_ticks() - self.gun_start >= 1200:
@@ -188,14 +195,21 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.shot_list2 = random.sample(range(18), k=2)
             self.gun_start = R_time.get_ticks()
 
-    def Change_flag(self):
-        if self.shot_flag == False:
+    def Change_flag(self, flag_number):
+        if flag_number == 0 and self.shot_flag == False:
             self.shot_flag = True
-        elif self.shot_flag == True:
+        elif flag_number == 0 and self.shot_flag == True:
             self.shot_flag = False
 
-        if self.invincible_flag == 2:
-            self.invincible_flag = None 
+        if flag_number == 0 and self.invincible_flag == 2:
+            self.invincible_flag = None
+        
+        if flag_number == 1 and self.move_flag == 0:
+            self.move_flag = None
+        elif flag_number == 1 and self.move_flag == None:
+            self.move_flag = 0
+
+ 
 
 class Stage1_sub(Boss):                                  #ボス付属品の機体
     def __init__(self, x, y, players, score, sub_number, boss, money):              
