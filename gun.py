@@ -34,7 +34,9 @@ class Gun:
 
     def reload(self):
         self.num = self.max                     #bulletの玉数を上限に戻す
-    
+
+    def BulletZero(self):    
+        self.num = 0
     
 class Tracking_Gun(Gun):
 

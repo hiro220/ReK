@@ -40,10 +40,12 @@ class PlayerMachine(Machine):
         return not self.alive()
 
     def firstmove(self):
-        super().move(self.dx, 0)                
+        super().BulletZero()   
+        super().move(5, 0)                
         pygame.display.update()
         self.count += 1
-        if self.count == 14:
+        if self.count == 20:
+            super().reload()
             self.wait_flag = 1
      
         

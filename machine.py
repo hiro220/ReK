@@ -51,6 +51,9 @@ class Machine(pygame.sprite.Sprite):
 
     def reload(self):
         self.gun.reload()
+
+    def BulletZero(self):
+        self.gun.BulletZero()
     
     def hit(self, attack):
         """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
