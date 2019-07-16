@@ -53,11 +53,10 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         if self.rect.left == self.move_save[0][0] and self.rect.top == self.move_save[0][1]:
             self.dx,self.dy = 0, 0
             #ボスを一時停止するための機構
-            """
-            if random.randint(0,1) == 0:
-                self.Change_flag(1)
-                Timer(100000, self.Change_flag, 1)
-            """
+            #if random.randint(0,2) == 1:
+            #self.Change_flag(1)
+            #Timer(5000, self.Change_flag, 1)
+            #print(self.move_flag)
             if self.move_flag == 0:
                 self.move_rule()
             elif self.move_flag == 1:
@@ -169,7 +168,6 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
 
     def Shield_loop(self):
         if self.shield.value != None:
-            print(self.shield.value.hp.hp)
             if self.hp.hp > 5 and self.shield.value.hp.hp <= 0:
                 self.shield = Timer(1000,Shield,5,self)
         elif self.invincible_flag == 2:
