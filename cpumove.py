@@ -1,29 +1,149 @@
 import random
+import math
 
-def Sample1():
-    return left()
+PI = 3.141592
 
-def Sample2(count):
-    if 0 <= count <= 14:
-            dx, dy = -2.5, 3
-            count += 1
-            return dx, dy, count
-    elif 15 <= count <= 30:
-        dx, dy = -2.5, -3
-        count += 1
-        if count == 31:
-            count = 0
-        return dx, dy, count
+class Sample1():
+    
+    def move():
+        return left()
 
-def Sample3(dx, acceleNum):
-    return acceleration(dx, acceleNum)
+class Sample2():
+
+    def  __init__(self):
+        self.count = 0
+
+    def move(self):
+        if 0 <= self.count <= 14:
+                dx, dy = -2.5, 3
+                self.count += 1
+                return dx, dy
+        elif 15 <= self.count <= 30:
+            dx, dy = -2.5, -3
+            self.count += 1
+            if self.count == 31:
+                self.count = 0
+            return dx, dy
+
+class Sample3():
+
+    def __init__(self):
+        self.count = 0
+        self.curve_count = 0
+
+    def move(self, dx, dy):
+        if self.count <= 100:
+            self.count += 1
+            return left()
+
+        dx, dy, self.curve_count = curve(-10, -5, 200, self.curve_count, dx, dy)
+        return dx, dy
+
   
-def Sample4(dx, dy, count, move_count):
-    return random_move(dx, dy, count, move_count)
+class Sample4():
+    
+    def __init__(self):
+        self.count = 0
+        self.curve_count = 0
 
+    def move(self, dx, dy):
+        if self.count <= 150:
+            self.count += 1
+            return left()
+        elif self.count <= 220:
+            self.count += 1
+            return rightup()
+        elif self.count >= 221:
+            dx, dy, self.curve_count = curve(-10, -6, 160, self.curve_count, dx, dy)
+            return dx, dy
+
+class Sample5():
+    def __init__(self):
+        self.count = 0
+        self.curve_count = 0
+
+    def move(self, dx, dy):
+        if self.count <= 150:
+            self.count += 1
+            return left()
+        elif self.count <= 220:
+            self.count += 1
+            return rightdown()
+        elif self.count >= 221:
+            dx, dy, self.curve_count = curve(-10, 6, 160, self.curve_count, dx, dy)
+            return dx, dy
+
+class Sample6():
+    
+    def __init__(self):
+        self.count = 0
+        self.circle_count = 0
+
+    def move(self, dx, dy):
+        if self.count <= 80:
+            self.count += 1
+            return left()
+        elif self.count <= 400:
+            self.count += 1
+            dx, dy, self.circle_count = circle(-7, -7, 50, self.circle_count)
+            return dx, dy
+        elif self.count >= 401:
+            return dx, dy
+
+class Sample7():
+    
+    def __init__(self):
+        self.count = 0
+        self.circle_count = 0
+
+    def move(self, dx, dy):
+        if self.count <= 80:
+            self.count += 1
+            return left()
+        elif self.count <= 400:
+            self.count += 1
+            dx, dy, self.circle_count = circle(-7, 7, 50, self.circle_count)
+            return dx, dy
+        elif self.count >= 401:
+            return dx, dy
+
+
+class Sample8():
+    
+    def __init__(self):
+        self.count = 0
+        self.circle_count = 0
+
+    def move(self, dx, dy):
+        if self.count <= 80:
+            self.count += 1
+            return left()
+        elif self.count <= 400:
+            self.count += 1
+            dx, dy, self.circle_count = circle(7, 7, 50, self.circle_count)
+            return dx, dy
+        elif self.count >= 401:
+            return dx, dy
+            
+class Sample9():
+    
+    def __init__(self):
+        self.count = 0
+        self.circle_count = 0
+
+    def move(self, dx, dy):
+        if self.count <= 80:
+            self.count += 1
+            return left()
+        elif self.count <= 400:
+            self.count += 1
+            dx, dy, self.circle_count = circle(7, -7, 50, self.circle_count)
+            return dx, dy 
+        elif self.count >= 401:
+            return dx, dy
 
 def left():
-    return -2.5, 0
+    return -5, 0
 
 def right():
     return 2.5, 0
@@ -41,10 +161,25 @@ def leftdown():
     return -2, 2 
 
 def rightup():
-    return 2, -2
+    return 3, -3
 
 def rightdown():
-    return 2, 2
+    return 3, 3
+
+def curve(velx, vely, cycle, count, dx, dy):
+    if count != cycle/2: 
+        dx = math.sin(PI * (count) / cycle) * velx
+        dy = math.sin(PI * (count+(cycle/2)) / cycle) *vely
+        count += 1
+        return dx, dy, count
+
+    return dx, dy, count
+    
+def circle(velx, vely, cycle, count): 
+    dx = math.sin(PI * (count) / cycle) * velx
+    dy = math.sin(PI * (count+(cycle/2)) / cycle) *vely
+    count += 1
+    return dx, dy, count
 
 def acceleration(dx, acceleNum):
     return dx - acceleNum
