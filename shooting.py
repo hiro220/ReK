@@ -10,6 +10,7 @@ from menu import *
 from  score import *
 import pygame.mixer
 from help_explain import *
+from shop import *
 
 class Main(pygame.sprite.Sprite):
 
@@ -18,6 +19,8 @@ class Main(pygame.sprite.Sprite):
         pygame.init()   # pygameの初期化
 
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
+
+        self.shop = Shop(self.screen)
         
     def do(self):
          while True:
@@ -32,8 +35,9 @@ class Main(pygame.sprite.Sprite):
                     if stageTxt == "0":
                         break
                     elif stageTxt == "1":
-                        break
-                    self.Stage_draw(stageTxt)                
+                        shop = self.shop.draw()
+                    else:
+                        self.Stage_draw(stageTxt)                
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 help_c = Help_a(self.screen)
                 help_b = help_c.draw()
@@ -41,7 +45,7 @@ class Main(pygame.sprite.Sprite):
                 pygame.quit()
                 sys.exit()
 
-    def Stage_draw(self, stageTxt):
+    def Stage_draw(self, stageTxt):    
         stage = Stage(self.screen, "stage/" + stageTxt)
         pygame.mixer.music.load("sound/sound1.mp3")     # 音楽ファイルの読み込み
         pygame.mixer.music.play(-1)                     # 音楽の再生回数(ループ再生)
