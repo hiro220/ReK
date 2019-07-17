@@ -49,7 +49,7 @@ class PlayerMachine(Machine):
         pygame.display.update()
         self.count += 1
         if self.count == 20:
-            super().reload()
+            self.gun.reload()
             self.wait_flag = 1
      
         
