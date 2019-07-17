@@ -51,7 +51,7 @@ class Stage:
 
         self.process = self.stage_process
         self.draw = self.stage_draw
-        
+
 
     def initGroup(self):
         self.group = pygame.sprite.RenderUpdates()  # 描画する機体や弾用のグループ
@@ -252,7 +252,8 @@ class Stage:
         # 辞書の定義。キーに定数、値にクラス名を指定する。（キー:値）
 
         # CPUの種類を指す辞書
-        cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU0:cpu0, BOSS1:Stage1_boss, BOSS2:Stage2_boss}
+        cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU4:cpu4, CPU5:cpu5, CPU6:cpu6, CPU7:cpu7, CPU8:cpu8, CPU9:cpu9, CPU10:cpu10, CPU0:cpu0, BOSS1:Stage1_boss, BOSS2:Stage2_boss}
+
         # アイテムの種類を指す辞書
         item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, METEORITE:MeteoriteItem}
         sub = name.split('_')
