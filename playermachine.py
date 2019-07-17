@@ -18,7 +18,7 @@ class PlayerMachine(Machine):
         self.cop_flag = True
         self.gun = Beam_Gun(self.machines, self, 100)
       
-    def move(self, height, width):
+    def move(self):
         if self.wait_flag == 0:
             self.firstmove()
         else:
