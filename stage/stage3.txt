@@ -1,0 +1,6 @@
+size    0
+rule    NORMAL
+bg      STAR
+
+0
+BOSS1    280

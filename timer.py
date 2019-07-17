@@ -2,6 +2,7 @@
 
 import pygame
 from pygame.locals import *
+from define import *
 
 class Timer(pygame.sprite.Sprite):
 
@@ -15,9 +16,25 @@ class Timer(pygame.sprite.Sprite):
         self.process = process                                  # 関数processをインスタンス変数に
         self.time = millisecond                                 # 時間計測
         self.args = args
-        self.init_time = pygame.time.get_ticks()                # 作成時の時間を保持
+        self.init_time = R_time.get_ticks()                # 作成時の時間を保持
+        self.value = None
 
     def update(self):
-        if pygame.time.get_ticks() - self.init_time >= self.time:       # このインスタンスが生成されたときからの経過時間が設定した時間より長い
-            self.process(*self.args)                                      # processを実行
+        if R_time.get_ticks() - self.init_time >= self.time:       # このインスタンスが生成されたときからの経過時間が設定した時間より長い
+            self.value = self.process(*self.args)                                      # processを実行
             self.kill()                                         # このスプライトをグループから削除
+
+class FlagTimer(Timer):
+
+    def __init__(self, process, *args, flag=False):
+        pygame.sprite.Sprite.__init__(self, self.containers)
+        self.process = process
+        self.args = args
+        self.flag = flag
+
+    def update(self):
+        if self.flag:
+            self.flag = False
+        else:
+            self.process(*self.args)
+            self.kill()

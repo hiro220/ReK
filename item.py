@@ -50,6 +50,7 @@ class Shield(pygame.sprite.Sprite):
         self.hp = Hp(firmness)                      # 引数で指定した堅さをhpとして保持
         self.rect = self.image.get_rect()           # 画像からrectを生成
         self.machine = machine                      # このシールドが守る機体の情報を保持
+        self.flag = False
         self.update()                               # 更新する
 
     def update(self):
@@ -57,17 +58,27 @@ class Shield(pygame.sprite.Sprite):
         x1, y1 = self.rect.center                   # rectの中心を取得
         x2, y2 = rect.center                        # このシールドのrectの中心を取得
         self.rect.move_ip(x2-x1,y2-y1)              # 機体の移動分シールドを移動
+        if len(self.machine.groups()) == 3:
+            self.group = self.machine.groups()[2]
+            self.machine.remove(self.group)
+            self.flag = True
 
-    def hit(self, attack):
+    def hit(self, attack, lasting=False):
         if self.hp.damage(attack):                  # ダメージ計算
             self.kill()
+            if self.flag:
+                self.machine.add(self.group)
 
     def isMachine(self):
         # このクラスは機体ではない
         return False
 
+    def __del__(self):
+        if len(self.machine.groups()) != 3:
+            self.machine.add(self.group)
+
 class ShieldItem(Item):
-    """取得した機体の体力を1回復するアイテム"""
+    """取得した機体にシールドを与えるアイテム"""
     def __init__(self, x, y, machine):
         image = pygame.image.load("img/item_shield.png").convert_alpha()
         super().__init__(x, y, image, machine)
@@ -93,3 +104,12 @@ class ScoreGetItem(Item):
     def effect(self, machine):
         for opp_machine in machine.machines:
             opp_machine.score.add_score(5)      # 画面内にいる相手の数だけスコアを獲得
+
+class MeteoriteItem(Item):
+
+    def __init__(self, x, y, machine):
+        image = pygame.image.load("img/meteorite_item.png").convert_alpha()
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        machine.fall_meteorite(machine.machines, 5, 1500)
