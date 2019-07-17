@@ -73,6 +73,7 @@ class Machine(pygame.sprite.Sprite):
             self.score.add_score(10)
             self.survival_flag = 1
             self.money.add_money(100)
+            self.death()
             self.kill()
             self.flagtimer.kill()
         else:

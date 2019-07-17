@@ -5,6 +5,8 @@ from rek_time import ReK_time
 
 """Rekでの、それぞれのファイルに共通の定数を定義している"""
 
+version = "1.0.0"
+
 # ウィンドウのサイズ
 WIDTH = 1160
 HEIGHT = 600
@@ -47,6 +49,7 @@ CPU9 = "CPU9"
 CPU10 = "CPU10"
 CPU0 = "CPU0"
 BOSS1 = "BOSS1"
+BOSS2 = "BOSS2"
 
 RECOVERY = "RECOVERY"
 SHIELD = "SHIELD"
@@ -62,11 +65,15 @@ NORMAL = "NORMAL"
 SCORE_BASED = "SCORE_BASED"
 
 #bossの座標調整のための設定
-Move_range = Rect(440,40,480,480)
+Move_range = Rect(600,40,STAGE_WIDTH/2,STAGE_WIDTH/2)
 mg = Move_range
 Correction = 10
+
 # stage background
 SKY = "SKY"
 STAR = "STAR"
 
+# timer
 R_time = ReK_time()
+
+data_key = {"money":int, "stage_progress":int, "version":str, "death":int, "kill":int, "sum_money":int, "play_time":float}

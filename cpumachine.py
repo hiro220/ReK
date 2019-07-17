@@ -9,6 +9,7 @@ from cpumove import *
 
 #comment
 class CpuMachine(Machine):
+    killed_count = 0
     def __init__(self, hp, x, y, image, players, score, money):
         """引数は、初期位置(x, y)、弾の当たり判定対象となるプレイヤーの機体グループ"""
         
@@ -16,7 +17,9 @@ class CpuMachine(Machine):
         self.dx, self.dy = 5, 5                           #bulletの移動量を指定する
         self.x, self.y = x, y                             #機体自身の位置を入力
         self.gun_start = R_time.get_ticks()          #createCPUが呼ばれた時のクロック数を入力
-        
+
+    def death(self):
+        CpuMachine.killed_count += 1
 
 #これはデバック用のCPUです。
 class cpu0(CpuMachine): 
@@ -26,7 +29,7 @@ class cpu0(CpuMachine):
         image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
         super().__init__(1, x, y, image, players, score, money)         #superクラス(CpuMachine)を呼び出す
         self.dx, self.dy = 5, 5                                  #機体自身の位置を入力　　
-        self.gun = Beam_Gun(self.machines, self, 3)             #machineクラスのself.gunを上書きする
+        self.gun = Twist_Gun(self.machines, self, -1)             #machineクラスのself.gunを上書きする
         self.count = 0                                           #このクラスupdataが呼ばれた回数を保存する
     
     def update(self):
