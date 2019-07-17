@@ -42,6 +42,7 @@ CPU2 = "CPU2"
 CPU3 = "CPU3"
 CPU0 = "CPU0"
 BOSS1 = "BOSS1"
+BOSS2 = "BOSS2"
 
 RECOVERY = "RECOVERY"
 SHIELD = "SHIELD"
@@ -57,7 +58,7 @@ NORMAL = "NORMAL"
 SCORE_BASED = "SCORE_BASED"
 
 #bossの座標調整のための設定
-Move_range = Rect(440,40,480,480)
+Move_range = Rect(600,40,STAGE_WIDTH/2,STAGE_WIDTH/2)
 mg = Move_range
 Correction = 10
 
