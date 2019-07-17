@@ -17,7 +17,7 @@ class Main(pygame.sprite.Sprite):
         """pygame、ウィンドウなどの初期化処理"""
         pygame.init()   # pygameの初期化
 
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウを960×600で作成する
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
         
     def do(self):
          while True:
@@ -31,10 +31,13 @@ class Main(pygame.sprite.Sprite):
                     stageTxt = menu.draw()
                     if stageTxt == "0":
                         break
-                    self.Stage_draw(stageTxt)                       
-            elif init_num == Help:
+                    self.Stage_draw(stageTxt)                
+            elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 help_c = Help_a(self.screen)
                 help_b = help_c.draw()
+            elif init_num == End:
+                pygame.quit()
+                sys.exit()
 
     def Stage_draw(self, stageTxt):
         stage = Stage(self.screen, "stage/" + stageTxt)
@@ -60,15 +63,15 @@ class Main(pygame.sprite.Sprite):
         Score_text = Score_font.render("SCORE: " + str(result[1]), True, (255,255,255))
         Enter_text = Enter_font.render("ENTER:RETURN", True, (255,255,255))
 
-        self.screen.blit(Score_text, [360, 470])
+        self.screen.blit(Score_text, [460, 470])
         self.screen.blit(Enter_text, [5, 5])
 
         if result[0] ==  GAMECLEAR:
             image = pygame.image.load("img/gameclear.jpg").convert_alpha()
-            self.screen.blit(image, [155, 50])    
+            self.screen.blit(image, [255, 50])    
         elif result[0] == GAMEOVER:
             image = pygame.image.load("img/gameover.jpg").convert_alpha()
-            self.screen.blit(image, [170, 10])
+            self.screen.blit(image, [270, 10])
 
         while True:
             pygame.display.update()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

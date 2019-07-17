@@ -60,7 +60,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
 
         self.Shield_loop()                                      #シールドを再配置する
                
-        print(self.groups())
+        #print(self.groups()[1])
         #print(self.move_flag)
         #print(self.dx,self.dy)
         #print(self.rect.left,self.rect.top)

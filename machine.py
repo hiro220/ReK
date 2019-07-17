@@ -4,7 +4,7 @@
 import pygame
 from pygame.locals import *
 from gun import *
-from timer import Timer
+from timer import Timer, FlagTimer
 from define import WIDTH, HEIGHT
 from random import random, randrange
 
@@ -25,7 +25,7 @@ class Hp:
 
 class Machine(pygame.sprite.Sprite):
 
-    def __init__(self, hp, x, y, img, machines, score):
+    def __init__(self, hp, x, y, img, machines, score, money):
         """引数は、機体の体力を表すhp、機体の初期位置(x, y)、描画する画像、発射する弾の当たり判定対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.hp = Hp(hp)
@@ -36,9 +36,13 @@ class Machine(pygame.sprite.Sprite):
         self.machines = machines
         self.survival_flag = 0      #マシンが存在しているかを判定
         self.beam_flag = 0          #ビームが存在しているかを判定
+        self.reload_flag = True
+        self.cop_flag = 0
+        self.flagtimer = FlagTimer(lambda x:x, 0)
 
         self.dx = self.dy = 0
         self.score = score
+        self.money = money
 
     def move(self, dx, dy):
         """機体を(dx, dy)だけ移動させる"""
@@ -51,18 +55,36 @@ class Machine(pygame.sprite.Sprite):
 
     def reload(self):
         self.gun.reload()
-
+        if self.reload_flag:
+            self.reload_flag = False
+            bullet_num = self.gun.num
+            bullet_num /= self.gun.max/10
+            self.gun.num = 0
+            Timer(1000+bullet_num*500, self.gun.reload)
+            Timer(1500+bullet_num*500, self.change_flag)
+    
     def BulletZero(self):
         self.gun.BulletZero()
+
+    def change_flag(self):
+        self.reload_flag = True
     
-    def hit(self, attack):
-        """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除"""
+    def hit(self, attack, lasting=False):
+        """引数attack分だけ機体にダメージを与え、hpがなくなればすべてのグループからこの機体を削除
+        機体に対して持続的にダメージを与えるときはlastingをTrueにする。
+        """
         if self.hp.damage(attack):
             self.score.add_score(10)
+            self.survival_flag = 1
+            self.money.add_money(100)
             self.kill()
+            self.flagtimer.kill()
         else:
             # ダメージを受けたが、破壊されていないなら、一定時間無敵になる
-            self.invincible(1500)       # 1500ミリ秒無敵
+            if len(self.flagtimer.groups()) == 0:
+                self.flagtimer = FlagTimer(self.invincible, 1500, flag=lasting)
+            else:
+                self.flagtimer.flag = lasting
 
     def isMachine(self):
         # このクラスは機体
@@ -95,11 +117,10 @@ class Machine(pygame.sprite.Sprite):
         tmp_image = self.image.copy()       # 元の画像をコピー
         self.image.fill((255, 255, 255, alpha), None, pygame.BLEND_RGBA_MULT)       # 指定の透明度に設定する
         Timer(millisecond, self.set_image, tmp_image)      # 一定時間経過後、元の画像に戻す
-        group = self.groups()[1]            # 当たり判定用のグループ
+        group = self.groups()[2]            # 当たり判定用のグループ
         self.remove(group)                  # この機体を当たり判定のグループから取り除く
         Timer(millisecond, self.add, group)                 # 一定時間経過後、グループに戻す
 
-    
     def fall_meteorite(self, machines, num, millisecond):
         x, y = WIDTH, 0
         if random() < 0.5:
