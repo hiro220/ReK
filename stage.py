@@ -19,7 +19,7 @@ import pygame.mixer
 
 class Stage:
 
-    def __init__(self, screen, filename, continue_num=0):
+    def __init__(self, screen, filename, data, continue_num=0):
         """screenは描画対象。filenameはステージ内容を記述したテキストファイル"""
         self.screen = screen                    # 描画対象
         self.speed = 1                          # 背景の移動速度
