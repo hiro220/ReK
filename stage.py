@@ -112,12 +112,12 @@ class Stage:
                 self.player.invincible(2000)
             else:
                 pygame.mixer.music.stop()
-                return GAMEOVER, self.score.return_score()
+                return GAMEOVER
 
         # ゲームクリア条件が満たされた
         if self.isClear():
             pygame.mixer.music.stop()
-            return GAMECLEAR, self.score.return_score()
+            return GAMECLEAR
           
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
