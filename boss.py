@@ -169,7 +169,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
     def Shield_loop(self):
         if self.shield.value != None:
             if self.hp.hp > 5 and self.shield.value.hp.hp <= 0:
-                self.shield = Timer(1000,Shield,5,self)
+                self.shield = Timer(7000,Shield,5,self)
         elif self.invincible_flag == 2:
             self.shield.kill()
     
