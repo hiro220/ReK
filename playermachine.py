@@ -7,7 +7,7 @@ from gun import *
 from define import INFO_WIDTH, WIDTH, HEIGHT
 
 class PlayerMachine(Machine):
-
+    killed_count = 0
     def __init__(self, x, y, cpus, score, money):
         """引数は、初期位置(x, y)、弾の当たり判定対象となる敵機グループ"""
         image = pygame.image.load("img/player.png").convert_alpha()
@@ -37,3 +37,6 @@ class PlayerMachine(Machine):
     
     def isGameOver(self):
         return not self.alive()
+
+    def death(self):
+        PlayerMachine.killed_count += 1

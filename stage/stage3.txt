@@ -1,4 +1,4 @@
-size    200
+size    0
 rule    NORMAL
 bg      STAR
 

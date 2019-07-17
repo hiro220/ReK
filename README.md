@@ -10,6 +10,7 @@
 - [Timer](#Timerの利用)
 - [ステージを作成する](#ステージの作成)
 - [アイテム一覧](#利用できるアイテム)
+- [セーブデータについて](#セーブデータ)
 
 </div></details>
 
@@ -74,7 +75,7 @@ class Stage:
 |`Circle_Gun`|周囲へ同時に通常弾を撃つ|
 |`Twist_Gun`|左方向へ周期的に弾を撃つ|
 |`Beam_Gun`|左方向へビームを撃つ|
-
+|`Missile_Gun`|相手を追尾するミサイルを撃つ|
 
 
 ## アイテムの作成
@@ -225,3 +226,22 @@ CPU3    500
 |`SPEEDDOWN`|取得した機体のスピードが3秒間落ちる|
 |`SCOREGET`|取得した時点で画面内に残る敵機数×5のスコアを獲得する|
 |`METEORITE`|相手にダメージのある隕石を5つ落とす|
+
+## セーブデータ
+*data*テーブルにセーブデータが保持されている
+### セーブデータの削除
+```
+python database.py
+```
+
+現在のバージョンでセーブされる項目は以下
+
+|data|Dictionary Key Name|veriable type|
+|:-:|:-:|:-:|
+|バージョン|`version`|`str`|
+|所持金|`money`|`int`|
+|これまで獲得したお金|`sum_money`|`int`|
+|何番目のステージまでクリアしたか|`stage_progress`|`int`|
+|倒した敵機の数|`kill`|`int`|
+|自機がやられた数|`death`|`int`|
+|ReK全体を通してのプレイ時間|`play_time`|`float`|
