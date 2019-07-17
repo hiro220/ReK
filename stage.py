@@ -11,17 +11,21 @@ from item import *
 from define import *
 from out_range import *
 from timer import Timer
-from score import *
+from score import Score
 from boss import *
 from money import *
 import pygame.mixer
 
 class Stage:
 
-    def __init__(self, screen, filename):
+    def __init__(self, screen, filename, data):
         """screenは描画対象。filenameはステージ内容を記述したテキストファイル"""
         self.screen = screen                    # 描画対象
         self.speed = 1                          # 背景の移動速度
+        self.data = data
+
+        CpuMachine.killed_count = self.data["kill"]
+        PlayerMachine.killed_count = self.data["death"]
         
         self.initGroup()                        # グループを初期化する
 
@@ -76,8 +80,10 @@ class Stage:
             result = self.process()
             self.draw()
             if not result == CONTINUE:
-                break            
-        return result
+                break
+        self.data["kill"] = CpuMachine.killed_count
+        self.data["death"] = PlayerMachine.killed_count
+        return result, self.score.return_score(), self.money.money
 
     def stage_process(self):
         # 1フレームごとの処理
@@ -92,13 +98,13 @@ class Stage:
 
         if self.isGameOver():
             pygame.mixer.music.stop()
-            return GAMEOVER, self.score.return_score()                 # ゲームオーバー条件が満たされた
+            return GAMEOVER                 # ゲームオーバー条件が満たされた
         if self.isClear():
             pygame.mixer.music.stop()
-            return GAMECLEAR, self.score.return_score()                # ゲームクリア条件が満たされた
+            return GAMECLEAR                # ゲームクリア条件が満たされた
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
-                return EXIT, -1
+                return EXIT
             if event.type == KEYDOWN:       # キー入力があった時
                 if event.key == K_SPACE:
                     R_time.stop()
@@ -146,14 +152,14 @@ class Stage:
     def pause_process(self):
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
-                return EXIT, -1
+                return EXIT
             if event.type == KEYDOWN:
                 if event.key == K_SPACE:
                     pygame.mixer.music.unpause()
                     R_time.restart()
                     self.process, self.draw = self.stage_process, self.stage_draw
                 elif event.key == K_q:
-                    return RETIRE, -1
+                    return RETIRE
         return CONTINUE
 
     def pause_draw(self):
