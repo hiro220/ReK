@@ -7,6 +7,7 @@ import pygame
 from pygame.locals import *
 import math
 import random
+from timer import *
 
 class Gun:
 
@@ -71,16 +72,16 @@ class Circle_Gun(Gun):
     def shoot(self, x, y):
         Bullet_list1 = [[-4.0,0],[-3.5,-3.5],[0,-4.0],[3.5,-3.5],[4.0,0],[3.5,3.5],[0,4.0],[-3.5,3.5]]           #弾の飛ばす方向を格納
         Bullet_list2 = [[1.9,-4.6],[4.6,-1.9],[4.6,1.9],[1.9,4.6],[-1.9,4.6],[-4.6,1.9],[-4.6,-1.9],[-1.9,-4.6]] #弾の飛ばす方向を格納
-        if R_time.get_ticks() - self.gun_start >= 1200 and self.count == 0:                  #弾をそれぞれ交互にとばすためのself.count
+        if self.count == 0:                  #弾をそれぞれ交互にとばすためのself.count
             for bullet_list in Bullet_list1:
                 Bullet(x, y, bullet_list[0],bullet_list[1], self.machines)
-            self.gun_start = R_time.get_ticks()
+            #self.gun_start = R_time.get_ticks()
             self.count = 1
             self.num -= 1
-        if  R_time.get_ticks() - self.gun_start >= 1200 and self.count == 1:
+        elif  self.count == 1:
             for bullet_list in Bullet_list2:
                 Bullet(x, y, bullet_list[0], bullet_list[1], self.machines)
-            self.gun_start = R_time.get_ticks()
+            #self.gun_start = R_time.get_ticks()
             self.count = 0
             self.num -= 1
 
@@ -90,13 +91,18 @@ class Twist_Gun(Gun):
         super().__init__(machines, principal, max)   #superクラス(Gun）を呼び出す
         self.standard_parameter = -10.0              #飛ばす弾の速度と角度を格納
         self.standard_angle = 0                      #飛ばす弾の角度を格納(例１５）
+        self.shot_flag = True
+        self.angle_count = 0
+        self.shot_count = 0
         if self.principal.cop_flag:
             self.standard_parameter *= -1
             
     def shoot(self, x, y):
+        #self.count_angle()
         dx = self.standard_parameter*math.cos(math.radians(self.standard_angle)) #飛ばす角度を指定してdxの値を変化させる
         dy = self.standard_parameter*math.sin(math.radians(self.standard_angle)) #飛ばす角度を指定してdyの値を変化させる
         Bullet(x, y, dx, dy, self.machines)
+        #self.shot_count += 1
         if self.standard_angle >= 45:                                            #角度が45度以上になると角度の変化が反時計回りになる
             self.count = 1
 
@@ -107,7 +113,23 @@ class Twist_Gun(Gun):
             self.standard_angle += 10                                            #変化角度を+10度する  
         if self.count == 1:
             self.standard_angle -= 10                                            #変化角度を-10度する
+        """if self.angle_count == 3:
+            self.change_flag()
+            #Timer(2000,self.change_flag)
+            self.angle_count = 0
+            self.shot_count = 0
+        print(self.angle_count)"""
         self.num -= 1
+    
+    def change_flag(self):
+        if self.shot_flag:
+            self.shot_flag = False
+        else:
+            self.shot_flag = True
+
+    def count_angle(self):
+        if self.standard_angle == 0:
+            self.angle_count += 1
 
 class Beam_Gun(Gun):
     def __init__(self, machines, principal, max):
@@ -131,6 +153,16 @@ class Beam_Gun(Gun):
             self.gun_start = pygame.time.get_ticks()
 
 class Missile_Gun(Gun):
+
+    def __init__(self, machines, principal, max):
+        super().__init__(machines, principal, max)
+
     def shoot(self, x, y):
-        Missile_Bullet(x, y, -10, 0, self.machines)
-        self.num -= 1
+        if self.principal.cop_flag == 1 and R_time.get_ticks() - self.gun_start >= 1000:
+                Missile_Bullet(x, y, self.dx*-1, self.dy, self.machines, 1)
+                self.gun_start = R_time.get_ticks()
+                self.num -= 1
+        elif self.principal.cop_flag == 0:
+            Missile_Bullet(x, y, self.dx, self.dy, self.machines, 0)
+            self.num -= 1
+        

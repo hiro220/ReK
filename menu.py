@@ -100,9 +100,5 @@ class Menu:
             self.shop_num = 0
     
     def Return_Stage(self):
-        if self.stage_num == 1:
-            return Stage1
-        elif self.stage_num == 2:
-            return Stage2
-        elif  self.stage_num == 3:
-            return Stage3
+        stage = [Stage1, Stage2, Stage3]
+        return self.stage_num, stage[self.stage_num-1]
