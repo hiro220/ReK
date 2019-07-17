@@ -153,6 +153,16 @@ class Beam_Gun(Gun):
             self.gun_start = pygame.time.get_ticks()
 
 class Missile_Gun(Gun):
+
+    def __init__(self, machines, principal, max):
+        super().__init__(machines, principal, max)
+
     def shoot(self, x, y):
-        Missile_Bullet(x, y, -10, 0, self.machines)
-        self.num -= 1
+        if self.principal.cop_flag == 1 and R_time.get_ticks() - self.gun_start >= 1000:
+                Missile_Bullet(x, y, self.dx*-1, self.dy, self.machines, 1)
+                self.gun_start = R_time.get_ticks()
+                self.num -= 1
+        elif self.principal.cop_flag == 0:
+            Missile_Bullet(x, y, self.dx, self.dy, self.machines, 0)
+            self.num -= 1
+        

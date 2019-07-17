@@ -7,14 +7,14 @@ from gun import *
 from define import INFO_WIDTH, WIDTH, HEIGHT
 
 class PlayerMachine(Machine):
-
+    killed_count = 0
     def __init__(self, x, y, cpus, score, money):
         """引数は、初期位置(x, y)、弾の当たり判定対象となる敵機グループ"""
         image = pygame.image.load("img/player.png").convert_alpha()
         super().__init__(2, x, y, image, cpus, score, money)
         self.dx, self.dy = 7, 7                         # 移動量
         self.cop_flag = True
-        self.gun = Beam_Gun(self.machines, self, 100)
+        self.gun = Missile_Gun(self.machines, self, 100)
 
     def move(self):
         key = pygame.key.get_pressed()      # 押されたキーを受け取る
@@ -37,3 +37,6 @@ class PlayerMachine(Machine):
     
     def isGameOver(self):
         return not self.alive()
+
+    def death(self):
+        PlayerMachine.killed_count += 1
