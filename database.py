@@ -4,7 +4,7 @@ import sqlite3
 
 db = 'data/savedata.db'
 
-
+"""
 # データベース
 conn = sqlite3.connect(db)
 # sqliteを操作するカーソルオブジェクトを作成
@@ -22,6 +22,33 @@ if cur.fetchone()[0] == 0:
 
 # データベースへのコネクションを閉じる
 conn.close()
+"""
+
+def create_table(table_name, keys):
+    """
+    - table_name : string
+    - keys : string list ['key_name type', ...]
+    - name type :
+        - INTEGER
+        - TEXT
+    """
+    # データベース
+    conn = sqlite3.connect(db)
+    # sqliteを操作するカーソルオブジェクトを作成
+    cur = conn.cursor()
+
+    # rankingテーブルが存在しないとき、作成する
+    cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name=?", [table_name])
+    execute_text = 'CREATE TABLE ' + table_name + '(' + ', '.join(keys) + ')'
+    if cur.fetchone()[0] == 0:
+        cur.execute(execute_text)
+
+    # データベースへのコネクションを閉じる
+    conn.close()
+
+
+create_table('ranking', ['id INTEGER PRYMARY KEY', 'stage INTEGER', 'score INTEGER'])
+create_table('data', ['key TEXT', 'value TEXT'])
 
 
 def insert_score(stage_id, score):
@@ -82,6 +109,8 @@ def load():
     # dataテーブル内から全てのデータを辞書にして取り出す。
     data_dic = {}
     for key, value in cur.execute("SELECT * FROM data"):
+        if type(value) == dict:
+            value = cur.execute("SELECT * FROM ?", [key])
         data_dic[key] = value
 
     # データベースへのコネクションを閉じる

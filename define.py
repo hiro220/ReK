@@ -76,4 +76,4 @@ STAR = "STAR"
 # timer
 R_time = ReK_time()
 
-data_key = {"money":int, "stage_progress":int, "version":str, "death":int, "kill":int, "sum_money":int, "play_time":float}
+data_key = {"money":int, "stage_progress":int, "version":str, "death":int, "kill":int, "sum_money":int, "play_time":float, "gun_data":dict}
