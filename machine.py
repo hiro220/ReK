@@ -54,6 +54,7 @@ class Machine(pygame.sprite.Sprite):
             self.gun.shoot(x, y)
 
     def reload(self):
+        self.gun.reload()
         if self.reload_flag:
             self.reload_flag = False
             bullet_num = self.gun.num
@@ -62,6 +63,9 @@ class Machine(pygame.sprite.Sprite):
             Timer(1000+bullet_num*500, self.gun.reload)
             Timer(1500+bullet_num*500, self.change_flag)
     
+    def BulletZero(self):
+        self.gun.BulletZero()
+
     def change_flag(self):
         self.reload_flag = True
     
@@ -73,6 +77,7 @@ class Machine(pygame.sprite.Sprite):
             self.score.add_score(10)
             self.survival_flag = 1
             self.money.add_money(100)
+            self.death()
             self.kill()
             self.flagtimer.kill()
         else:
