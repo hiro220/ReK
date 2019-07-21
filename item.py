@@ -74,7 +74,7 @@ class Shield(pygame.sprite.Sprite):
         return False
 
     def __del__(self):
-        if len(self.machine.groups()) != 3:
+        if len(self.machine.groups()) == 2:
             self.machine.add(self.group)
 
 class ShieldItem(Item):

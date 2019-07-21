@@ -77,6 +77,7 @@ class Stage:
     def loop(self):
         while True:
             self.clock.tick(30)         # フレームレート(30fps)
+            print("cpus :", self.cpus, "¥ncpus2 :", self.cpus2)
             result = self.process()
             self.draw()
             pygame.display.update()     # 画面更新
@@ -271,9 +272,9 @@ class Stage:
     
     def creatRange(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range(INFO_WIDTH-100,-100,10,HEIGHT+50)
-        #Range(0,-10,WIDTH,10)
-        #Range(0,HEIGHT,WIDTH,10)
+        Range(INFO_WIDTH-100,-50,10,HEIGHT+100)
+        Range(0,-10,WIDTH,10)
+        Range(0,HEIGHT,WIDTH,10)
     
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
