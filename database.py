@@ -85,7 +85,7 @@ def _save_gun(cur, values):
         cur.execute("SELECT COUNT(*) FROM gun WHERE id=? AND name=?", [gun_id, dic['name']])
         if cur.fetchone()[0] == 0:
             data_list = [gun_id, dic['name'], dic['bullet_size'], dic['reload_size'], dic['own'], dic['set']]
-            cur.execute("INSERT INTO gun(id, name, bullet_max, reload_size, own, set) values(?, ?, ?, ?, ?, ?)", data_list)
+            cur.execute("INSERT INTO gun(id, name, bullet_size, reload_size, own, set) values(?, ?, ?, ?, ?, ?)", data_list)
         else:
             cur.execute("UPDATE gun SET own=?, set=? WHERE id=?", [dic['own'], dic['set'], gun_id])
         
@@ -164,4 +164,4 @@ if __name__=='__main__':
 else:
     create_table('ranking', ['id INTEGER PRYMARY KEY', 'stage INTEGER', 'score INTEGER'])
     create_table('data', ['key TEXT', 'value TEXT'])
-    create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_max INTEGER', 'reload_size INTEGER', 'own INTEGER', 'set INTEGER'])
+    create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_size INTEGER', 'reload_size INTEGER', 'own INTEGER', 'set INTEGER'])
