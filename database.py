@@ -84,10 +84,10 @@ def _save_gun(cur, values):
         # keyがテーブル内に存在するなら更新、存在しないなら追加する。
         cur.execute("SELECT COUNT(*) FROM gun WHERE id=? AND name=?", [gun_id, dic['name']])
         if cur.fetchone()[0] == 0:
-            data_list = [gun_id, dic['name'], dic['bullet_size'], dic['reload_size'], dic['own'], dic['set']]
-            cur.execute("INSERT INTO gun(id, name, bullet_size, reload_size, own, set) values(?, ?, ?, ?, ?, ?)", data_list)
+            data_list = [gun_id, dic['name'], dic['bullet_size'], dic['reload_size'], dic['own'], dic['set_flag']]
+            cur.execute("INSERT INTO gun(id, name, bullet_size, reload_size, own, set_flag) values(?, ?, ?, ?, ?, ?)", data_list)
         else:
-            cur.execute("UPDATE gun SET own=?, set=? WHERE id=?", [dic['own'], dic['set'], gun_id])
+            cur.execute("UPDATE gun SET own=?, set_flag=? WHERE id=?", [dic['own'], dic['set_flag'], gun_id])
         
 def save(data_dic):
     # データベース
@@ -115,7 +115,7 @@ def _load_gun(cur):
     for gun_data in cur.execute("SELECT * FROM gun"):
         data = {}
         gun_key = gun_data[0]
-        data['name'], data['bullet_size'], data['reload_size'], data['own'], data['set'] = gun_data[1:]
+        data['name'], data['bullet_size'], data['reload_size'], data['own'], data['set_flag'] = gun_data[1:]
         dic[gun_key] = data
     return dic
 
@@ -164,4 +164,4 @@ if __name__=='__main__':
 else:
     create_table('ranking', ['id INTEGER PRYMARY KEY', 'stage INTEGER', 'score INTEGER'])
     create_table('data', ['key TEXT', 'value TEXT'])
-    create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_size INTEGER', 'reload_size INTEGER', 'own INTEGER', 'set INTEGER'])
+    create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_size INTEGER', 'reload_size INTEGER', 'own INTEGER', 'set_flag INTEGER'])

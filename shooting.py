@@ -127,6 +127,7 @@ class Main(pygame.sprite.Sprite):
                 continue
             data['name'] = name
             data['own'] = 0
+            data['set_flag'] = 0
             self.data['gun_data'][i] = data
             i += 1
 
