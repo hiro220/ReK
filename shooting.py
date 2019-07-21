@@ -11,6 +11,7 @@ import pygame.mixer
 import database as db
 from define import *
 from help_explain import Help_a, Help_print
+import json
 
 class Main(pygame.sprite.Sprite):
 
@@ -39,6 +40,8 @@ class Main(pygame.sprite.Sprite):
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 help_c = Help_a(self.screen)
                 help_b = help_c.draw()
+                if help_b == EXIT:
+                    self.exit()
             elif init_num == End:
                 self.exit()
 
@@ -114,12 +117,31 @@ class Main(pygame.sprite.Sprite):
                 self.screen.blit(score, [550, 180+50*(pos+1)])
                 pos += 1
             
+    def _check_gun(self, flag=False):
+        """ 新しいデータを追加する時、flagをTrueにする。
+        """
+        dic = json.load(open("data/gun.json", "r"))
+        i = 0
+        for name, data in dic.items():
+            if i in self.data['gun_data']:
+                continue
+            data['name'] = name
+            data['own'] = 0
+            self.data['gun_data'][i] = data
+            i += 1
+
+
     def data_check(self):
         for key, cast in data_key.items():
             if key in self.data:
-                self.data[key] = cast(self.data[key])
+                if key == 'gun_data':
+                    self._check_gun()
+                else:
+                    self.data[key] = cast(self.data[key])
             else:
                 self.data[key] = cast()
+        if self.data['version'] != version:
+            self._check_gun(flag=True)
         self.data['version'] = version
 
     def exit(self):

@@ -48,11 +48,6 @@ def create_table(table_name, keys):
     conn.close()
 
 
-create_table('ranking', ['id INTEGER PRYMARY KEY', 'stage INTEGER', 'score INTEGER'])
-create_table('data', ['key TEXT', 'value TEXT'])
-create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_max INTEGER', 'reload_size INTEGER', 'own INTEGER'])
-
-
 def insert_score(stage_id, score):
     # データベース
     conn = sqlite3.connect(db)
@@ -87,9 +82,9 @@ def load_ranking(stage_id):
 def _save_gun(cur, values):
     for gun_id, dic in values.items():
         # keyがテーブル内に存在するなら更新、存在しないなら追加する。
-        cur.execute("SELECT COUNT(*) FROM gun WHERE id=?", [gun_id])
+        cur.execute("SELECT COUNT(*) FROM gun WHERE id=? AND name=?", [gun_id, dic['name']])
         if cur.fetchone()[0] == 0:
-            data_list = [gun_id] + list(dic.values())
+            data_list = [gun_id, dic['name'], dic['bullet_size'], dic['reload_size'], dic['own']]
             cur.execute("INSERT INTO gun(id, name, bullet_max, reload_size, own) values(?, ?, ?, ?, ?)", data_list)
         else:
             cur.execute("UPDATE gun SET own=? WHERE id=?", [dic['own'], gun_id])
@@ -101,7 +96,7 @@ def save(data_dic):
     cur = conn.cursor()
     for key, value in data_dic.items():
         if type(value) == dict:
-            if key == 'gun':
+            if key == 'gun_data':
                 _save_gun(cur, value)
                 value = 'dict'
         # keyがテーブル内に存在するなら更新、存在しないなら追加する。
@@ -115,13 +110,13 @@ def save(data_dic):
     # データベースへのコネクションを閉じる
     conn.close()
 
-def _load_gun():
+def _load_gun(cur):
     dic = {}
-    for _id, key, data in cur.execute("SELECT * FROM gun"):
+    for gun_data in cur.execute("SELECT * FROM gun"):
         data = {}
-        for key, value in zip(data[0::2], data[1::2]):
-            data[key] = value
-        dic[key] = value
+        gun_key = gun_data[0]
+        data['name'], data['bullet_size'], data['reload_size'], data['own'] = gun_data[1:]
+        dic[gun_key] = data
     return dic
 
 
@@ -134,9 +129,10 @@ def load():
     # dataテーブル内から全てのデータを辞書にして取り出す。
     data_dic = {}
     for key, value in cur.execute("SELECT * FROM data"):
-        if key == 'gun':
-            data_dic[key] = _load_gun()
-        data_dic[key] = value
+        if key == 'gun_data':
+            data_dic[key] = _load_gun(cur)
+        else:
+            data_dic[key] = value
 
     # データベースへのコネクションを閉じる
     conn.close()
@@ -147,11 +143,25 @@ if __name__=='__main__':
     conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
-    cur.execute("DROP TABLE ranking")
+    tables = cur.execute("SELECT * FROM sqlite_master WHERE type='table'")
+    for table in list(tables):
+        table = table[1]
+        cur.execute("DROP TABLE "+table)
+        cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name=?", [table])
+        if cur.fetchone()[0] == 0:
+            print(table, "TABLE deleted")
+        else:
+            print("error :", table, "TABLE didn't deleted")
+    """cur.execute("DROP TABLE ranking")
     cur.execute("DROP TABLE data")
     cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='ranking'")
     print("ranking table deleted :", cur.fetchone()[0] == 0)
     cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='data'")
     print("data table deleted :", cur.fetchone()[0] == 0)
+    """
     conn.commit()
     conn.close()
+else:
+    create_table('ranking', ['id INTEGER PRYMARY KEY', 'stage INTEGER', 'score INTEGER'])
+    create_table('data', ['key TEXT', 'value TEXT'])
+    create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_max INTEGER', 'reload_size INTEGER', 'own INTEGER'])
