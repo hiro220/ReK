@@ -114,6 +114,8 @@ class Machine(pygame.sprite.Sprite):
         self.image = image
 
     def invincible(self, millisecond):
+        if len(self.groups()) != 3:
+            return
         alpha = 100                         # 透明度
         tmp_image = self.image.copy()       # 元の画像をコピー
         self.image.fill((255, 255, 255, alpha), None, pygame.BLEND_RGBA_MULT)       # 指定の透明度に設定する
