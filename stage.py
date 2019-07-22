@@ -77,7 +77,6 @@ class Stage:
     def loop(self):
         while True:
             self.clock.tick(30)         # フレームレート(30fps)
-            print("cpus :", self.cpus, "¥ncpus2 :", self.cpus2)
             result = self.process()
             self.draw()
             pygame.display.update()     # 画面更新
@@ -146,9 +145,9 @@ class Stage:
         # 描画処理
         self.screen.blit(self.image, (-self.x, 0))                      # 背景画像の描画
         self.screen.blit(self.sub_image, (-self.x+self.width, 0))       # 対になる背景画像を繋げて描画
+        self.draw_info()
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         self.bullets.draw(self.screen)
-        self.draw_info()
         self.score.draw(self.screen)
         self.money.draw(self.screen)
 
@@ -272,9 +271,10 @@ class Stage:
     
     def creatRange(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range(INFO_WIDTH-100,-50,10,HEIGHT+100)
-        Range(0,-10,WIDTH,10)
-        Range(0,HEIGHT,WIDTH,10)
+        Range(INFO_WIDTH-100,-50,20,HEIGHT+100)
+        Range(0,-70,WIDTH+200,20)
+        Range(0,HEIGHT+50,WIDTH+200,20)
+        Range(WIDTH+200,-50,20,HEIGHT+100)
     
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
