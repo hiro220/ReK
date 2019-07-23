@@ -122,7 +122,12 @@ class Machine(pygame.sprite.Sprite):
         Timer(millisecond, self.set_image, tmp_image)      # 一定時間経過後、元の画像に戻す
         group = self.groups()[2]            # 当たり判定用のグループ
         self.remove(group)                  # この機体を当たり判定のグループから取り除く
-        Timer(millisecond, self.add, group)                 # 一定時間経過後、グループに戻す
+        Timer(millisecond, self.add_group, group)                 # 一定時間経過後、グループに戻す
+    
+    def add_group(self, group):
+        if len(self.groups()) != 2:
+            return
+        self.add(group)
 
     def fall_meteorite(self, machines, num, millisecond):
         x, y = WIDTH, 0
