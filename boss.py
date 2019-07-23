@@ -17,7 +17,7 @@ class Boss(Machine):
 class Stage1_boss(Boss):                                 #ボス本体の機体
     def __init__(self, x, y, players, score, money):
         image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
-        super().__init__(10000, x, y, image, players, score, money)         #superクラス(Boss)を呼び出す
+        super().__init__(10000, x, 280, image, players, score, money)         #superクラス(Boss)を呼び出す
         self.shield  = Timer(0,Shield,10000,self)
         self.summon_flag = False                         #subをロードしていいかの判定フラグ
         self.load_count = 0                              #何回subをロードかを確かめるためのフラグ
