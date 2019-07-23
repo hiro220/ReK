@@ -11,7 +11,7 @@ from item import *
 from define import *
 from out_range import *
 from timer import Timer
-from score import *
+from score import Score
 from boss import *
 from boss2 import *
 from money import *
@@ -19,10 +19,15 @@ import pygame.mixer
 
 class Stage:
 
-    def __init__(self, screen, filename):
+    def __init__(self, screen, filename, continue_num=0):
         """screenは描画対象。filenameはステージ内容を記述したテキストファイル"""
         self.screen = screen                    # 描画対象
         self.speed = 1                          # 背景の移動速度
+        self.continue_num = continue_num
+        self.data = data
+
+        CpuMachine.killed_count = self.data["kill"]
+        PlayerMachine.killed_count = self.data["death"]
         
         self.initGroup()                        # グループを初期化する
 
@@ -53,7 +58,6 @@ class Stage:
         self.players = pygame.sprite.Group()        # playerの機体用グループ
         self.cpus = pygame.sprite.Group()           # cpuの機体用グループ
         self.bullets = pygame.sprite.Group()        # bulletのグループ
-        self.beams = pygame.sprite.Group()          # beamのグループ
         self.ranges = pygame.sprite.Group()         # 画面の範囲外のspriteを格納したグループ
         self.ranges2 = pygame.sprite.Group()        # 画面の範囲外のspriteを格納したグループ
         self.timers = pygame.sprite.Group()
@@ -62,10 +66,9 @@ class Stage:
         
         PlayerMachine.containers = self.group, self.players2, self.players     # プレイヤーマシンにグループを割り当てる
         CpuMachine.containers = self.group, self.cpus2, self.cpus           # cpuマシンにグループを割り当てる
-        Bullet.containers = self.group                          # 弾にグループを割り当てる
         Item.containers = self.group
-        Bullet.containers = self.group, self.bullets            # 弾にグループを割り当てる
-        Beam.containers = self.group, self.beams
+        Bullet.containers = self.bullets            # 弾にグループを割り当てる
+        Beam.containers = self.bullets
         Range.containers = self.ranges                          # 範囲にグループを割り当てる
         Range2.containers = self.ranges2                        # 範囲にグループを割り当てる
         Timer.containers = self.timers
@@ -76,9 +79,12 @@ class Stage:
             self.clock.tick(30)         # フレームレート(30fps)
             result = self.process()
             self.draw()
+            pygame.display.update()     # 画面更新
             if not result == CONTINUE:
-                break            
-        return result
+                break
+        self.data["kill"] = CpuMachine.killed_count
+        self.data["death"] = PlayerMachine.killed_count
+        return result, self.score.return_score(), self.money.money
 
     def stage_process(self):
         # 1フレームごとの処理
@@ -86,20 +92,36 @@ class Stage:
         self.moveStage()                    # ステージを動かす
         self.player.move()     # 入力に応じてプレイヤーの機体を動かす
         self.group.update()                 # groupに割り当てられたすべてのスプライトを更新する
+        self.bullets.update()
         self.timers.update()
 
         pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にでるとグループから削除される
         pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
 
+        # ゲームオーバー条件が満たされた
         if self.isGameOver():
-            pygame.mixer.music.stop()
-            return GAMEOVER, self.score.return_score()                 # ゲームオーバー条件が満たされた
+
+            pygame.mixer.music.pause()
+            R_time.stop()
+            # コンティニューするか
+            if self.select_continued():
+                R_time.restart()
+                pygame.mixer.music.unpause()
+                self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20))  # 初期値にプレイヤー機を生成
+                self.continue_num -= 1
+                self.player.invincible(2000)
+            else:
+                pygame.mixer.music.stop()
+                return GAMEOVER, self.score.return_score()
+
+        # ゲームクリア条件が満たされた
         if self.isClear():
             pygame.mixer.music.stop()
-            return GAMECLEAR, self.score.return_score()                # ゲームクリア条件が満たされた
+            return GAMECLEAR, self.score.return_score()
+          
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
-                return EXIT, -1
+                return EXIT
             if event.type == KEYDOWN:       # キー入力があった時
                 if event.key == K_SPACE:
                     R_time.stop()
@@ -112,7 +134,6 @@ class Stage:
         self.keyx += self.speed
         if self.keyx > self.size:         # 画面がステージサイズ分移動しているなら早期リターン
             return
-
         self.x += self.speed                # ステージの位置を移動させる
         if self.x - 1 >= self.width:        # 画像が端までいったとき、背景画像と反転画像を入れ替えて、位置を初期化する
             self.x = 0
@@ -125,10 +146,10 @@ class Stage:
         self.screen.blit(self.image, (-self.x, 0))                      # 背景画像の描画
         self.screen.blit(self.sub_image, (-self.x+self.width, 0))       # 対になる背景画像を繋げて描画
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
+        self.bullets.draw(self.screen)
         self.draw_info()
         self.score.draw(self.screen)
         self.money.draw(self.screen)
-        pygame.display.update()             # 画面を更新する
 
     def draw_info(self):
         pygame.draw.rect(self.screen, (0,0,0),Rect(0,0,INFO_WIDTH, HEIGHT))     # infoエリアの描画
@@ -143,25 +164,53 @@ class Stage:
         pygame.draw.rect(self.screen, (100, 0, 150), Rect(120, HEIGHT-80-length, 30, length))   # Bulletバー
         pygame.draw.rect(self.screen, (255, 255, 255), Rect(120, HEIGHT-380, 30, 300), 3)       # 枠線
 
+    def select_continued(self):
+        self.draw()
+        pygame.display.update()
+        # コンティニューできるか
+        if self.continue_num:
+            # 表示する文字の設定
+            text = "Continue? : " + str(self.continue_num) + " Times"
+            text = pygame.font.Font("freesansbold.ttf", 60).render(text, True, (255,255,255))
+            text_width = text.get_rect().centerx
+            yes_text = pygame.font.Font("freesansbold.ttf", 40).render("Yes", True, (255,255,255))
+            no_text = pygame.font.Font("freesansbold.ttf", 40).render("No", True, (255,255,255))
+            select = 0
+            # Enterが押されるまで無限ループ
+            while True:
+                self.draw()
+                self.screen.blit(text,[WIDTH/2-text_width, HEIGHT/4-50])
+                self.screen.blit(yes_text,[WIDTH/2-150, HEIGHT/4+80])
+                self.screen.blit(no_text,[WIDTH/2+100, HEIGHT/4+80])
+                pygame.draw.rect(self.screen, (0,255,255), Rect(WIDTH/2+80-240*select, HEIGHT/4+75, 100, 50), 3)
+                pygame.display.update()
+                for event in pygame.event.get():
+                    if event.type == KEYDOWN:       # キー入力があった時
+                        if event.key == K_RETURN:
+                            return select
+                        if event.key in [K_RIGHT, K_LEFT]:
+                            select ^= 1         # xor演算(1, 0の反転)
+        else:
+            # コンティニューできない
+            return False
 
     def pause_process(self):
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
-                return EXIT, -1
+                return EXIT
             if event.type == KEYDOWN:
                 if event.key == K_SPACE:
                     pygame.mixer.music.unpause()
                     R_time.restart()
                     self.process, self.draw = self.stage_process, self.stage_draw
                 elif event.key == K_q:
-                    return RETIRE, -1
+                    return RETIRE
         return CONTINUE
 
     def pause_draw(self):
         self.screen.blit(self.pause_text, [WIDTH/2-80, HEIGHT/4])
         self.screen.blit(self.restart_text, [WIDTH/2-80, HEIGHT/4+100])
         self.screen.blit(self.retire_text, [WIDTH/2-80, HEIGHT/4+150])
-        pygame.display.update()
 
     def readStage(self, file):
         """引数に指定したテキストファイルからステージ情報を読み込み、cpu情報をx座標がkeyとなる辞書型に格納する。（同様にアイテムの読み込みもできるはず）

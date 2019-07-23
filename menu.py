@@ -53,7 +53,7 @@ class Menu:
                     self.Key_Event(event)       #押されたキーによって異なる処理
                     if event.key == K_RETURN:
                         if self.back_num == 1:
-                            return "0"
+                            return None, None
                         return self.Return_Stage()
                 if event.type == QUIT:
                     pygame.quit()
@@ -82,9 +82,5 @@ class Menu:
             self.back_num = 0
     
     def Return_Stage(self):
-        if self.stage_num == 1:
-            return Stage1
-        elif self.stage_num == 2:
-            return Stage2
-        elif  self.stage_num == 3:
-            return Stage3
+        stage = [Stage1, Stage2, Stage3]
+        return self.stage_num, stage[self.stage_num-1]
