@@ -15,6 +15,8 @@ class Shop:
 
         self.money = Money(10,10)
 
+        self.gun_pack
+
         Circle_gun_font = pygame.font.Font("freesansbold.ttf", 45)
         Circle_gun_place_font = pygame.font.Font("freesansbold.ttf", 45)
         Reflection_Gun_font = pygame.font.Font("freesansbold.ttf", 45)
@@ -54,7 +56,7 @@ class Shop:
                         if self.back_num == 1:
                             return "0"
                         else:
-                            self.Buy()
+                            self.Buy(gun_value)
 
             self.screen.fill((0,0,0))
 
@@ -74,6 +76,6 @@ class Shop:
                 if self.gun_num > 1 and self.gun_num <= 2:
                     self.gun_num -= 1
 
-    def Buy(self):
-        if self.money.money >= 1000:
-            self.money.money -= 1000
+    def Buy(self, value):
+        if self.money.money >= self.value:
+            self.money.money -= self.value

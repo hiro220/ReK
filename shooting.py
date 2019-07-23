@@ -22,7 +22,7 @@ class Main(pygame.sprite.Sprite):
         self.data_check()
         print(self.data)
 
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.RESIZABLE)   # ウィンドウをWIDTH×HEIGHTで作成する
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
         self.shop = Shop(self.screen)
 
     def do(self):
@@ -35,7 +35,7 @@ class Main(pygame.sprite.Sprite):
                 while True:
                     menu = Menu(self.screen)    #メニュー画面の描画
                     stage_id, stageTxt = menu.draw()
-                    if stage_id == None:
+                    if stageTxt == "0":
                         break
                     elif stageTxt == "1":
                         shop = self.shop.draw()

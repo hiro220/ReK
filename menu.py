@@ -59,9 +59,9 @@ class Menu:
                     self.Key_Event(event)       #押されたキーによって異なる処理
                     if event.key == K_RETURN:
                         if self.back_num == 1:
-                            return "0"
+                            return None, "0"
                         elif self.shop_num == 1:
-                            return "1"
+                            return None, "1"
                         return self.Return_Stage()
                 if event.type == QUIT:
                     pygame.quit()
