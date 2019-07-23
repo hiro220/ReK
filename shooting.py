@@ -21,7 +21,7 @@ class Main(pygame.sprite.Sprite):
         self.data_check()
         print(self.data)
 
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.RESIZABLE)   # ウィンドウをWIDTH×HEIGHTで作成する
         
     def do(self):
          while True:
