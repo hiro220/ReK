@@ -278,10 +278,10 @@ class Stage:
     
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range2(INFO_WIDTH-20,0,10,HEIGHT)
-        Range2(INFO_WIDTH-10,-80,STAGE_WIDTH+20,10)
-        Range2(INFO_WIDTH-10,HEIGHT+10,STAGE_WIDTH+20,10)
-        Range2(WIDTH+80,0,10,HEIGHT)
+        Range2(INFO_WIDTH-WIDTH,-80,10,HEIGHT+160)
+        Range2(INFO_WIDTH-WIDTH+10,-80,WIDTH*3-INFO_WIDTH,10)
+        Range2(INFO_WIDTH-10,HEIGHT+80,WIDTH*3-INFO_WIDTH,10)
+        Range2(WIDTH*2,-80,10,HEIGHT+160)
 
     def set_background(self, image_id):
         dic = {SKY:"sky.jpg", STAR:"star.jpg"}
