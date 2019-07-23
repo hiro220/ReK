@@ -15,7 +15,6 @@ class Shop:
 
         self.money = Money(10,10)
 
-        self.gun_pack
 
         Circle_gun_font = pygame.font.Font("freesansbold.ttf", 45)
         Circle_gun_place_font = pygame.font.Font("freesansbold.ttf", 45)
