@@ -3,6 +3,7 @@ rule    NORMAL
 bg      STAR
 
 0
+CPU0    300
 CPU7    200
 CPU10   200
 CPU8    400

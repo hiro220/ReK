@@ -169,3 +169,11 @@ class Missile_Gun(Gun):
             Missile_Bullet(x, y, self.dx, self.dy, self.machines, 0)
             self.num -= 1
         
+class Fluffy_Gun(Gun):
+
+    def __init__(self, machines, principal, max):
+        super().__init__(machines, principal, max)
+
+    def shoot(self, x, y):
+        Fluffy_Bullet(x, y, self.dx*-1, self.dy, self.machines)
+        self.num -= 1
