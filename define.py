@@ -5,7 +5,7 @@ from rek_time import ReK_time
 
 """Rekでの、それぞれのファイルに共通の定数を定義している"""
 
-version = "1.0.0"
+version = "1.0.1"
 
 # ウィンドウのサイズ
 WIDTH = 1160
