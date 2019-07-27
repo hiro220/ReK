@@ -1,8 +1,14 @@
 # coding:utf-8
 
 import sqlite3
+import argparse
 
 db = 'data/savedata.db'
+
+parser = argparse.ArgumentParser(description='ReKにおけるデータベースを管理するファイル')
+parser.add_argument('-d', '--delete', action='store_true', help="すべてのデータベースを初期化する")
+parser.add_argument('-s', '--show', action='store_true', help="すべてのデータベースの中身を表示する")
+args = parser.parse_args()
 
 """
 # データベース
@@ -155,20 +161,33 @@ def load():
 
 if __name__=='__main__':
     # このプログラムをメインで実行したとき
-
+        
     # データベース
     conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
-    tables = cur.execute("SELECT * FROM sqlite_master WHERE type='table'")
-    for table in list(tables):
-        table = table[1]
-        cur.execute("DROP TABLE "+table)
-        cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name=?", [table])
-        if cur.fetchone()[0] == 0:
-            print(table, "TABLE deleted")
-        else:
-            print("error :", table, "TABLE didn't deleted")
+
+    if args.show:
+        tables = cur.execute("SELECT * FROM sqlite_master WHERE type='table'")
+        for table in list(tables):
+            print(table[4][13:])
+            table = table[1]
+            print('-'*100)
+            for row in cur.execute("SELECT * FROM "+table):
+                print(row)
+            print()
+
+
+    if args.delete:
+        tables = cur.execute("SELECT * FROM sqlite_master WHERE type='table'")
+        for table in list(tables):
+            table = table[1]
+            cur.execute("DROP TABLE "+table)
+            cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name=?", [table])
+            if cur.fetchone()[0] == 0:
+                print(table, "TABLE deleted")
+            else:
+                print("error :", table, "TABLE didn't deleted")
     """cur.execute("DROP TABLE ranking")
     cur.execute("DROP TABLE data")
     cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='ranking'")
