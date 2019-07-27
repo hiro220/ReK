@@ -100,7 +100,6 @@ def _save_equip(cur, data):
     if cur.fetchone()[0] == 0:
         cur.execute("INSERT INTO equipment(id, gun1, gun2, gun3) values(?,?,?,?)", [1]+data)
     else:
-        print(data)
         cur.execute("UPDATE equipment SET gun1=?, gun2=?, gun3=?", data)
 
 def save(data_dic):
