@@ -145,9 +145,9 @@ class Stage:
         # 描画処理
         self.screen.blit(self.image, (-self.x, 0))                      # 背景画像の描画
         self.screen.blit(self.sub_image, (-self.x+self.width, 0))       # 対になる背景画像を繋げて描画
-        self.draw_info()
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         self.bullets.draw(self.screen)
+        self.draw_info()
         self.score.draw(self.screen)
         self.money.draw(self.screen)
 
