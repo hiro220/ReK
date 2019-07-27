@@ -3,11 +3,13 @@ from pygame.locals import *
 import sys
 import time
 from define import *
+from equipment import Equipment
 
 class Menu:
     
-    def __init__(self, screen):
+    def __init__(self, screen, data):
         self.screen = screen
+        self.data = data
 
         self.stage_num = 1
         self.select_num = 0
@@ -30,6 +32,8 @@ class Menu:
         self.Stage3_text = Stage3_font.render("Stage3", True, (255,255,255))
         self.back_text = back_font.render("Back", True, (255,255,255))
 
+        self.equip = back_font.render("Equip", True, (255,255,255))
+
 
     def draw(self):
 
@@ -39,6 +43,7 @@ class Menu:
             self.screen.blit(self.RightArrow_text, [965, 220])  #テキスト ＞ を描画
             self.screen.blit(self.LeftArrow_text, [105, 220])     #テキスト ＞ を描画
             self.screen.blit(self.back_text,[900, 5])
+            self.screen.blit(self.equip, [500, 5])
 
             self.Select_Stage()     #ステージ選択処理
 
@@ -53,6 +58,7 @@ class Menu:
                     self.Key_Event(event)       #押されたキーによって異なる処理
                     if event.key == K_RETURN:
                         if self.back_num == 1:
+                            Equipment(self.screen, self.data).do()
                             return None, None
                         return self.Return_Stage()
                 if event.type == QUIT:

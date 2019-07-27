@@ -19,6 +19,7 @@ STAGE_WIDTH = 960
 START_GAME = 0          #START GAMEを選択した時
 Help = 1                #Helpを選択した時
 End = 2
+BACK = 3
 
 # メニュー画面におけるステージ名
 Stage1 = "Stage1.txt"
