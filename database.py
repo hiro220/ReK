@@ -89,16 +89,25 @@ def _save_gun(cur, values):
         else:
             cur.execute("UPDATE gun SET own=?, set_flag=? WHERE id=?", [dic['own'], dic['set_flag'], gun_id])
         
+def _save_equip(cur, data):
+    cur.execute("SELECT COUNT(*) FROM equipment WHERE id=?", [1])
+    if cur.fetchone()[0] == 0:
+        cur.execute("INSERT INTO equipment(id, gun1, gun2, gun3) values(?,?,?,?)", [1]+data)
+    else:
+        cur.execute("UPDATE equipment SET gun1=?, gun2=?, gun3=?", data)
+
 def save(data_dic):
     # データベース
     conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
     for key, value in data_dic.items():
-        if type(value) == dict:
-            if key == 'gun_data':
-                _save_gun(cur, value)
-                value = 'dict'
+        if key == 'gun_data':
+            _save_gun(cur, value)
+            value = 'gun table'
+        elif key == 'equip':
+            _save_equip(cur, value)
+            value = 1       # id
         # keyがテーブル内に存在するなら更新、存在しないなら追加する。
         cur.execute("SELECT COUNT(*) FROM data WHERE key=?", [key])
         if cur.fetchone()[0] == 0:
@@ -119,6 +128,10 @@ def _load_gun(cur):
         dic[gun_key] = data
     return dic
 
+def _load_equip(cur):
+    equipment = list(cur.execute("SELECT gun1, gun2, gun3 FROM equipment"))
+    print(equipment)
+    return equipment
 
 def load():
     # データベース
@@ -131,6 +144,8 @@ def load():
     for key, value in cur.execute("SELECT * FROM data"):
         if key == 'gun_data':
             data_dic[key] = _load_gun(cur)
+        elif key == 'equip':
+            data_dic[key] = _load_equip(cur)
         else:
             data_dic[key] = value
 
@@ -139,6 +154,8 @@ def load():
     return data_dic
 
 if __name__=='__main__':
+    # このプログラムをメインで実行したとき
+
     # データベース
     conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
@@ -162,6 +179,13 @@ if __name__=='__main__':
     conn.commit()
     conn.close()
 else:
+    # このプログラムがimportなどで別ファイルから実行されたとき
+
+    # rankingテーブル
     create_table('ranking', ['id INTEGER PRYMARY KEY', 'stage INTEGER', 'score INTEGER'])
+    # dataテーブル
     create_table('data', ['key TEXT', 'value TEXT'])
+    # gunテーブル
     create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_size INTEGER', 'reload_size INTEGER', 'own INTEGER', 'set_flag INTEGER'])
+    # equipmentテーブル
+    create_table('equipment', ['id INTEGER PRYMARY KEY', 'gun1 INTEGER', 'gun2 INTEGER', 'gun3 INTEGER'])

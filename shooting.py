@@ -131,6 +131,11 @@ class Main(pygame.sprite.Sprite):
             self.data['gun_data'][i] = data
             i += 1
 
+    def _check_equip(self):
+        # 何も装備されていないとき、Gunを装備する
+        if self.data['equip'] == []:
+            self.data['equip'] = [0, -1, -1]
+        
 
     def data_check(self):
         for key, cast in data_key.items():
@@ -143,6 +148,7 @@ class Main(pygame.sprite.Sprite):
                 self.data[key] = cast()
         if self.data['version'] != version:
             self._check_gun(flag=True)
+            self._check_equip()
         self.data['version'] = version
 
     def exit(self):
