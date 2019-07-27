@@ -131,7 +131,7 @@ def _load_gun(cur):
     for gun_data in cur.execute("SELECT * FROM gun"):
         data = {}
         gun_key = gun_data[0]
-        data['name'], data['bullet_size'], data['reload_size'], data['own'], data['set_flag'] = gun_data[1:]
+        data['name'], data['bullet_size'], data['reload_size'], data['own'] = gun_data[1:]
         dic[gun_key] = data
     return dic
 
