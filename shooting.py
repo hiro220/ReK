@@ -140,15 +140,11 @@ class Main(pygame.sprite.Sprite):
     def data_check(self):
         for key, cast in data_key.items():
             if key in self.data:
-                if key == 'gun_data':
-                    self._check_gun()
-                else:
-                    self.data[key] = cast(self.data[key])
+                self.data[key] = cast(self.data[key])
             else:
                 self.data[key] = cast()
-        if self.data['version'] != version:
-            self._check_gun(flag=True)
-            self._check_equip()
+        self._check_gun(flag=True)
+        self._check_equip()
         self.data['version'] = version
 
     def exit(self):

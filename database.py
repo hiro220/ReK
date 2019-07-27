@@ -100,6 +100,7 @@ def _save_equip(cur, data):
     if cur.fetchone()[0] == 0:
         cur.execute("INSERT INTO equipment(id, gun1, gun2, gun3) values(?,?,?,?)", [1]+data)
     else:
+        print(data)
         cur.execute("UPDATE equipment SET gun1=?, gun2=?, gun3=?", data)
 
 def save(data_dic):
@@ -135,8 +136,7 @@ def _load_gun(cur):
     return dic
 
 def _load_equip(cur):
-    equipment = list(cur.execute("SELECT gun1, gun2, gun3 FROM equipment"))
-    print(equipment)
+    equipment = list(cur.execute("SELECT gun1, gun2, gun3 FROM equipment"))[0]
     return equipment
 
 def load():
@@ -147,7 +147,8 @@ def load():
 
     # dataテーブル内から全てのデータを辞書にして取り出す。
     data_dic = {}
-    for key, value in cur.execute("SELECT * FROM data"):
+    data_list = list(cur.execute("SELECT * FROM data"))
+    for key, value in data_list:
         if key == 'gun_data':
             data_dic[key] = _load_gun(cur)
         elif key == 'equip':
