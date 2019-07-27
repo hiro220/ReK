@@ -117,9 +117,7 @@ class Main(pygame.sprite.Sprite):
                 self.screen.blit(score, [550, 180+50*(pos+1)])
                 pos += 1
             
-    def _check_gun(self, flag=False):
-        """ 新しいデータを追加する時、flagをTrueにする。
-        """
+    def _check_gun(self):
         dic = json.load(open("data/gun.json", "r"))
         i = 0
         for name, data in dic.items():
@@ -142,8 +140,10 @@ class Main(pygame.sprite.Sprite):
                 self.data[key] = cast(self.data[key])
             else:
                 self.data[key] = cast()
-        self._check_gun(flag=True)
+        self._check_gun()
         self._check_equip()
+
+        # versionを最新に更新する
         self.data['version'] = version
 
     def exit(self):
