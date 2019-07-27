@@ -124,7 +124,8 @@ class Main(pygame.sprite.Sprite):
             if i in self.data['gun_data']:
                 continue
             data['name'] = name
-            data['own'] = 0
+            if i == 0:
+                data['own'] = 1
             self.data['gun_data'][i] = data
             i += 1
 
