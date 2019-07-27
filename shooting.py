@@ -4,6 +4,7 @@
 import pygame
 from pygame.locals import *
 import sys
+import os
 from stage import Stage
 from initial_screen import Initial_Screen
 from menu import Menu
@@ -22,7 +23,12 @@ class Main(pygame.sprite.Sprite):
         self.data_check()
         print(self.data)
 
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.RESIZABLE)   # ウィンドウをWIDTH×HEIGHTで作成する
+        if os.name == 'posix':
+            # Linux系OSの場合
+            self.screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.RESIZABLE)   # ウィンドウをWIDTH×HEIGHTで作成する
+        if os.name == 'nt':
+            # Windows
+            self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
         
     def do(self):
          while True:
