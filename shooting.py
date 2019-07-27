@@ -122,10 +122,12 @@ class Main(pygame.sprite.Sprite):
         i = 0
         for name, data in dic.items():
             if i in self.data['gun_data']:
+                if self.data['version'] == '1.0.0' and i == 0:
+                    data = self.data['gun_data']
+                    data[0]['own'] = 1
                 continue
             data['name'] = name
-            if i == 0:
-                data['own'] = 1
+            data['own'] = int(i==0)
             self.data['gun_data'][i] = data
             i += 1
 
