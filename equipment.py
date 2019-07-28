@@ -55,6 +55,7 @@ class Equipment:
         self.screen.fill((0,0,0))
         self.screen.blit(self.screen_info, [150, 20])
         self.screen.blit(self.back_info, [WIDTH-self.back_info.get_rect().right-20, 20])
+        pygame.draw.rect(self.screen, (255,255,255), Rect(700, HEIGHT-150, 350, 100))
 
         # 銃一覧の表示
         for i in range(5):
@@ -69,6 +70,15 @@ class Equipment:
                 height = draw_text.get_rect().bottom
                 color = (255,0,0)
                 pygame.draw.rect(self.screen, color, Rect(75, 145+50*i, width+10, height+10), 2)
+
+        # 装備中の銃情報の表示
+        for i, data in enumerate(self.data['equip']):
+            color = (255,0,0) * (i == self.change_gun) or (0,)*3
+            pygame.draw.rect(self.screen, color, [730+95*i, HEIGHT-145, 90, 90], 2+(i==self.change_gun))
+            if data == -1:
+                continue
+            text = pygame.font.Font("freesansbold.ttf", 80).render(str(data), True, (0,0,0))
+            self.screen.blit(text, [755+95*i, HEIGHT-135])
         pygame.display.update()
 
     def check(self):
