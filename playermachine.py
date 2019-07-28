@@ -17,7 +17,7 @@ class PlayerMachine(Machine):
         self.count = 0
         self.cop_flag = True
         
-        self.gun = Missile_Gun(self.machines, self, 100)
+        self.gun = Gun(self.machines, self, 100)
 
     def move(self):
         if self.wait_flag == 0:
