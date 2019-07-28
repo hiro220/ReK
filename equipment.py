@@ -68,6 +68,10 @@ class Equipment:
 
     def check(self):
         # 装備変更確認
+        gun = self.data['gun_data'][self.selected]
+        if gun['own'] == 0:
+            print("error")
+            return False
         return True
 
     def equip(self):
