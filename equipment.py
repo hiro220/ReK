@@ -43,8 +43,9 @@ class Equipment:
                 self.change_gun = (self.change_gun + 3) % 3
                 self.selected = (self.selected+self.guns_num) % self.guns_num
                 # 選択している銃が、表示している銃でないなら、表示する銃を調整する
-                self.top_draw += self.top_draw+5 < self.selected
-                self.top_draw -= self.top_draw > self.selected
+                self.top_draw = (self.top_draw <= self.selected <= self.top_draw+4) * self.top_draw or \
+                                (self.top_draw+4 < self.selected) * (self.selected-4) or \
+                                (self.top_draw > self.selected) * (self.selected)
         return CONTINUE
 
     def draw(self):
