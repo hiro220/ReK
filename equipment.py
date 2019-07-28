@@ -76,6 +76,11 @@ class Equipment:
         gun = self.data['gun_data'][self.selected]
         if gun['own'] == 0:
             return False
+        for i, gun in enumerate(self.data['equip']):
+            if gun == self.selected:
+                if i == 0:
+                    return False
+                self.data['equip'][i] = -1
         return True
 
     def equip(self):
