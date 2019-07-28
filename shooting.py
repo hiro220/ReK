@@ -131,6 +131,7 @@ class Main(pygame.sprite.Sprite):
                 if self.data['version'] == '1.0.0' and i == 0:
                     data = self.data['gun_data']
                     data[0]['own'] = 1
+                i += 1
                 continue
             data['name'] = name
             data['own'] = int(i==0)
