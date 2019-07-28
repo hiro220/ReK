@@ -56,14 +56,14 @@ class Equipment:
             gun_id = i+self.top_draw
             gun = self.data['gun_data'][gun_id]
             gun_text = gun['name']
-            color = (200+55*gun['own'],)*3
+            color = (150+105*gun['own'],)*3
             draw_text = pygame.font.Font("freesansbold.ttf", 40).render(gun_text, True, color)
-            self.screen.blit(draw_text, [30, 100+50*i])
+            self.screen.blit(draw_text, [80, 150+50*i])
             if self.selected == gun_id:
                 width = draw_text.get_rect().right
                 height = draw_text.get_rect().bottom
                 color = (255,0,0)
-                pygame.draw.rect(self.screen, color, Rect(25, 95+50*i, width+10, height+10), 2)
+                pygame.draw.rect(self.screen, color, Rect(75, 145+50*i, width+10, height+10), 2)
         pygame.display.update()
 
     def check(self):
