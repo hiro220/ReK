@@ -90,7 +90,7 @@ def _save_gun(cur, values):
         # keyがテーブル内に存在するなら更新、存在しないなら追加する。
         cur.execute("SELECT COUNT(*) FROM gun WHERE id=? AND name=?", [gun_id, dic['name']])
         if cur.fetchone()[0] == 0:
-            data_list = [gun_id, dic['name'], dic['bullet_size'], dic['reload_size'], dic['own'], dic['set_flag']]
+            data_list = [gun_id, dic['name'], dic['bullet_size'], dic['reload_size'], dic['own']]
             cur.execute("INSERT INTO gun(id, name, bullet_size, reload_size, own) values(?, ?, ?, ?, ?)", data_list)
         else:
             cur.execute("UPDATE gun SET own=? WHERE id=?", [dic['own'], gun_id])
