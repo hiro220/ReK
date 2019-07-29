@@ -52,9 +52,9 @@ class Beam_principal(Beam):
             self.Change_flag(0, False)
         elif self.principal.survival_flag == 0 and self.alpha_flag == False:
             if self.rect.width <= 600 and self.angle == 0 or self.rect.width <= 600 and self.angle == 180:
-                self.rect.width += 80   
-            elif self.rect.height <= 250 and self.angle == 90 or self.rect.height <= 250 and self.angle == 270:
-                self.rect.height += 40
+                self.rect.width += 200   
+            elif self.rect.height <= 400 and self.angle == 90 or self.rect.height <= 400 and self.angle == 270:
+                self.rect.height += 200
             self.p_image1 = pygame.transform.smoothscale(self.p_image1, (self.rect.width,self.rect.height))
             self.p_image2 = pygame.transform.smoothscale(self.p_image2, (self.rect.width,self.rect.height))
 
@@ -79,13 +79,13 @@ class Beam_principal(Beam):
         elif self.rect.height == 0 or self.rect.width == 0:                                              #本体の高さが0であること
             self.kill()                                                                                  #本体のspriteを削除する
             Timer(500,self.Change_flag, 2, 0)
-        
+
         x,y = self.principal.rect.midright
-        if self.alpha_flag == None and self.principal.cop_flag and self.lord_sub:
-            Beam_sub(x, y, self, "img/beam6.png")
-            self.lord_sub = False
-        elif self.alpha_flag == None and self.principal.cop_flag == False and self.lord_sub:
+        if self.alpha_flag == None and self.principal.cop_flag == 0 and self.lord_sub:
             Beam_sub(x, y, self, "img/beam5.png")
+            self.lord_sub = False
+        elif self.alpha_flag == None and self.principal.cop_flag and self.lord_sub and self.angle == 90:
+            Beam_sub(x, y, self, "img/beam6.png")
             self.lord_sub = False
 
         #ここのコードでbeam本体をmachineに追従させる
@@ -96,13 +96,11 @@ class Beam_principal(Beam):
         elif self.angle == 180:
             self.rect.midleft = (self.principal.rect.right, y)
         elif self.angle == 270:
-            self.rect.midbottom = (self.principal.rect.centerx, self.principal.rect.top+5)
+            self.rect.midbottom = (self.principal.rect.centerx, self.principal.rect.top+7)
         collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
         if collide_list and self.alpha_flag == None:                                # リストがあるか
             for machine in collide_list:                                            # この弾に当たったすべての機体に対してダメージを与える
                 machine.hit(0.1, lasting=True)
-        
-        print(self.rect.width)
             
     def Change_flag(self, number, boolean):
         if number == 0:
@@ -110,7 +108,7 @@ class Beam_principal(Beam):
         if number == 1:
             self.kill_flag = boolean
         if number == 2:
-            self.principal.bema_flag = boolean 
+            self.principal.beam_flag = 0 
     
     def image0__init__(self):
         self.p_image1 = pygame.transform.smoothscale(self.image,(5,2))
@@ -129,12 +127,12 @@ class Beam_principal(Beam):
         self.p_image1 = pygame.transform.smoothscale(self.image,(2,5))
         self.p_image2 = self.p_image1.copy()
         self.p_image2.fill((255, 255, 255, 100), None, pygame.BLEND_RGBA_MULT)
-        self.p_image3 = pygame.transform.smoothscale(self.image, (3,250))
-        self.p_image4 = pygame.transform.smoothscale(self.image, (4,250))
-        self.p_image5 = pygame.transform.smoothscale(self.image, (5,250))
-        self.p_image6 = pygame.transform.smoothscale(self.image, (6,250))
-        self.p_image7 = pygame.transform.smoothscale(self.image, (7,250))
-        self.p_image8 = pygame.transform.smoothscale(self.image, (9,250))
+        self.p_image3 = pygame.transform.smoothscale(self.image, (3,400))
+        self.p_image4 = pygame.transform.smoothscale(self.image, (4,400))
+        self.p_image5 = pygame.transform.smoothscale(self.image, (5,400))
+        self.p_image6 = pygame.transform.smoothscale(self.image, (6,400))
+        self.p_image7 = pygame.transform.smoothscale(self.image, (7,400))
+        self.p_image8 = pygame.transform.smoothscale(self.image, (9,400))
         self.image_list = [self.p_image3, self.p_image4, self.p_image5,self.p_image6, self.p_image7, self.p_image8]
         self.image_number = 0
     
@@ -151,6 +149,8 @@ class Beam_sub(Beam):  #サブクラス
         self.image__init__()
         self.principal = principal
         self.count = 0
+        self.rect = self.image.get_rect()
+        self.move_image()
         
         #ここでサブ画像の大きさを大きくする
     def update(self):
@@ -159,25 +159,14 @@ class Beam_sub(Beam):  #サブクラス
             self.rect = self.image.get_rect()                                                             #画像の大きさが変わるのでrect値を更新
             if self.rect.height <= 0:
                 self.kill()
-
+        
         if  self.count < 6:                                  #格納したデータを置き換えながら表示する
             self.image = self.c_data[self.count]
-            self.rect = self.image.get_rect() 
+            self.rect = self.image.get_rect()
             self.count += 1
         
-        if self.principal.angle == 0:
-            x,y = self.principal.principal.rect.left,self.principal.rect.centery
-            self.rect.midright = (x, y)
-        elif self.principal.angle == 90:
-            x,y = self.principal.principal.rect.centerx,self.principal.principal.rect.bottom
-            self.rect.centerx,self.rect.top = (x, y)
-        elif self.principal.angle == 180:
-            x,y = self.principal.principal.rect.right,self.principal.principal.rect.centery
-            self.rect.midleft = (x, y)
-        elif self.principal.angle == 270:
-            x,y = self.principal.principal.rect.centerx,self.principal.principal.rect.top
-            self.rect.centerx,self.rect.bottom = (x, y+10)
-
+        self.move_image()
+        
     def image__init__(self):
         self.copy_image = self.image.copy()
         self.image = pygame.transform.smoothscale(self.copy_image, (9,6))                #それそれの大きさの画像を設定する
@@ -188,3 +177,17 @@ class Beam_sub(Beam):  #サブクラス
         self.c_image4 = pygame.transform.smoothscale(self.copy_image, (25,23))
         self.c_image5 = pygame.transform.smoothscale(self.copy_image, (27,24))
         self.c_data = [self.c_image0,self.c_image1,self.c_image2,self.c_image3,self.c_image4,self.c_image5] #データを配列に格納す
+    
+    def move_image(self):
+        if self.principal.angle == 0:
+            x,y = self.principal.principal.rect.left,self.principal.rect.centery
+            self.rect.midright = (x, y)
+        elif self.principal.angle == 90:
+            x,y = self.principal.principal.rect.centerx,self.principal.principal.rect.bottom
+            self.rect.centerx,self.rect.top = (x, y)
+        elif self.principal.angle == 180:
+            x,y = self.principal.principal.rect.right,self.principal.rect.centery
+            self.rect.midleft = (x, y)
+        elif self.principal.angle == 270:
+            x,y = self.principal.principal.rect.centerx,self.principal.principal.rect.top
+            self.rect.centerx,self.rect.bottom = (x, y+10)
