@@ -22,7 +22,7 @@ class Beam_principal(Beam):
             self.image0__init__()
         elif angle == 90 or angle ==  270:
             self.image90__init__()
-        #self.length_select(angle)
+        self.length_select(angle)
         self.image = self.p_image1
         self.rect.left =- self.rect.width                                                        #beam右端の値を入力
         self.rect = self.image.get_rect()                                              #大きさ変更後のrect値を格納
@@ -51,9 +51,9 @@ class Beam_principal(Beam):
             self.image = self.p_image2
             self.Change_flag(0, False)
         elif self.principal.survival_flag == 0 and self.alpha_flag == False:
-            if self.rect.width <= 600 and self.angle == 0:
+            if self.rect.width <= 600 and self.angle == 0 or self.rect.width <= 600 and self.angle == 180:
                 self.rect.width += 80   
-            elif self.rect.height <= 250 and self.angle == 90:
+            elif self.rect.height <= 250 and self.angle == 90 or self.rect.height <= 250 and self.angle == 270:
                 self.rect.height += 40
             self.p_image1 = pygame.transform.smoothscale(self.p_image1, (self.rect.width,self.rect.height))
             self.p_image2 = pygame.transform.smoothscale(self.p_image2, (self.rect.width,self.rect.height))
@@ -70,10 +70,10 @@ class Beam_principal(Beam):
                 self.kill_time = Timer(2000, self.Change_flag, 1, True)
             
             #本体が伸び切ってからのクロック数が1000以上と本体の高さが０より大きいとflagが１であること
-        if self.rect.height > 0 and self.kill_flag and self.angle == 0:  
+        if self.rect.height > 0 and self.kill_flag and self.angle == 0 or self.rect.height > 0 and self.kill_flag and self.angle == 180:  
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width,self.rect.height-1))   #本体画像の高さを-1する
             self.rect = self.image.get_rect()                                                             #画像の高さが変わるのでrect値を更新
-        elif self.rect.width > 0 and self.kill_flag and self.angle == 90:  
+        elif self.rect.width > 0 and self.kill_flag and self.angle == 90 or self.rect.width > 0 and self.kill_flag and self.angle == 270:  
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width-1,self.rect.height))   #本体画像の高さを-1する
             self.rect = self.image.get_rect()
         elif self.rect.height == 0 or self.rect.width == 0:                                              #本体の高さが0であること
@@ -93,7 +93,10 @@ class Beam_principal(Beam):
             self.rect.midright = (self.principal.rect.left, y+5)
         elif self.angle == 90:
             self.rect.midtop = (self.principal.rect.centerx, self.principal.rect.bottom)                                       #beam本体の座標を打ったmachineの座標に合わせる
-        
+        elif self.angle == 180:
+            self.rect.midleft = (self.principal.rect.right, y)
+        elif self.angle == 270:
+            self.rect.midbottom = (self.principal.rect.centerx, self.principal.rect.top+5)
         collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
         if collide_list and self.alpha_flag == None:                                # リストがあるか
             for machine in collide_list:                                            # この弾に当たったすべての機体に対してダメージを与える
@@ -169,11 +172,11 @@ class Beam_sub(Beam):  #サブクラス
             x,y = self.principal.principal.rect.centerx,self.principal.principal.rect.bottom
             self.rect.centerx,self.rect.top = (x, y)
         elif self.principal.angle == 180:
-            x,y = self.principal.principal.rect.right,self.principal.rect.centery
+            x,y = self.principal.principal.rect.right,self.principal.principal.rect.centery
             self.rect.midleft = (x, y)
         elif self.principal.angle == 270:
-            x,y = self.principal.principal.rect.centerx,self.principal.rect.top
-            self.rect.centerx,self.rect.bottom = (x, y-7)
+            x,y = self.principal.principal.rect.centerx,self.principal.principal.rect.top
+            self.rect.centerx,self.rect.bottom = (x, y+10)
 
     def image__init__(self):
         self.copy_image = self.image.copy()
