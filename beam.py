@@ -18,9 +18,9 @@ class Beam_principal(Beam):
     def __init__(self, x, y, machines, principal, img, angle):
         super().__init__(x, y ,img)
         self.image = pygame.transform.rotate(self.image, angle)
-        if angle == 0 or 180:
+        if angle == 0 or angle == 180:
             self.image0__init__()
-        elif angle == 90 or 270:
+        elif angle == 90 or angle ==  270:
             self.image90__init__()
         #self.length_select(angle)
         self.image = self.p_image1
@@ -37,7 +37,6 @@ class Beam_principal(Beam):
         
     
     def update(self):
-
         if self.principal.survival_flag == 1:
             self.kill_flag = True
             if self.alpha_flag != None:
@@ -52,12 +51,14 @@ class Beam_principal(Beam):
             self.image = self.p_image2
             self.Change_flag(0, False)
         elif self.principal.survival_flag == 0 and self.alpha_flag == False:
-            if self.rect.width <= 600 and self.angle == 0 or 180:
-                self.rect.width += 80    
-            elif self.rect.height <= 250 and self.angle == 90 or 270:
+            if self.rect.width <= 600 and self.angle == 0:
+                self.rect.width += 80   
+            elif self.rect.height <= 250 and self.angle == 90:
                 self.rect.height += 40
             self.p_image1 = pygame.transform.smoothscale(self.p_image1, (self.rect.width,self.rect.height))
             self.p_image2 = pygame.transform.smoothscale(self.p_image2, (self.rect.width,self.rect.height))
+
+            
             self.image = self.p_image1
             self.Change_flag(0, True)
         
@@ -69,10 +70,10 @@ class Beam_principal(Beam):
                 self.kill_time = Timer(2000, self.Change_flag, 1, True)
             
             #本体が伸び切ってからのクロック数が1000以上と本体の高さが０より大きいとflagが１であること
-        if self.rect.height > 0 and self.kill_flag and self.angle == 0 or 180:  
+        if self.rect.height > 0 and self.kill_flag and self.angle == 0:  
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width,self.rect.height-1))   #本体画像の高さを-1する
             self.rect = self.image.get_rect()                                                             #画像の高さが変わるのでrect値を更新
-        elif self.rect.width > 0 and self.kill_flag and self.angle == 90 or 270:  
+        elif self.rect.width > 0 and self.kill_flag and self.angle == 90:  
             self.image = pygame.transform.smoothscale(self.image, (self.rect.width-1,self.rect.height))   #本体画像の高さを-1する
             self.rect = self.image.get_rect()
         elif self.rect.height == 0 or self.rect.width == 0:                                              #本体の高さが0であること
@@ -89,18 +90,17 @@ class Beam_principal(Beam):
 
         #ここのコードでbeam本体をmachineに追従させる
         if self.angle == 0:
-            self.rect.midleft = (x-self.principal.rect.width, y+5)
+            self.rect.midright = (self.principal.rect.left, y+5)
         elif self.angle == 90:
-            self.rect.midtop = (x-self.principal.rect.width, self.principal.rect.bottom)                                       #beam本体の座標を打ったmachineの座標に合わせる
+            self.rect.midtop = (self.principal.rect.centerx, self.principal.rect.bottom)                                       #beam本体の座標を打ったmachineの座標に合わせる
         
         collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
         if collide_list and self.alpha_flag == None:                                # リストがあるか
             for machine in collide_list:                                            # この弾に当たったすべての機体に対してダメージを与える
                 machine.hit(0.1, lasting=True)
-            
-        print(self.rect.width)
-        print(self.kill_flag)
         
+        print(self.rect.width)
+            
     def Change_flag(self, number, boolean):
         if number == 0:
             self.alpha_flag = boolean
@@ -166,8 +166,8 @@ class Beam_sub(Beam):  #サブクラス
             x,y = self.principal.principal.rect.left,self.principal.rect.centery
             self.rect.midright = (x, y)
         elif self.principal.angle == 90:
-            x,y = self.principal.principal.rect.centerx,self.principal.rect.bottom
-            self.rect.centerx,self.rect.top = (x, y+7)
+            x,y = self.principal.principal.rect.centerx,self.principal.principal.rect.bottom
+            self.rect.centerx,self.rect.top = (x, y)
         elif self.principal.angle == 180:
             x,y = self.principal.principal.rect.right,self.principal.rect.centery
             self.rect.midleft = (x, y)
