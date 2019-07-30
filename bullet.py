@@ -152,13 +152,14 @@ class Fluffy_Bullet(Bullet):
 
             self.cycle += 1
 
-            self.rect.move_ip(self.dx, self.dy)
+            #self.rect.move_ip(self.dx, self.dy)
             collide_list = pygame.sprite.spritecollide(self, self.machines, False)  
             if collide_list:
                 self.collide_flag = 1
+                self.dx, self.dy = self.rect.center
                 for machine in collide_list:  
                     machine.hit(1)
-        else:
+        elif self.collide_flag ==  1:
             if self.swap_count == 0:
                 self.image = pygame.image.load("img/Fluffy.png").convert_alpha()
             elif self.swap_count ==  1:
@@ -180,9 +181,10 @@ class Fluffy_Bullet(Bullet):
             elif self.swap_count ==  9:
                 self.image = pygame.image.load("img/Fluffy10.png").convert_alpha()
 
-            self.dx = 0
-            self.dy = 0
             self.image = pygame.transform.scale(self.image, (self.current_width, self.current_height))
+            self.rect = self.image.get_rect()
+            self.rect.move_ip(self.dx-self.rect.width/2, self.dy-self.rect.height/2)
+            
 
             if self.scale_flag == 0:
                 self.current_width += 20
@@ -198,7 +200,6 @@ class Fluffy_Bullet(Bullet):
                 self.current_width -= 10
                 self.current_height -= 10
             
-            self.rect.move_ip(self.dx, self.dy)
             collide_list = pygame.sprite.spritecollide(self, self.machines, False)  
             if collide_list:
                 for machine in collide_list:  
