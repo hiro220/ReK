@@ -236,6 +236,8 @@ class Stage:
                     elif line[0] == 'bg':
                         self.set_background(line[1])    # 背景画像の設定
                     else:                               # sizeでない場合はcpu(アイテム)なので、名前とy座標をリストにして辞書に追加
+                        if len(line) >= 3:
+                            line[1] = random.randrange(int(line[1]), int(line[2])+1)
                         self.dic[key].append([line[0], int(line[1])])
 
     def createCpu(self):
