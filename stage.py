@@ -51,6 +51,7 @@ class Stage:
 
         self.process = self.stage_process
         self.draw = self.stage_draw
+        print(self.dic)
 
 
     def initGroup(self):
@@ -222,10 +223,15 @@ class Stage:
             self.setRule(NORMAL)                        # ステージルールをNORMALに設定する。
             self.set_background(SKY)                    # 背景をSKYに初期化
             # ファイルから情報を抽出し、ステージの形成
-            for line in fp.readlines():                 # ファイルを一行ごとに読み取り、変数lineに文字列として格納する
-                line = line.strip('\n').split()         # 改行コード'\n'を取り除き、タブ区切りでリストに分割する
+            loop_key = line_num = 0
+            lines = True
+            while lines:
+                lines = fp.readline()                    # ファイルを一行ごとに読み取り、変数lineに文字列として格納する
+                line_num += len(lines)
+                print(lines)
+                line = lines.strip('\n').split()         # 改行コード'\n'を取り除き、タブ区切りでリストに分割する
                 if len(line) == 1:                      # リストの要素数が1のとき、keyとなるx座標が記述されている
-                    key = int(line[0])                  # 文字列をintに変換
+                    key = int(line[0]) + loop_key                  # 文字列をintに変換
                     self.dic[key] = []                  # 辞書にkeyを追加し、その値をリストとして初期化しておく
                     continue
                 if len(line) >= 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
@@ -235,6 +241,17 @@ class Stage:
                         self.setRule(*line[1:])         # ルールをセットする
                     elif line[0] == 'bg':
                         self.set_background(line[1])    # 背景画像の設定
+                    elif line[0] == 'loop':
+                        loop_count = int(line[1])
+                        loop_pos = line_num
+                    elif line[0] == 'endloop':
+                        loop_count -= 1
+                        if loop_count == 0:
+                            loop_key = 0
+                        else:
+                            fp.seek(loop_pos)
+                            line_num = loop_pos
+                            loop_key += int(line[1])
                     else:                               # sizeでない場合はcpu(アイテム)なので、名前とy座標をリストにして辞書に追加
                         if len(line) >= 3:
                             line[1] = random.randrange(int(line[1]), int(line[2])+1)

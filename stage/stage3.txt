@@ -1,33 +1,14 @@
-size    1000
+size    300
 rule    NORMAL
 bg      STAR
 
+loop 3
 0
-CPU7    200
-CPU10   200
-CPU8    400
-CPU9    400
-500
-CPU6    100
-CPU5    500
-520
-CPU6    100
-CPU5    500
-540
-CPU6    100
-CPU5    500
-560
-CPU6    100
-CPU5    500
-580
-CPU6    100
-CPU5    500
-600
-CPU6    100
-CPU5    500
-620
-CPU6    100
-CPU5    500
+CPU1 100
+CPU2 200 300
+CPU3 400
 
-1000
-BOSS1    300
+endloop 50
+
+300
+CPU3 300
