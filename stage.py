@@ -223,13 +223,13 @@ class Stage:
             self.set_background(SKY)                    # 背景をSKYに初期化
             # ファイルから情報を抽出し、ステージの形成
             loop_key = line_num = 0
-            lines = True
+            lines = True                                # ファイルの一行を格納する変数の初期化(while文の条件に使う)
             while lines:
-                lines = fp.readline()                    # ファイルを一行ごとに読み取り、変数lineに文字列として格納する
-                line_num += len(lines)
-                line = lines.strip('\n').split()         # 改行コード'\n'を取り除き、タブ区切りでリストに分割する
+                lines = fp.readline()                   # ファイルを一行ごとに読み取り、変数lineに文字列として格納する
+                line_num += len(lines)                  # 文字数をカウント(ファイルポインタの移動に使う)
+                line = lines.strip('\n').split()        # 改行コード'\n'を取り除き、タブ区切りでリストに分割する
                 if len(line) == 1:                      # リストの要素数が1のとき、keyとなるx座標が記述されている
-                    key = int(line[0]) + loop_key                  # 文字列をintに変換
+                    key = int(line[0]) + loop_key       # 文字列をintに変換
                     self.dic[key] = []                  # 辞書にkeyを追加し、その値をリストとして初期化しておく
                     continue
                 if len(line) >= 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
@@ -241,15 +241,15 @@ class Stage:
                         self.set_background(line[1])    # 背景画像の設定
                     elif line[0] == 'loop':
                         loop_count = int(line[1])
-                        loop_pos = line_num
+                        loop_pos = line_num             # この行の次行の位置を保持
                     elif line[0] == 'endloop':
                         loop_count -= 1
                         if loop_count == 0:
                             loop_key = 0
                         else:
-                            fp.seek(loop_pos)
-                            line_num = loop_pos
-                            loop_key += int(line[1])
+                            fp.seek(loop_pos)           # loop行の直後にファイルポインタを移動
+                            line_num = loop_pos         # 文字数のカウントをそこまでにリセット
+                            loop_key += int(line[1])    # endloopのオプションをx座標に足す
                     else:                               # sizeでない場合はcpu(アイテム)なので、名前とy座標をリストにして辞書に追加
                         if len(line) >= 3:
                             line[1] = random.randrange(int(line[1]), int(line[2])+1)
