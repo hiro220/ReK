@@ -1,7 +1,6 @@
 # coding:utf-8
 
 import pygame
-from pygame.locals import *
 from machine import Hp
 from timer import Timer
 

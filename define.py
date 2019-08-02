@@ -1,6 +1,5 @@
 # coding:utf-8
-import pygame
-from pygame.locals import *
+from pygame.locals import Rect
 from rek_time import ReK_time
 
 """Rekでの、それぞれのファイルに共通の定数を定義している"""
@@ -31,7 +30,7 @@ PLAYER_X = INFO_WIDTH + 100
 PLAYER_Y = HEIGHT // 2
 
 # stageにおける処理結果
-EXIT = 0            # ウィンドウの「閉じるボタン」を押したとき
+EXIT = 100            # ウィンドウの「閉じるボタン」を押したとき
 CONTINUE = 1        # ステージが続いているとき
 GAMEOVER = 2        # ゲームオーバーになったとき
 GAMECLEAR = 3       # ステージをクリアしたとき

@@ -4,10 +4,9 @@ from bullet import *
 from beam import *
 from define import R_time
 import pygame
-from pygame.locals import *
 import math
 import random
-from timer import *
+from timer import Timer
 
 class Gun:
 

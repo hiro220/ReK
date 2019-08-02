@@ -34,12 +34,16 @@ class Main(pygame.sprite.Sprite):
          while True:
             init_screen = Initial_Screen()              #初期画面の描画              
             init_num = init_screen.draw(self.screen)    
+            if init_num == EXIT:
+                self.exit()
 
             if init_num == START_GAME:      #選択したモードがSTART GAMEならメニュー画面に移動
 
                 while True:
                     menu = Menu(self.screen, self.data)    #メニュー画面の描画
                     stage_id, stageTxt = menu.draw()
+                    if stage_id == EXIT:
+                        self.exit()
                     if stage_id == None:
                         break
                     self.Stage_draw(stage_id, stageTxt)                

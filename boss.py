@@ -1,9 +1,9 @@
 from machine import Machine
 import pygame
 from define import *
-from item import *
+from item import Shield
 from gun import *
-from timer import *
+from timer import Timer
 import random
 import math
 

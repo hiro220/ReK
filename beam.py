@@ -2,7 +2,6 @@
 # coding:utf-8
 
 import pygame
-from pygame.locals import *
 from define import R_time
 
 class Beam(pygame.sprite.Sprite):

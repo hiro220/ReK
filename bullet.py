@@ -4,7 +4,6 @@
 import pygame
 import math
 from define import R_time
-from pygame.locals import *
 from define import INFO_WIDTH, WIDTH, HEIGHT
 
 class Bullet(pygame.sprite.Sprite):

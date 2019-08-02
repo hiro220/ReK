@@ -9,12 +9,12 @@ from playermachine import PlayerMachine
 from cpumachine import *
 from item import *
 from define import *
-from out_range import *
+from out_range import Range, Range2
 from timer import Timer
 from score import Score
-from boss import *
+from boss import Stage1_boss
 from boss2 import *
-from money import *
+from money import Money
 import pygame.mixer
 
 class Stage:
