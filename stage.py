@@ -51,7 +51,6 @@ class Stage:
 
         self.process = self.stage_process
         self.draw = self.stage_draw
-        print(self.dic)
 
 
     def initGroup(self):
@@ -228,7 +227,6 @@ class Stage:
             while lines:
                 lines = fp.readline()                    # ファイルを一行ごとに読み取り、変数lineに文字列として格納する
                 line_num += len(lines)
-                print(lines)
                 line = lines.strip('\n').split()         # 改行コード'\n'を取り除き、タブ区切りでリストに分割する
                 if len(line) == 1:                      # リストの要素数が1のとき、keyとなるx座標が記述されている
                     key = int(line[0]) + loop_key                  # 文字列をintに変換
