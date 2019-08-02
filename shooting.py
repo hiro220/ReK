@@ -4,6 +4,7 @@
 import pygame
 from pygame.locals import *
 import sys
+import os
 from stage import Stage
 from initial_screen import Initial_Screen
 from menu import Menu
@@ -11,6 +12,7 @@ import pygame.mixer
 import database as db
 from define import *
 from help_explain import Help_a, Help_print
+import json
 
 class Main(pygame.sprite.Sprite):
 
@@ -21,7 +23,12 @@ class Main(pygame.sprite.Sprite):
         self.data_check()
         print(self.data)
 
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.RESIZABLE)   # ウィンドウをWIDTH×HEIGHTで作成する
+        if os.name == 'posix':
+            # Linux系OSの場合
+            self.screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.RESIZABLE)   # ウィンドウをWIDTH×HEIGHTで作成する
+        if os.name == 'nt':
+            # Windows
+            self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
         
     def do(self):
          while True:
@@ -31,7 +38,7 @@ class Main(pygame.sprite.Sprite):
             if init_num == START_GAME:      #選択したモードがSTART GAMEならメニュー画面に移動
 
                 while True:
-                    menu = Menu(self.screen)    #メニュー画面の描画
+                    menu = Menu(self.screen, self.data)    #メニュー画面の描画
                     stage_id, stageTxt = menu.draw()
                     if stage_id == None:
                         break
@@ -39,6 +46,8 @@ class Main(pygame.sprite.Sprite):
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 help_c = Help_a(self.screen)
                 help_b = help_c.draw()
+                if help_b == EXIT:
+                    self.exit()
             elif init_num == End:
                 self.exit()
 
@@ -114,12 +123,37 @@ class Main(pygame.sprite.Sprite):
                 self.screen.blit(score, [550, 180+50*(pos+1)])
                 pos += 1
             
+    def _check_gun(self):
+        dic = json.load(open("data/gun.json", "r"))
+        i = 0
+        for name, data in dic.items():
+            if i in self.data['gun_data']:
+                if self.data['version'] == '1.0.0' and i == 0:
+                    data = self.data['gun_data']
+                    data[0]['own'] = 1
+                i += 1
+                continue
+            data['name'] = name
+            data['own'] = int(i==0)
+            self.data['gun_data'][i] = data
+            i += 1
+
+    def _check_equip(self):
+        # 何も装備されていないとき、Gunを装備する
+        if self.data['equip'] == []:
+            self.data['equip'] = [0, -1, -1]
+        
+
     def data_check(self):
         for key, cast in data_key.items():
             if key in self.data:
                 self.data[key] = cast(self.data[key])
             else:
                 self.data[key] = cast()
+        self._check_gun()
+        self._check_equip()
+
+        # versionを最新に更新する
         self.data['version'] = version
 
     def exit(self):
