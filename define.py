@@ -5,7 +5,7 @@ from rek_time import ReK_time
 
 """Rekでの、それぞれのファイルに共通の定数を定義している"""
 
-version = "1.0.0"
+version = "1.0.1"
 
 # ウィンドウのサイズ
 WIDTH = 1160
@@ -19,6 +19,7 @@ STAGE_WIDTH = 960
 START_GAME = 0          #START GAMEを選択した時
 Help = 1                #Helpを選択した時
 End = 2
+BACK = 3
 
 # メニュー画面におけるステージ名
 Stage1 = "Stage1.txt"
@@ -76,4 +77,5 @@ STAR = "STAR"
 # timer
 R_time = ReK_time()
 
-data_key = {"money":int, "stage_progress":int, "version":str, "death":int, "kill":int, "sum_money":int, "play_time":float}
+data_key = {"money":int, "stage_progress":int, "version":str, "death":int, "kill":int, \
+            "sum_money":int, "play_time":float, "gun_data":dict, "equip":list}

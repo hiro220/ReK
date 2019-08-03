@@ -112,12 +112,12 @@ class Stage:
                 self.player.invincible(2000)
             else:
                 pygame.mixer.music.stop()
-                return GAMEOVER, self.score.return_score()
+                return GAMEOVER
 
         # ゲームクリア条件が満たされた
         if self.isClear():
             pygame.mixer.music.stop()
-            return GAMECLEAR, self.score.return_score()
+            return GAMECLEAR
           
         for event in pygame.event.get():
             if event.type == QUIT:          # 「閉じるボタン」を押したとき
@@ -271,16 +271,17 @@ class Stage:
     
     def creatRange(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range(INFO_WIDTH-100,-100,10,HEIGHT+50)
-        #Range(0,-10,WIDTH,10)
-        #Range(0,HEIGHT,WIDTH,10)
+        Range(INFO_WIDTH-100,-50,20,HEIGHT+100)
+        Range(0,-70,WIDTH+200,20)
+        Range(0,HEIGHT+50,WIDTH+200,20)
+        Range(WIDTH+200,-50,20,HEIGHT+100)
     
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range2(INFO_WIDTH-20,0,10,HEIGHT)
-        Range2(INFO_WIDTH-10,-80,STAGE_WIDTH+20,10)
-        Range2(INFO_WIDTH-10,HEIGHT+10,STAGE_WIDTH+20,10)
-        Range2(WIDTH+80,0,10,HEIGHT)
+        Range2(INFO_WIDTH-WIDTH,-80,10,HEIGHT+160)
+        Range2(INFO_WIDTH-WIDTH+10,-80,WIDTH*3-INFO_WIDTH,10)
+        Range2(INFO_WIDTH-10,HEIGHT+80,WIDTH*3-INFO_WIDTH,10)
+        Range2(WIDTH*2,-80,10,HEIGHT+160)
 
     def set_background(self, image_id):
         dic = {SKY:"sky.jpg", STAR:"star.jpg"}

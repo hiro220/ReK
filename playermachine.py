@@ -32,7 +32,7 @@ class PlayerMachine(Machine):
                 super().move(self.dx, 0)
             if key[K_LEFT]:                     # 矢印キー左が押されているとき(長押し)
                 super().move(-self.dx, 0)
-        self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH, HEIGHT))       # 画面外に出たとき、画面内に収まるよう移動
+        self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))       # 画面外に出たとき、画面内に収まるよう移動
 
     def shoot(self, key):
         if key == K_x:              # ｘキーが押されたとき弾を発射
