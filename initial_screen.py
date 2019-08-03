@@ -6,15 +6,12 @@ from define import *
 class Initial_Screen:
     def __init__(self):
         title_font = pygame.font.Font("freesansbold.ttf", 55)
-        game_font = pygame.font.Font("freesansbold.ttf", 25)
-        help_font = pygame.font.Font("freesansbold.ttf", 25)
-        end_font = pygame.font.Font("freesansbold.ttf", 25)
-        choice_font = pygame.font.Font("freesansbold.ttf", 25)
+        font = pygame.font.Font("freesansbold.ttf", 25)
         self.title_text = title_font.render("ReK", True, (255,255,255))        #タイトルテキストReK
-        self.game_text = game_font.render("START GAME", True, (255,255,255))   #テキストSTART_GAME
-        self.help_text = help_font.render("Help", True, (255,255,255))         #テキストHelp
-        self.end_text = end_font.render("End", True, (255, 255, 255))          #テキストEnd
-        self.choice_text = choice_font.render("->", True, (255,255,255))       #選択矢印->
+        self.game_text = font.render("START GAME", True, (255,255,255))   #テキストSTART_GAME
+        self.help_text = font.render("Help", True, (255,255,255))         #テキストHelp
+        self.end_text = font.render("End", True, (255, 255, 255))          #テキストEnd
+        self.choice_text = font.render("->", True, (255,255,255))       #選択矢印->
         self.select_num = START_GAME        #現在選択しているモード
 
 
