@@ -3,4 +3,4 @@ rule    NORMAL
 bg      STAR
 
 0
-CPU0    500
+BOSS2    300
