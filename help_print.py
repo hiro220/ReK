@@ -1,6 +1,7 @@
 import pygame
 import sys
 from pygame.locals import *
+from define import EXIT
 
 class Help_print():
     def __init__(self, screen, select_num):
@@ -34,9 +35,8 @@ class Help_print():
                     if event.key == K_RETURN:
                         if self.back_num == 1:
                             return "0"
-                    if event.type == QUIT:         
-                        pygame.quit()
-                        sys.exit()
+                    if event.type == QUIT:  
+                        return EXIT
 
             self.screen.fill((0,0,0))
 
