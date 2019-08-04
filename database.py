@@ -98,7 +98,7 @@ def _save_gun(cur, values):
 def _save_equip(cur, data):
     cur.execute("SELECT COUNT(*) FROM equipment WHERE id=?", [1])
     if cur.fetchone()[0] == 0:
-        cur.execute("INSERT INTO equipment(id, gun1, gun2, gun3) values(?,?,?,?)", [1]+data)
+        cur.execute("INSERT INTO equipment(gun1, gun2, gun3) values(?,?,?)", data)
     else:
         cur.execute("UPDATE equipment SET gun1=?, gun2=?, gun3=?", data)
 
@@ -201,10 +201,10 @@ else:
     # このプログラムがimportなどで別ファイルから実行されたとき
 
     # rankingテーブル
-    create_table('ranking', ['id INTEGER PRYMARY KEY', 'stage INTEGER', 'score INTEGER'])
+    create_table('ranking', ['id INTEGER PRIMARY KEY', 'stage INTEGER', 'score INTEGER'])
     # dataテーブル
     create_table('data', ['key TEXT', 'value TEXT'])
     # gunテーブル
     create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_size INTEGER', 'reload_size INTEGER', 'own INTEGER', 'set_flag INTEGER'])
     # equipmentテーブル
-    create_table('equipment', ['id INTEGER PRYMARY KEY', 'gun1 INTEGER', 'gun2 INTEGER', 'gun3 INTEGER'])
+    create_table('equipment', ['id INTEGER PRIMARY KEY', 'gun1 INTEGER', 'gun2 INTEGER', 'gun3 INTEGER'])
