@@ -233,7 +233,9 @@ class Stage:
                     self.dic[key] = []                  # 辞書にkeyを追加し、その値をリストとして初期化しておく
                     continue
                 if len(line) >= 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
-                    if line[0] == 'size':               # 要素の一つ目がsizeのとき、二つ目の要素にステージサイズが記述されている
+                    if line[0] == '#':          # コメントアウト
+                        pass
+                    elif line[0] == 'size':             # 要素の一つ目がsizeのとき、二つ目の要素にステージサイズが記述されている
                         self.size = int(line[1])
                     elif line[0] == 'rule':             # 要素の一つ目がruleのとき、二つ目の要素にルールを示す定数が記述されている
                         self.setRule(*line[1:])         # ルールをセットする
