@@ -6,7 +6,7 @@ import argparse
 db = 'data/savedata.db'
 
 parser = argparse.ArgumentParser(description='ReKにおけるデータベースを管理するファイル')
-parser.add_argument('-d', '--delete', action='store_true', help="すべてのデータベースを初期化する")
+parser.add_argument('--delete', action='store_true', help="すべてのデータベースを初期化する")
 parser.add_argument('-s', '--show', action='store_true', help="すべてのデータベースの中身を表示する")
 args = parser.parse_args()
 
