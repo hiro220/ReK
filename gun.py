@@ -22,10 +22,7 @@ class Gun:
     def isBulletZero(self):
         """銃弾数が0ならTrue
         そうでないならFalseを返す"""
-        if self.num == 0:
-            return True
-        else:
-            return False
+        return self.num == 0
 
     def shoot(self, x, y):
         """引数は弾の発射位置(x, y)"""
@@ -124,10 +121,7 @@ class Twist_Gun(Gun):
         self.num -= 1
     
     def change_flag(self):
-        if self.shot_flag:
-            self.shot_flag = False
-        else:
-            self.shot_flag = True
+        self.shot_flag ^= True
 
     def count_angle(self):
         if self.standard_angle == 0:
@@ -161,10 +155,9 @@ class Missile_Gun(Gun):
 
     def shoot(self, x, y):
         if self.principal.cop_flag == 1 and R_time.get_ticks() - self.gun_start >= 1000:
-                Missile_Bullet(x, y, self.dx*-1, self.dy, self.machines, 1)
-                self.gun_start = R_time.get_ticks()
-                self.num -= 1
+            Missile_Bullet(x, y, self.dx*-1, self.dy, self.machines, 1)
+            self.gun_start = R_time.get_ticks()
         elif self.principal.cop_flag == 0:
             Missile_Bullet(x, y, self.dx, self.dy, self.machines, 0)
-            self.num -= 1
+        self.num -= 1
         
