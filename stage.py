@@ -312,7 +312,7 @@ class Stage:
         self.image = pygame.image.load(path).convert_alpha()              # 背景画像
         self.sub_image = pygame.transform.flip(self.image, True, False)         # 背景画像を左右反転させた、背景画像（自然につなげるため）
         self.rect = self.image.get_rect()       # 画像のrect情報
-        self.x = self.keyx = 0                  # 背景画像の左上の位置、ステージの進行度
+        self.x = self.keyx = -20                # 背景画像の左上の位置、ステージの進行度
         self.width, _ = self.rect.midright      # 背景画像のサイズ、_は使わない部分の値
 
     def setRule(self, name, value=None):
