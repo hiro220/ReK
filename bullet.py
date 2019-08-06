@@ -264,7 +264,7 @@ class Thunder_Bullet(Bullet):
             collide_list = pygame.sprite.spritecollide(self, self.machines, False)
             if collide_list:
                 for machine in collide_list:
-                    machine.hit(0.35)
+                    machine.hit(0.2)
             
 
 class subThunder_Bullet(Bullet):
