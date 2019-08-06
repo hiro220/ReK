@@ -131,7 +131,7 @@ class Fluffy_Bullet(Bullet):
         self.rect.move_ip(x, y)
         self.dx, self.dy = dx, dy 
         self.machines = machines
-        self.maxscale = 150
+        self.maxscale = 130
         self.current_width = 47
         self.current_height = 47
         self.PI = 3.141592
@@ -147,8 +147,8 @@ class Fluffy_Bullet(Bullet):
         if self.collide_flag == 0:
             self.rect.move_ip(self.dx, self.dy)
 
-            self.dx = 5.0
-            self.dy = math.sin(self.PI * self.cycle/20) * 5.0
+            self.dx = 10
+            self.dy = math.sin(self.PI * self.cycle/20) * 7.0
 
             self.cycle += 1
 
@@ -158,7 +158,7 @@ class Fluffy_Bullet(Bullet):
                 self.collide_flag = 1
                 self.dx, self.dy = self.rect.center
                 for machine in collide_list:  
-                    machine.hit(1)
+                    machine.hit(0.5)
         elif self.collide_flag ==  1:
             if self.swap_count == 0:
                 self.image = pygame.image.load("img/Fluffy.png").convert_alpha()
@@ -203,7 +203,7 @@ class Fluffy_Bullet(Bullet):
             collide_list = pygame.sprite.spritecollide(self, self.machines, False)  
             if collide_list:
                 for machine in collide_list:  
-                    machine.hit(1)
+                    machine.hit(0.1, lasting=True)
             if self.swap_count == 9:
                 self.swap_count = 0
             else:
@@ -212,26 +212,91 @@ class Fluffy_Bullet(Bullet):
             if self.current_width <= 0:
                 self.kill()
 
-class Thunder_Bullet():
+class Thunder_Bullet(Bullet):
     
     def __init__(self, x, y, dx, dy, machines):
         pygame.sprite.Sprite.__init__(self, self.containers)
-        self.image = pygame.image.load("img/bullet1.png").convert_alpha()   # 相対パスで画像を読み込む
+        self.image = pygame.image.load("img/Thunder11.png").convert_alpha()
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
+        self.rect2 = self.rect
         self.rect.move_ip(x, y)             # 引数で指定された位置に移動させる
         self.dx, self.dy = dx, dy       # 移動量
-        self.machines = machines        # 
+        self.machines = machines        #
+        self.collide_machine = 0 
+        self.image_flag = 0
+        self.flag = 0
         
         self.update = self.move         # updateで呼ばれるメソッドをmoveに設定する。
 
     def move(self):
-        self.rect.move_ip(self.dx, self.dy)     # 弾を移動させる
-        collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
-        if collide_list:                        # リストがあるか
-            self.kill()                         # このスプライトを所属するすべてのグループから削除
-            for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
-                machine.hit(1)
+        if self.flag == 0:
+            if self.image_flag == 0:
+                self.image = pygame.image.load("img/Thunder11.png").convert_alpha()
+                self.image_flag = 1
+            elif self.image_flag == 1:
+                self.image = pygame.image.load("img/Thunder12.png").convert_alpha()
+                self.image_flag = 0
+
+            self.rect.move_ip(self.dx, self.dy)
+
+            collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+            if collide_list:                        # リストがあるか
+                self.flag = 1                         # このスプライトを所属するすべてのグループから削除
+                for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                    self.collide_machine = machine.rect
+                    self.sub = subThunder_Bullet(self.collide_machine.centerx, self.collide_machine.centery, 0, 20, self.machines)
+                    Timer(2000, self.kill)
+                    machine.hit(0.5)
+        elif self.flag == 1:
+            if self.image_flag == 0:
+                self.image = pygame.image.load("img/Thunder21.png").convert_alpha()
+                self.image_flag = 1
+            elif self.image_flag == 1:
+                self.image = pygame.image.load("img/Thunder22.png").convert_alpha()
+                self.image_flag = 0
+
+            self.dx, self.dy = 0, -20
+            self.rect.centerx = self.collide_machine.centerx
+            self.rect.move_ip(self.dx, self.dy)
+
+            self.sub.move()
+
+            collide_list = pygame.sprite.spritecollide(self, self.machines, False)
+            if collide_list:
+                for machine in collide_list:
+                    machine.hit(0.35)
+            
+
+class subThunder_Bullet(Bullet):
+    def __init__(self, x, y, dx, dy, machines):
+        pygame.sprite.Sprite.__init__(self, self.containers)
+        self.image = pygame.image.load("img/Thunder31.png").convert_alpha()
+        self.rect = self.image.get_rect()   # 画像からrectを読み取る
+        self.rect.move_ip(x, y)             # 引数で指定された位置に移動させる
+        self.dx, self.dy = dx, dy       # 移動量
+        self.machines = machines
+        self.image_flag = 0
         
+        self.update = self.move
+
+        Timer(2000, self.kill) 
+
+    def move(self):
+        if self.image_flag == 0:
+            self.image = pygame.image.load("img/Thunder31.png").convert_alpha()
+            self.image_flag = 1
+        elif self.image_flag == 1:
+            self.image = pygame.image.load("img/Thunder32.png").convert_alpha()
+            self.image_flag = 0
+
+        self.rect.move_ip(self.dx, self.dy)
+
+        collide_list = pygame.sprite.spritecollide(self, self.machines, False)
+        if collide_list:
+            self.flag = 1
+            for machine in collide_list:
+                machine.hit(0.35)
+
 
 class Meteorite(Bullet):
 

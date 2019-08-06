@@ -184,5 +184,5 @@ class Thunder_Gun(Gun):
         super().__init__(machines, principal, max)
 
     def shoot(self, x, y):
-        Thunder_Bullet(x, y, self.dx*-1, self.dy, self.machines)
+        Thunder_Bullet(x, y, self.dx*-2, self.dy, self.machines)
         self.num -= 1
