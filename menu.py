@@ -59,7 +59,7 @@ class Menu:
                     self.Key_Event(event)       #押されたキーによって異なる処理
                     if event.key == K_RETURN:
                         if self.option_num == 1:
-                            return None, None
+                            return None, "0"
                         elif self.option_num == 2:
                             return None, "1"
                         elif self.option_num == 3:

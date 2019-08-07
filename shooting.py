@@ -24,14 +24,14 @@ class Main(pygame.sprite.Sprite):
         self.data_check()
         print(self.data)
 
-        self.shop = Shop(self.screen)
-
         if os.name == 'posix':
             # Linux系OSの場合
             self.screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.RESIZABLE)   # ウィンドウをWIDTH×HEIGHTで作成する
         if os.name == 'nt':
             # Windows
             self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
+
+        self.shop = Shop(self.screen, self.data)
         
     def do(self):
          while True:
@@ -46,7 +46,7 @@ class Main(pygame.sprite.Sprite):
                     if stageTxt == "0":
                         break
                     elif stageTxt == "1":
-                        shop = self.shop.draw()
+                        self.shop_own = self.shop.draw()
                     else:
                         self.Stage_draw(stage_id, stageTxt)             
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動

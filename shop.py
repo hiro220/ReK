@@ -7,14 +7,12 @@ from pygame.locals import *
 from money import *
 
 class Shop:
-    def __init__(self, screen):
+    def __init__(self, screen, data):
         self.screen = screen
+        self.data = data
 
         self.gun_num = 1
         self.back_num = 0
-
-        self.money = Money(10,10)
-
 
         Circle_gun_font = pygame.font.Font("freesansbold.ttf", 45)
         Circle_gun_place_font = pygame.font.Font("freesansbold.ttf", 45)
@@ -31,17 +29,19 @@ class Shop:
 
     def draw(self):
         while True:
-            self.screen.blit(self.Circle_gun_text, [210, 150])
-            self.screen.blit(self.Circle_gun_place_text, [700, 150])
-            self.screen.blit(self.Reflection_Gun_text, [210, 250])
+            self.screen.blit(self.Reflection_Gun_text, [210, 150])
             self.screen.blit(self.Reflection_Gun_place_text, [700, 250])
+            self.screen.blit(self.Circle_gun_text, [210, 250])
+            self.screen.blit(self.Circle_gun_place_text, [700, 150])
             self.screen.blit(self.back_text, [900, 5])
-            self.money.draw(self.screen)
+            
+            own_money = pygame.font.SysFont(None, 20).render("MONEY:" + str(self.data['money']), True, (255, 255, 255))
+            self.screen.blit(own_money, (10, 10))
 
             if self.gun_num == 1:
-                pygame.draw.rect(self.screen,(255,255,0),Rect(210,150,250,60),5)
+                pygame.draw.rect(self.screen,(255,255,0),Rect(210,150,350,60),5)
             elif self.gun_num == 2:
-                pygame.draw.rect(self.screen,(255,255,0),Rect(210,250,350,60),5)
+                pygame.draw.rect(self.screen,(255,255,0),Rect(210,250,250,60),5)
             
             if self.back_num == 1:
                 pygame.draw.rect(self.screen,(255,255,0),Rect(890,3,150,60),5)
@@ -55,7 +55,7 @@ class Shop:
                         if self.back_num == 1:
                             return "0"
                         else:
-                            self.Buy(gun_value)
+                            self.Buy()
 
             self.screen.fill((0,0,0))
 
@@ -75,6 +75,9 @@ class Shop:
                 if self.gun_num > 1 and self.gun_num <= 2:
                     self.gun_num -= 1
 
-    def Buy(self, value):
-        if self.money.money >= self.value:
-            self.money.money -= self.value
+
+    def Buy(self):
+        #if self.data['money'] >= 1000:
+            self.data['money'] -= 1000
+            data = self.data['gun_data']
+            data[self.gun_num]['own'] = 1
