@@ -137,12 +137,12 @@ class Beam_Gun(Gun):
 
     def shoot(self, x, y):
         if self.principal.beam_flag == 0 and self.beam_count == 0:
-            Beam_principal(x, y, self.machines, self.principal,"img/beam3.png",self.angle)
+            Beam_principal(x, y, self.machines, self.principal,"img/bullet/beam/beam3.png",self.angle)
             self.principal.beam_flag = 1
             self.num -= 1
             self.beam_count += 1
         elif self.principal.beam_flag == 0 and self.beam_count == 1 and pygame.time.get_ticks() - self.gun_start >= 600:
-            Beam_principal(x, y, self.machines, self.principal,"img/beam3.png", self.angle)
+            Beam_principal(x, y, self.machines, self.principal,"img/bullet/beam/beam3.png", self.angle)
             self.principal.beam_flag = 1
             self.num -= 1
 
