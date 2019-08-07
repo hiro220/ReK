@@ -96,7 +96,7 @@ class Stage:
         self.timers.update()
 
         pygame.sprite.groupcollide(self.cpus, self.ranges, True, False) # 画面外にでるとグループから削除される
-        #pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
+        pygame.sprite.groupcollide(self.bullets, self.ranges2, True, False) # 画面外にでるとグループから削除される
 
         # ゲームオーバー条件が満たされた
         if self.isGameOver():
