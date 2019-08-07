@@ -70,6 +70,9 @@ Move_range = Rect(600,40,STAGE_WIDTH/2,STAGE_WIDTH/2)
 mg = Move_range
 Correction = 10
 
+#boss2の移動座標
+Move_range2 = Rect(INFO_WIDTH,0,STAGE_WIDTH,HEIGHT)
+mg2 = Move_range2
 # stage background
 SKY = "SKY"
 STAR = "STAR"

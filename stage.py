@@ -27,6 +27,7 @@ class Stage:
         self.data = data
 
         CpuMachine.killed_count = self.data["kill"]
+        Boss.killed_count = 0
         PlayerMachine.killed_count = self.data["death"]
         
         self.initGroup()                        # グループを初期化する
@@ -82,7 +83,7 @@ class Stage:
             pygame.display.update()     # 画面更新
             if not result == CONTINUE:
                 break
-        self.data["kill"] = CpuMachine.killed_count
+        self.data["kill"] = CpuMachine.killed_count + Boss.killed_count
         self.data["death"] = PlayerMachine.killed_count
         return result, self.score.return_score(), self.money.money
 

@@ -1,12 +1,37 @@
-size    1000
+size    500
 rule    NORMAL
 bg      STAR
 
 0
+CPU0    300
 CPU7    200
 CPU10   200
 CPU8    400
 CPU9    400
+
+1
+CPU0    100
+CPU0    200
+CPU0    300
+CPU0    400
+CPU0    500
+CPU0    600
+50
+CPU0    100
+CPU0    200
+CPU0    300
+CPU0    400
+CPU0    500
+CPU0    600
+100
+CPU0    100
+CPU0    200
+CPU0    300
+CPU0    400
+CPU0    500
+CPU0    600
+
+
 500
 CPU6    100
 CPU5    500
