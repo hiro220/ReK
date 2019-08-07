@@ -128,7 +128,7 @@ class Twist_Gun(Gun):
             self.angle_count += 1
 
 class Beam_Gun(Gun):
-    def __init__(self, machines, principal, max, angle):
+    def __init__(self, machines, principal, max, angle=180):
         super().__init__(machines, principal, max)
         self.principal.beam_flag = 0
         self.gun_start = pygame.time.get_ticks()

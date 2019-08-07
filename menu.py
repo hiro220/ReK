@@ -12,8 +12,7 @@ class Menu:
         self.stage_num = 1
         self.select_num = 0
         self.option_num = 0
-
-
+        
         StageSelect_font = pygame.font.Font("freesansbold.ttf", 55)
         Arrow_font = pygame.font.Font("freesansbold.ttf", 150)
         Stage_font = pygame.font.Font("freesansbold.ttf", 45)
@@ -39,6 +38,7 @@ class Menu:
             self.screen.blit(self.StageSelect_text, [105, 5])     #テキストStageSelectを描画
             self.screen.blit(self.RightArrow_text, [965, 220])  #テキスト ＞ を描画
             self.screen.blit(self.LeftArrow_text, [105, 220])     #テキスト ＞ を描画
+            
             for i, option in enumerate(self.oprion_text):
                 self.screen.blit(option,[900-200*i, 5])
 
@@ -57,10 +57,9 @@ class Menu:
                     self.Key_Event(event)       #押されたキーによって異なる処理
                     if event.key == K_RETURN:
                         if self.option_num == 1:
-                            return None, None
+                            return None, "0"
                         elif self.option_num == 2:
-                            pass
-                            break
+                            return None, "1"
                         elif self.option_num == 3:
                             Equipment(self.screen, self.data).do()
                             break

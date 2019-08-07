@@ -45,7 +45,7 @@ class Stage:
 
         self.score = Score(10, 10)
         self.money = Money(10, 30)
-        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20))    # プレイヤーのマシンを生成する
+        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20), self.data)    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
         R_time.restart()
@@ -128,7 +128,9 @@ class Stage:
                     R_time.stop()
                     pygame.mixer.music.pause()
                     self.process, self.draw = self.pause_process, self.pause_draw
-                self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
+                if event.key == K_x or event.key == K_v:
+                    self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
+                self.player.change(event.key)
         return CONTINUE
 
     def moveStage(self):

@@ -12,6 +12,7 @@ import pygame.mixer
 import database as db
 from define import *
 from help_explain import Help_a, Help_print
+from shop import *
 import json
 import argparse
 
@@ -36,6 +37,8 @@ class Main(pygame.sprite.Sprite):
         if os.name == 'nt':
             # Windows
             self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
+
+        self.shop = Shop(self.screen, self.data)
         
     def do(self):
          while True:
@@ -51,9 +54,12 @@ class Main(pygame.sprite.Sprite):
                     stage_id, stageTxt = menu.draw()
                     if stage_id == EXIT:
                         self.exit()
-                    if stage_id == None:
+                    if stageTxt == "0":
                         break
-                    self.Stage_draw(stage_id, stageTxt)                
+                    elif stageTxt == "1":
+                        self.shop_own = self.shop.draw()
+                    else:
+                        self.Stage_draw(stage_id, stageTxt)             
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 help_c = Help_a(self.screen)
                 help_b = help_c.draw()
@@ -171,6 +177,5 @@ class Main(pygame.sprite.Sprite):
         sys.exit()
 
 if __name__=='__main__':
-
     game = Main(args.cheat)
     game.do()

@@ -1,6 +1,6 @@
 {
     "Gun": {"bullet_size": 10, "reload_size": 10},
-    "Reflect_Gun": {"bullet_size": 5, "reload_size": 3},
+    "Reflection_Gun": {"bullet_size": 5, "reload_size": 3},
     "Circle_Gun": {"bullet_size": 8, "reload_size": 6},
     "Beam_Gun": {"bullet_size": 3, "reload_size": 4},
     "Missile_Gun": {"bullet_size": 2, "reload_size": 5},
