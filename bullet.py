@@ -3,8 +3,8 @@
 
 import pygame
 import math
-from define import R_time
-from define import INFO_WIDTH, WIDTH, HEIGHT
+from define import R_time, INFO_WIDTH, WIDTH, HEIGHT
+from timer import Timer
 
 class Bullet(pygame.sprite.Sprite):
 
