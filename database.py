@@ -4,11 +4,8 @@ import sqlite3
 import argparse
 
 db = 'data/savedata.db'
+cdb = 'data/cheat.db'
 
-parser = argparse.ArgumentParser(description='ReKにおけるデータベースを管理するファイル')
-parser.add_argument('--delete', action='store_true', help="すべてのデータベースを初期化する")
-parser.add_argument('-s', '--show', action='store_true', help="すべてのデータベースの中身を表示する")
-args = parser.parse_args()
 
 """
 # データベース
@@ -54,9 +51,12 @@ def create_table(table_name, keys):
     conn.close()
 
 
-def insert_score(stage_id, score):
+def insert_score(stage_id, score, cheat):
     # データベース
-    conn = sqlite3.connect(db)
+    if cheat:
+        conn = sqlite3.connect(cdb)
+    else:
+        conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
 
@@ -75,9 +75,12 @@ def insert_score(stage_id, score):
     # データベースへのコネクションを閉じる
     conn.close()
 
-def load_ranking(stage_id):
+def load_ranking(stage_id, cheat):
     # データベース
-    conn = sqlite3.connect(db)
+    if cheat:
+        conn = sqlite3.connect(cdb)
+    else:
+        conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
     ranking = [data for data in cur.execute('SELECT id, score FROM ranking WHERE stage=?', str(stage_id))]
@@ -102,9 +105,12 @@ def _save_equip(cur, data):
     else:
         cur.execute("UPDATE equipment SET gun1=?, gun2=?, gun3=?", data)
 
-def save(data_dic):
+def save(data_dic, cheat):
     # データベース
-    conn = sqlite3.connect(db)
+    if cheat:
+        conn = sqlite3.connect(cdb)
+    else:
+        conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
     for key, value in data_dic.items():
@@ -138,9 +144,12 @@ def _load_equip(cur):
     equipment = list(cur.execute("SELECT gun1, gun2, gun3 FROM equipment"))[0]
     return equipment
 
-def load():
+def load(flag=False):
     # データベース
-    conn = sqlite3.connect(db)
+    if flag:
+        conn = sqlite3.connect(cdb)
+    else:
+        conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
 
@@ -162,6 +171,10 @@ def load():
 if __name__=='__main__':
     # このプログラムをメインで実行したとき
         
+    parser = argparse.ArgumentParser(description='ReKにおけるデータベースを管理するファイル')
+    parser.add_argument('--delete', action='store_true', help="すべてのデータベースを初期化する")
+    parser.add_argument('-s', '--show', action='store_true', help="すべてのデータベースの中身を表示する")
+    args = parser.parse_args()
     # データベース
     conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成

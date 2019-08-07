@@ -1,4 +1,4 @@
 *.pyc
 
 # セーブデータファイルを無視する
-/data/*.db
+/data/savedata.db

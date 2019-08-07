@@ -13,13 +13,20 @@ import database as db
 from define import *
 from help_explain import Help_a, Help_print
 import json
+import argparse
+
+parser = argparse.ArgumentParser(description='ReK')
+parser.add_argument('-c', '--cheat', action='store_true', help="チート")
+args = parser.parse_args()
+
 
 class Main(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, cheat):
         """pygame、ウィンドウなどの初期化処理"""
         pygame.init()   # pygameの初期化
-        self.data = db.load()
+        self.data = db.load(cheat)
+        self.cheat = cheat
         self.data_check()
         print(self.data)
 
@@ -136,7 +143,7 @@ class Main(pygame.sprite.Sprite):
                 i += 1
                 continue
             data['name'] = name
-            data['own'] = int(i==0)
+            data['own'] = int(self.cheat or i==0)
             self.data['gun_data'][i] = data
             i += 1
 
@@ -145,7 +152,6 @@ class Main(pygame.sprite.Sprite):
         if self.data['equip'] == []:
             self.data['equip'] = [0, -1, -1]
         
-
     def data_check(self):
         for key, cast in data_key.items():
             if key in self.data:
@@ -160,11 +166,11 @@ class Main(pygame.sprite.Sprite):
 
     def exit(self):
         self.data["play_time"] += pygame.time.get_ticks()
-        db.save(self.data)
+        db.save(self.data, self.cheat)
         pygame.quit()
         sys.exit()
 
 if __name__=='__main__':
 
-    game = Main()
+    game = Main(args.cheat)
     game.do()
