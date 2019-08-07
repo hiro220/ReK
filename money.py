@@ -8,7 +8,7 @@ import sys
 class Money:
     def __init__(self, x, y):
         self.sysfont = pygame.font.SysFont(None, 20)
-        self.money = 1000
+        self.money = 0
         (self.x, self.y) = (x, y)
 
     def draw(self, screen):

@@ -35,7 +35,7 @@ class Shop:
             self.screen.blit(self.Circle_gun_place_text, [700, 150])
             self.screen.blit(self.back_text, [900, 5])
             
-            own_money = pygame.font.SysFont(None, 20).render("MONEY:" + str(self.data['money']), True, (255, 255, 255))
+            own_money = pygame.font.SysFont(None, 55).render("MONEY:" + str(self.data['money']), True, (255, 255, 255))
             self.screen.blit(own_money, (10, 10))
 
             if self.gun_num == 1:
@@ -77,7 +77,8 @@ class Shop:
 
 
     def Buy(self):
-        #if self.data['money'] >= 1000:
-            self.data['money'] -= 1000
-            data = self.data['gun_data']
-            data[self.gun_num]['own'] = 1
+        data = self.data['gun_data']
+        if data[self.gun_num]['own'] == 0:
+            if self.data['money'] >= 1000:
+                self.data['money'] -= 1000
+                data[self.gun_num]['own'] = 1
