@@ -66,13 +66,11 @@ class Main(pygame.sprite.Sprite):
         elif result[0] == RETIRE:
             return
         self.StageResult_draw(stage_id, result)
-        return
 
     def StageResult_draw(self, stage_id, result):
         """ステージ結果画面を描画する"""
         self.screen.fill((0,0,0))
 
-        Score_font = pygame.font.Font("freesansbold.ttf", 50)
         Enter_font = pygame.font.Font("freesansbold.ttf", 20)
 
         #Score_text = Score_font.render("SCORE: " + str(result[1]), True, (255,255,255))
