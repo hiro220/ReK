@@ -14,16 +14,11 @@ class Sample2():
         self.count = 0
 
     def move(self):
-        if 0 <= self.count <= 14:
-                dx, dy = -2.5, 3
-                self.count += 1
-                return dx, dy
-        elif 15 <= self.count <= 30:
-            dx, dy = -2.5, -3
-            self.count += 1
-            if self.count == 31:
-                self.count = 0
-            return dx, dy
+        dx, dy = -2.5, 3 - (6 * (15 <= self.count <= 30))
+        self.count += 1
+        if self.count == 31:
+            self.count = 0
+        return dx, dy
 
 class Sample3():
 

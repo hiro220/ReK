@@ -1,7 +1,5 @@
 import pygame
 from pygame.locals import *
-import sys
-import time
 from define import *
 from equipment import Equipment
 
@@ -68,8 +66,7 @@ class Menu:
                             break
                         return self.Return_Stage()
                 if event.type == QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return EXIT, None
             
             self.screen.fill((0,0,0))
             
