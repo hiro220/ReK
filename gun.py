@@ -135,20 +135,21 @@ class Twist_Gun(Gun):
             self.angle_count += 1
 
 class Beam_Gun(Gun):
-    def __init__(self, machines, principal, max):
+    def __init__(self, machines, principal, max, angle):
         super().__init__(machines, principal, max)
         self.principal.beam_flag = 0
         self.gun_start = pygame.time.get_ticks()
         self.beam_count = 0
+        self.angle = angle
 
     def shoot(self, x, y):
         if self.principal.beam_flag == 0 and self.beam_count == 0:
-            Beam_principal(x, y, 0, 0, self.machines, self.principal,"img/beam3.png")
+            Beam_principal(x, y, self.machines, self.principal,"img/beam3.png",self.angle)
             self.principal.beam_flag = 1
             self.num -= 1
             self.beam_count += 1
         elif self.principal.beam_flag == 0 and self.beam_count == 1 and pygame.time.get_ticks() - self.gun_start >= 600:
-            Beam_principal(x, y, 0, 0, self.machines, self.principal,"img/beam3.png")
+            Beam_principal(x, y, self.machines, self.principal,"img/beam3.png", self.angle)
             self.principal.beam_flag = 1
             self.num -= 1
 
