@@ -100,15 +100,14 @@ class Main(pygame.sprite.Sprite):
             self.screen.blit(image, [255, 50])
             self.data["money"] += money
             self.data["sum_money"] += money
-            db.insert_score(stage_id, score)
-            self.draw_ranking(db.load_ranking(stage_id))
+            db.insert_score(stage_id, score, self.cheat)
+            self.draw_ranking(db.load_ranking(stage_id, self.cheat))
         elif result == GAMEOVER:
             image = pygame.image.load("img/gameover.jpg").convert_alpha()
             self.screen.blit(image, [270, 10])
 
         while True:
-            pygame.display.update()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-
+            pygame.display.update()
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_RETURN:
