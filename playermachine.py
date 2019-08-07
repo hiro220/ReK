@@ -8,7 +8,7 @@ from define import INFO_WIDTH, WIDTH, HEIGHT
 
 class PlayerMachine(Machine):
     killed_count = 0
-    def __init__(self, x, y, cpus, score, money):
+    def __init__(self, x, y, cpus, score, money, data):
         """引数は、初期位置(x, y)、弾の当たり判定対象となる敵機グループ"""
         image = pygame.image.load("img/player.png").convert_alpha()
         super().__init__(20, x, y, image, cpus, score, money)
@@ -16,6 +16,8 @@ class PlayerMachine(Machine):
         self.wait_flag = 0
         self.count = 0
         self.cop_flag = True
+        self.equip = data["equip"]
+        self.gun_data = data["gun_data"]
         
         self.gun = Beam_Gun(self.machines, self, 100)
 
@@ -43,7 +45,8 @@ class PlayerMachine(Machine):
 
     def change(self, key):
         if key == K_a:
-            self.gun = Circle_Gun(self.machines, self, 10)   
+            gun_num = self.equip[0]
+            self.gun = exec(self.gun_data[gun_num]['name'] + )
         elif key == K_s:
             self.gun = Reflection_Gun(self.machines, self, 10)
         elif key == K_d:
