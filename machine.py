@@ -54,7 +54,6 @@ class Machine(pygame.sprite.Sprite):
             self.gun.shoot(x, y)
 
     def reload(self):
-        self.gun.reload()
         if self.reload_flag:
             self.reload_flag = False
             bullet_num = self.gun.num

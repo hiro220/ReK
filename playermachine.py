@@ -18,8 +18,8 @@ class PlayerMachine(Machine):
         self.cop_flag = True
         self.equip = data["equip"]
         self.gun_data = data["gun_data"]
-        
-        self.gun = Beam_Gun(self.machines, self, 100)
+        self.gun_base()
+        self.gun = self.gun_file[0]
 
     def move(self):
         if self.wait_flag == 0:
@@ -44,13 +44,22 @@ class PlayerMachine(Machine):
             super().reload()
 
     def change(self, key):
-        if key == K_a:
-            gun_num = self.equip[0]
-            self.gun = exec(self.gun_data[gun_num]['name'] + )
-        elif key == K_s:
-            self.gun = Reflection_Gun(self.machines, self, 10)
-        elif key == K_d:
-            super().change(2)
+        gun_number = 1 * (key==K_a) or 2 * (key==K_s) or 3 * (key==K_d)
+        if gun_number == 0 or self.gun_file[gun_number - 1] == None:
+            return
+        self.gun = self.gun_file[gun_number - 1]
+        
+    def gun_base(self):
+        self.gun_file = []   
+        for i in range(3):
+            gun_num = self.equip[i]
+            if gun_num == -1:
+                self.gun_file.append(None)
+            else:
+                class_name = self.gun_data[gun_num]['name']
+                bullet_count = self.gun_data[gun_num]['bullet_size']
+                exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + "))") 
+            
     
     def isGameOver(self):
         return not self.alive()
