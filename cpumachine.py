@@ -6,6 +6,7 @@ from define import *
 from gun import *
 from cpumove import *
 
+img_path = "img/cpu/"
 
 #comment
 class CpuMachine(Machine):
@@ -26,7 +27,7 @@ class cpu0(CpuMachine):
     def __init__(self, x, y, players, score, money):
         """引数は、初期位置(x, y)、弾の当たり判定対象となるプレイヤーの機体グループ"""
 
-        image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
+        image = pygame.image.load(img_path+"cpu.png").convert_alpha() #イメージ画像をロードする
         super().__init__(1, x, y, image, players, score, money)         #superクラス(CpuMachine)を呼び出す
         self.dx, self.dy = 5, 5                                  #機体自身の位置を入力　　
         self.gun = Beam_Gun(self.machines, self, -1, 270)          #machineクラスのself.gunを上書きする
@@ -46,7 +47,7 @@ class cpu(CpuMachine):
     def __init__(self, x, y, players, score, money):
         """引数は、初期位置(x, y)、弾の当たり判定対象となるプレイヤーの機体グループ"""
 
-        image = pygame.image.load("img/cpu.png").convert_alpha()
+        image = pygame.image.load(img_path+"cpu.png").convert_alpha()
         super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = 5, 5
         self.Sample1 = Sample1()
@@ -64,7 +65,7 @@ class cpu2(CpuMachine):
     def __init__(self, x, y, players, score, money):
         """引数は、初期位置(x, y)、弾の当たり判定対象となるプレイヤーの機体グループ"""
         
-        image = pygame.image.load("img/cpu2.png").convert_alpha()
+        image = pygame.image.load(img_path+"cpu2.png").convert_alpha()
         super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = 5, 5
         self.Sample2 = Sample2()
@@ -83,7 +84,7 @@ class cpu3(CpuMachine):
     def __init__(self, x, y, players, score, money):
         """引数は、初期位置(x, y)、弾の当たり判定対象となるプレイヤーの機体グループ"""
         
-        image = pygame.image.load("img/cpu3.png").convert_alpha()
+        image = pygame.image.load(img_path+"cpu3.png").convert_alpha()
         super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = 5, 5
         self. count = 0
@@ -103,7 +104,7 @@ class cpu3(CpuMachine):
 
 class cpu4(CpuMachine):
     def __init__(self, x, y, players, score, money):
-        image = pygame.image.load("img/cpu4.png").convert_alpha()
+        image = pygame.image.load(img_path+"cpu4.png").convert_alpha()
         super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = -1, 0
         self.Sample3 = Sample3()
@@ -119,7 +120,7 @@ class cpu4(CpuMachine):
 
 class cpu5(CpuMachine):
     def __init__(self, x, y, players, score, money):
-        image = pygame.image.load("img/cpu5.png").convert_alpha()
+        image = pygame.image.load(img_path+"cpu5.png").convert_alpha()
         super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = -5, -2
         self.Sample4 = Sample4()
@@ -135,7 +136,7 @@ class cpu5(CpuMachine):
 
 class cpu6(CpuMachine):
     def __init__(self, x, y, players, score, money):
-        image = pygame.image.load("img/cpu6.png").convert_alpha()
+        image = pygame.image.load(img_path+"cpu6.png").convert_alpha()
         super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = -2, 0
         self.Sample5 = Sample5()
@@ -151,7 +152,7 @@ class cpu6(CpuMachine):
 
 class cpu7(CpuMachine):
     def __init__(self, x, y, players, score, money):
-        image = pygame.image.load("img/cpu6.png").convert_alpha()
+        image = pygame.image.load(img_path+"cpu6.png").convert_alpha()
         super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = -2, 0
         self.Sample6 = Sample6()
@@ -167,7 +168,7 @@ class cpu7(CpuMachine):
 
 class cpu8(CpuMachine):
     def __init__(self, x, y, players, score, money):
-        image = pygame.image.load("img/cpu6.png").convert_alpha()
+        image = pygame.image.load(img_path+"cpu6.png").convert_alpha()
         super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = -2, 0
         self.Sample7 = Sample7()
@@ -183,7 +184,7 @@ class cpu8(CpuMachine):
 
 class cpu9(CpuMachine):
     def __init__(self, x, y, players, score, money):
-        image = pygame.image.load("img/cpu6.png").convert_alpha()
+        image = pygame.image.load(img_path+"cpu6.png").convert_alpha()
         super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = -2, 0
         self.Sample8 = Sample8()
@@ -199,7 +200,7 @@ class cpu9(CpuMachine):
 
 class cpu10(CpuMachine):
     def __init__(self, x, y, players, score, money):
-        image = pygame.image.load("img/cpu6.png").convert_alpha()
+        image = pygame.image.load(img_path+"cpu6.png").convert_alpha()
         super().__init__(1, x, y, image, players, score, money)
         self.dx, self.dy = -2, 0
         self.Sample9 = Sample9()

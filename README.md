@@ -1,20 +1,5 @@
 # ReK
 
-<details><summary>目次</summary><div>
-
-- [Clone](#clone)
-- [実行方法](#実行)
-- [CPUを作成](#CPUの作成)
-    - [GUN一覧](#利用できるGUN一覧)
-- [アイテムの作成](#アイテムの作成)
-- [Timer](#Timerの利用)
-- [ステージを作成する](#ステージの作成)
-- [アイテム一覧](#利用できるアイテム)
-- [セーブデータについて](#セーブデータ)
-
-</div></details>
-
-
 ## Clone
 `git clone https://github.com/hiroki-inoue-git/ReK`
 
@@ -115,57 +100,6 @@ class Stage:
 ```
 
 
-## Timerの利用
-
-- シンプルなタイマーの実行
-
-```python
-def method():
-    print("result")
-
-Timer(1000, method)
-```
-
-```python
-# 1000ミリ秒後
-result
-```
-
-- 実行する関数に引数を与えるとき
-
-```python
-def method(a, b):
-    print(a+b)
-
-a, b = 10, 5
-Timer(1000, method, a, b)
-```
-
-```python
-# 1000ミリ秒後
-15
-```
-
-- 実行する関数の返り値を利用したいとき
-```python
-def method(a, b):
-    return a + b
-
-a, b = 3, 4
-timer = Timer(1000, method, a, b)
-
-while True:
-    if timer.value != None:
-        print(timer.value)      # 返り値の利用
-        timer.value = None      # リセット
-```
-
-```python
-# 1000ミリ秒後
-7
-```
-
-
 ## ステージの作成
 stageフォルダにテキストファイルを作成し、指定の方式で記述する
 ### フォーマット
@@ -226,22 +160,3 @@ CPU3    500
 |`SPEEDDOWN`|取得した機体のスピードが3秒間落ちる|
 |`SCOREGET`|取得した時点で画面内に残る敵機数×5のスコアを獲得する|
 |`METEORITE`|相手にダメージのある隕石を5つ落とす|
-
-## セーブデータ
-*data*テーブルにセーブデータが保持されている
-### セーブデータの削除
-```
-python database.py
-```
-
-現在のバージョンでセーブされる項目は以下
-
-|data|Dictionary Key Name|veriable type|
-|:-:|:-:|:-:|
-|バージョン|`version`|`str`|
-|所持金|`money`|`int`|
-|これまで獲得したお金|`sum_money`|`int`|
-|何番目のステージまでクリアしたか|`stage_progress`|`int`|
-|倒した敵機の数|`kill`|`int`|
-|自機がやられた数|`death`|`int`|
-|ReK全体を通してのプレイ時間|`play_time`|`float`|

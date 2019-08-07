@@ -2,7 +2,6 @@
 # coding:utf:-8
 
 import pygame
-from pygame.locals import *
 from gun import *
 from timer import Timer, FlagTimer
 from define import WIDTH, HEIGHT

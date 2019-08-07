@@ -1,7 +1,6 @@
 # coding:utf-8
 
 import pygame
-from pygame.locals import *
 from machine import Hp
 from timer import Timer
 
@@ -27,10 +26,9 @@ class Item(pygame.sprite.Sprite):
 
     def checkMachine(self, collide_list):
         """引数collide_listのリスト中に機体があればTrueが返る。ない場合はFalse"""
-        if collide_list:
-            for x in collide_list:
-                if x.isMachine():
-                    return True
+        for x in collide_list:
+            if x.isMachine():
+                return True
         return False
 
 class Recovery(Item):
