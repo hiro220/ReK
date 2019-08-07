@@ -7,6 +7,8 @@ from timer import Timer
 import random
 import math
 
+img_path = "img/cpu/"
+
 class Boss(Machine):
     killed_count = 0
     def __init__(self, hp, x, y, image, players, score, money):
@@ -20,7 +22,7 @@ class Boss(Machine):
 
 class Stage1_boss(Boss):                                 #ボス本体の機体
     def __init__(self, x, y, players, score, money):
-        image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
+        image = pygame.image.load(img_path+"cpu.png").convert_alpha() #イメージ画像をロードする
         super().__init__(10000, x, 280, image, players, score, money)         #superクラス(Boss)を呼び出す
         self.shield  = Timer(0,Shield,10000,self)
         self.summon_flag = False                         #subをロードしていいかの判定フラグ
@@ -215,7 +217,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
 
 class Stage1_sub(Boss):                                  #ボス付属品の機体
     def __init__(self, x, y, players, score, sub_number, boss, money):              
-        image = pygame.image.load("img/boss1_sub.png").convert_alpha()
+        image = pygame.image.load(img_path+"boss1_sub.png").convert_alpha()
         super().__init__(10000, x, y, image, players, score, money)
         self.sub_number = sub_number                     #付属品のID
         self.boss = boss
