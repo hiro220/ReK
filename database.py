@@ -36,19 +36,20 @@ def create_table(table_name, keys):
         - TEXT(str)
         - REAL(float)
     """
-    # データベース
-    conn = sqlite3.connect(db)
-    # sqliteを操作するカーソルオブジェクトを作成
-    cur = conn.cursor()
+    for database in (db, cdb):
+        # データベース
+        conn = sqlite3.connect(database)
+        # sqliteを操作するカーソルオブジェクトを作成
+        cur = conn.cursor()
 
-    # rankingテーブルが存在しないとき、作成する
-    cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name=?", [table_name])
-    execute_text = 'CREATE TABLE ' + table_name + '(' + ', '.join(keys) + ')'
-    if cur.fetchone()[0] == 0:
-        cur.execute(execute_text)
+        # rankingテーブルが存在しないとき、作成する
+        cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name=?", [table_name])
+        execute_text = 'CREATE TABLE ' + table_name + '(' + ', '.join(keys) + ')'
+        if cur.fetchone()[0] == 0:
+            cur.execute(execute_text)
 
-    # データベースへのコネクションを閉じる
-    conn.close()
+        # データベースへのコネクションを閉じる
+        conn.close()
 
 
 def insert_score(stage_id, score, cheat):
