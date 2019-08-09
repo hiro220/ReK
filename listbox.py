@@ -6,14 +6,14 @@ class ListBox:
 
     def __init__(self, screen, x, y, width, height, data_list=[], bg=(255,255,255), outline=3, target=False, font_size=20):
         self.screen = screen
-        self.rect = Rect(x, y, x+width, y+height)
+        self.rect = Rect(x, y, width, height)
         self.list = data_list
         self.bg = bg
         self.outline = outline
         self.target = target
         self.selected = 0
         self.top_id = 0
-        self.font = pygame.font.Font("freesansbold.ttf", size=font_size)
+        self.font = pygame.font.Font("freesansbold.ttf", font_size)
         self.draw_num = height // (font_size+10)
         self.font_size = font_size
 
