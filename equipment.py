@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from define import *
+from listbox import ListBox
 
 class Equipment:
 
@@ -14,6 +15,8 @@ class Equipment:
         self.back = False               # 一つ前の画面にもどるか
         self.screen_info = pygame.font.Font("freesansbold.ttf" ,70).render("Equip", True, (255,255,255))
         self.back_info = pygame.font.Font("freesansbold.ttf" ,50).render("'Q' : Back", True, (255,255,255))
+        texts = [data["name"] for data in self.data["gun_data"].values()]
+        self.listbox = ListBox(self.screen, 80, 150, 300, 250, texts, font_size=40)
     
     def do(self):
         while True:
@@ -56,7 +59,8 @@ class Equipment:
         self.screen.blit(self.screen_info, [150, 20])
         self.screen.blit(self.back_info, [WIDTH-self.back_info.get_rect().right-20, 20])
         pygame.draw.rect(self.screen, (255,255,255), Rect(700, HEIGHT-150, 350, 100))
-
+        self.listbox.draw()
+        """
         # 銃一覧の表示
         for i in range(5):
             gun_id = i+self.top_draw
@@ -70,7 +74,7 @@ class Equipment:
                 height = draw_text.get_rect().bottom
                 color = (255,0,0)
                 pygame.draw.rect(self.screen, color, Rect(75, 145+50*i, width+10, height+10), 2)
-
+        """
         # 装備中の銃情報の表示
         for i, data in enumerate(self.data['equip']):
             color = (255,0,0) * (i == self.change_gun) or (0,)*3
