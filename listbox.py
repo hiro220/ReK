@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from define import EXIT
 import numpy
 
 class ListBox:
@@ -16,6 +17,7 @@ class ListBox:
         self.font = pygame.font.Font("freesansbold.ttf", font_size)
         self.draw_num = height // (font_size+10)
         self.font_size = font_size
+        self.list_size = len(self.list)
 
     def draw(self):
         pygame.draw.rect(self.screen, self.bg, self.rect)
@@ -31,12 +33,32 @@ class ListBox:
         # このListBoxがターゲットされていないなら処理はなし
         if not self.target:
             return
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                return EXIT
+            if event.type == KEYDOWN:
+                if event.key == K_UP:
+                    self.selected -= 1
+                elif event.key == K_DOWN:
+                    self.selected += 1
+                elif event.key == K_RETURN:
+                    self.target = False
+                    return self.selected
+                else:
+                    self.target = False
+                self.selected = (self.selected+self.list_size) % self.list_size
+                self.top_id = (self.top_id <= self.selected <= self.top_id+self.draw_num-1) * self.top_id or \
+                              (self.top_id+self.draw_num-1 < self.selected) * (self.selected-self.draw_num+1) or \
+                              (self.top_id > self.selected) * (self.selected)
 
     def get_list(self):
         return self.list
 
     def set_selectable(self, selectable_list):
         pass
+
+    def __call__(self):
+        self.target ^= True
 
     def __add__(self, others_list):
         self.list += others_list
