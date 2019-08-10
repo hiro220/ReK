@@ -1,6 +1,5 @@
 import pygame
 from pygame.locals import *
-from define import EXIT
 
 class ListBox:
 
