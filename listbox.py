@@ -5,7 +5,7 @@ import numpy as np
 
 class ListBox:
 
-    def __init__(self, screen, x, y, width, height, data_list=[], bg=(255,255,255), outline=3, target=False, font_size=20):
+    def __init__(self, screen, x, y, width, height, data_list=[], bg=(255,255,255), outline=3, outline_color=(155,155,155),target=False, font_size=20):
         """リストボックスを作成する。
         Rect(x, y, width, height)で背景色bg(初期値では白)、外枠の大きさがoutline(初期値3)の描画領域を作成。
         その描画領域内に、data_listに指定したテキストのリストを縦にリストアップする。その際、フォントサイズはfont_size(初期値20)に設定される。
@@ -16,6 +16,7 @@ class ListBox:
         self.list = data_list
         self.bg = bg
         self.outline = outline
+        self.outline_color = outline_color
         self.target = target
         self.selected = 0
         self.top_id = 0
@@ -29,21 +30,24 @@ class ListBox:
     def draw(self):
         """self.screenで指定される画面にリストボックスを描画する。"""
         pygame.draw.rect(self.screen, self.bg, self.rect)
-        pygame.draw.rect(self.screen, (0,0,0), self.rect, self.outline)
+        pygame.draw.rect(self.screen, self.outline_color, self.rect, self.outline)
         s, l = self.top_id, self.top_id+self.draw_num
         text_list = self.list[s:l]
-        selectable = self.selectable[s:l]
         colors = self.color_list[s:l]
         x, y = self.rect.left, self.rect.top
         i = 0
-        for text, sele, color in zip(text_list, selectable, colors):
+        size = (0,0,self.rect.right-self.rect.left-20-self.outline, self.font_size)
+        for text, color in zip(text_list, colors):
             draw_text = self.font.render(text, True, color)
-            self.screen.blit(draw_text, [x+5, y+5+(self.font_size+10)*i])
+            self.screen.blit(draw_text, [x+5, y+5+(self.font_size+10)*i], size)
             if self.selected == self.top_id+i:
                 rect = draw_text.get_rect()
+                if rect.right > self.rect.right-self.rect.left-15-self.outline:
+                    rect = Rect(0,0,self.rect.right-self.rect.left-15-self.outline, rect.bottom)
                 rect.move_ip(x+5, y+5+(self.font_size+10)*i)
                 pygame.draw.rect(self.screen, (255,0,0), rect, 2)
             i += 1
+        pygame.mask.from_surface(self.screen)
 
 
     def process(self, event):
