@@ -36,17 +36,17 @@ class ListBox:
         # 枠線を描画
         pygame.draw.rect(self.screen, self.outline_color, self.rect, self.outline)
         # スクロールバーの枠を描画
-        rect = Rect(self.rect.right-15, self.rect.top, 15, self.rect.bottom-self.rect.top)
+        rect = Rect(self.rect.right-18, self.rect.top+3, 15, self.rect.bottom-self.rect.top-6)
         pygame.draw.rect(self.screen, (80,80,80), rect, 3)
         # スクロールバーを描画
         par = self.draw_num / self.list_size
-        size = (self.rect.bottom-self.rect.top-6)
+        size = (rect.bottom-rect.top-6)
         height = size * par
         par = self.top_id / self.list_size
-        top = self.rect.top + 3 + size * par
+        top = rect.top + 3 + size * par
         rect = Rect(rect.left+3, top, 9, height)
         pygame.draw.rect(self.screen, (100,100,100), rect)
-        
+
         # 表示する範囲のデータを抽出
         s, l = self.top_id, self.top_id+self.draw_num
         text_list = self.list[s:l]
