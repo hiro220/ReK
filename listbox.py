@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from define import EXIT
-import numpy
+import numpy as np
 
 class ListBox:
 
@@ -23,18 +23,20 @@ class ListBox:
         self.draw_num = height // (font_size+10)
         self.font_size = font_size
         self.list_size = len(self.list)
-        self.selectable = [False for _ in range(self.list_size)]
+        self.selectable = [False for _ in self.list]
+        self.color_list = [(0,0,0) for _ in self.list]
 
     def draw(self):
         """self.screenで指定される画面にリストボックスを描画する。"""
         pygame.draw.rect(self.screen, self.bg, self.rect)
         pygame.draw.rect(self.screen, (0,0,0), self.rect, self.outline)
-        text_list = self.list[self.top_id:self.top_id+self.draw_num]
-        selectable = self.selectable[self.top_id:self.top_id+self.draw_num]
+        s, l = self.top_id, self.top_id+self.draw_num
+        text_list = self.list[s:l]
+        selectable = self.selectable[s:l]
+        colors = self.color_list[s:l]
         x, y = self.rect.left, self.rect.top
         i = 0
-        for text, sele in zip(text_list, selectable):
-            color = (0,0,0)*sele or (100, 100, 100)
+        for text, sele, color in zip(text_list, selectable, colors):
             draw_text = self.font.render(text, True, color)
             self.screen.blit(draw_text, [x+5, y+5+(self.font_size+10)*i])
             if self.selected == self.top_id+i:
@@ -70,7 +72,23 @@ class ListBox:
         return self.list
 
     def set_selectable(self, selectable_list):
+        color_list = []
+        for tf, color in zip(selectable_list, self.color_list):
+            if color in ((0,0,0), (100,100,100)):
+                color_list.append((0,0,0)*tf or (100,100,100))
+            else:
+                color_list.append(color)
+        self.color_list = color_list
         self.selectable = selectable_list
+
+    def set_color(self, id_list, color):
+        for i in id_list:
+            if i == -1:
+                continue
+            self.color_list[i] = color
+
+    def color_reset(self):
+        self.color_list = [(0,0,0)*tf or (100,100,100) for tf in self.selectable]
 
     def __call__(self):
         self.target = True
@@ -84,4 +102,5 @@ class ListBox:
         self.list += others_list
         self.list_size += len(others_list)
         self.selectable += [False for i in others_list]
+        self.color_reset()
         return self
