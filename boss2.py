@@ -32,7 +32,7 @@ class Stage2_boss(Boss):
     def lord_sub(self):
         for number in range(3,7):
             Stage2_sub(mg2.centerx,100*(number-2), self.machines, self.score, number, self, self.money)
-            
+
 class Stage2_sub(Boss):
     def __init__(self, x, y, players, score, sub_number, boss, money):              
         image = pygame.image.load("img/bot.png").convert_alpha()
@@ -41,34 +41,16 @@ class Stage2_sub(Boss):
         self.number = sub_number
         self.sel_number = 0
         self.lord_count = 0
-        #self.move_dic = {0:move_pack0, 1:move_pack1, 2:move_pack2, 3:move_pack3}
-        #Timer(3000,self.change_number, 8)
+        self.move_dic = {0:self.move_pack0, 1:self.move_pack1, 2:self.move_pack2, 3:self.move_pack3, 4:self.move_pack4, 5:self.move_pack5, \
+        6:self.move_pack6, 7:self.move_pack7, 8:self.move_pack8, 100:self.move_flesh}
+        Timer(3000,self.change_number, 8)
 
     def update(self):
         self.move_select(self.sel_number)
         self.move(self.dx,self.dy)
     
     def move_select(self, select_number):
-        if self.sel_number == 0:
-            self.move_pack0()
-        elif self.sel_number == 1:
-            self.move_pack1()
-        elif self.sel_number == 2:
-            self.move_pack2()
-        elif self.sel_number == 3:
-            self.move_pack3()
-        elif self.sel_number == None:
-            self.move_flesh()
-        elif self.sel_number == 4:
-            self.move_pack4()
-        elif self.sel_number == 5:
-            self.move_pack5()
-        elif self.sel_number == 6:
-            self.move_pack6()
-        elif self.sel_number == 7:
-            self.move_pack7()
-        elif self.sel_number == 8:
-            self.move_pack8()
+        self.move_dic[select_number]()
 
     def change_number(self,number):
         self.sel_number = number
@@ -113,7 +95,7 @@ class Stage2_sub(Boss):
             self.dy += 50
             self.dx -= 100
     
-    def move_pack5(self):
+    def move_pack5(self): #未完成
         if self.number == 0 and self.rect.top - 30 <= mg2.top:
             self.dy = 10
         elif self.number == 0 and self.rect.bottom -30 >= mg2.centerx:
