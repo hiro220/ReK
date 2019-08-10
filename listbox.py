@@ -5,11 +5,13 @@ import numpy as np
 
 class ListBox:
 
-    def __init__(self, screen, x, y, width, height, data_list=[], bg=(255,255,255), outline=3, outline_color=(155,155,155),target=False, font_size=20):
+    def __init__(self, screen, x, y, width, height, data_list=[], bg=(255,255,255), outline=3, \
+                 outline_color=(155,155,155),target=False, font_size=20):
         """リストボックスを作成する。
         Rect(x, y, width, height)で背景色bg(初期値では白)、外枠の大きさがoutline(初期値3)の描画領域を作成。
-        その描画領域内に、data_listに指定したテキストのリストを縦にリストアップする。その際、フォントサイズはfont_size(初期値20)に設定される。
-        targetは、このリストボックスにキー入力による選択の移動、Enterキーによる選択要素の返却を受け付けるかどうかをしていする。
+        その描画領域内に、data_listに指定したテキストのリストを縦にリストアップする。
+        その際、フォントサイズはfont_size(初期値20)に設定される。
+        targetは、このリストボックスにキー入力による選択の移動、Enterキーによる選択要素の返却を受け付けるかどうかを指定する。
         """
         self.screen = screen
         self.rect = Rect(x, y, width, height)
@@ -29,25 +31,44 @@ class ListBox:
 
     def draw(self):
         """self.screenで指定される画面にリストボックスを描画する。"""
+        # 背景を塗りつぶす
         pygame.draw.rect(self.screen, self.bg, self.rect)
+        # 枠線を描画
         pygame.draw.rect(self.screen, self.outline_color, self.rect, self.outline)
+        # スクロールバーの枠を描画
+        rect = Rect(self.rect.right-15, self.rect.top, 15, self.rect.bottom-self.rect.top)
+        pygame.draw.rect(self.screen, (80,80,80), rect, 3)
+        # スクロールバーを描画
+        par = self.draw_num / self.list_size
+        size = (self.rect.bottom-self.rect.top-6)
+        height = size * par
+        par = self.top_id / self.list_size
+        top = self.rect.top + 3 + size * par
+        rect = Rect(rect.left+3, top, 9, height)
+        pygame.draw.rect(self.screen, (100,100,100), rect)
+        
+        # 表示する範囲のデータを抽出
         s, l = self.top_id, self.top_id+self.draw_num
         text_list = self.list[s:l]
         colors = self.color_list[s:l]
+        # 描画位置、サイズなどの設定
         x, y = self.rect.left, self.rect.top
+        size = (0,0,self.rect.right-self.rect.left-25-self.outline, self.font_size)
         i = 0
-        size = (0,0,self.rect.right-self.rect.left-20-self.outline, self.font_size)
         for text, color in zip(text_list, colors):
+            # テキストを描画範囲に収まるように描画
             draw_text = self.font.render(text, True, color)
             self.screen.blit(draw_text, [x+5, y+5+(self.font_size+10)*i], size)
+            # 選択中の要素に枠線を描画する
             if self.selected == self.top_id+i:
                 rect = draw_text.get_rect()
-                if rect.right > self.rect.right-self.rect.left-15-self.outline:
-                    rect = Rect(0,0,self.rect.right-self.rect.left-15-self.outline, rect.bottom)
+                # 描画範囲を超える大きさなら、収まるように調整
+                if rect.right > self.rect.right-self.rect.left-20-self.outline:
+                    rect = Rect(0,0,self.rect.right-self.rect.left-20-self.outline, rect.bottom)
                 rect.move_ip(x+5, y+5+(self.font_size+10)*i)
+                # 描画
                 pygame.draw.rect(self.screen, (255,0,0), rect, 2)
             i += 1
-        pygame.mask.from_surface(self.screen)
 
 
     def process(self, event):
@@ -68,8 +89,8 @@ class ListBox:
                 self.target = False
             self.selected = (self.selected+self.list_size) % self.list_size
             self.top_id = (self.top_id <= self.selected <= self.top_id+self.draw_num-1) * self.top_id or \
-                            (self.top_id+self.draw_num-1 < self.selected) * (self.selected-self.draw_num+1) or \
-                            (self.top_id > self.selected) * (self.selected)
+                          (self.top_id+self.draw_num-1 < self.selected) * (self.selected-self.draw_num+1) or \
+                          (self.top_id > self.selected) * (self.selected)
 
     def get_list(self):
         """保持しているテキストリストを返す。"""
