@@ -4,10 +4,9 @@ from bullet import *
 from beam import *
 from define import R_time
 import pygame
-from pygame.locals import *
 import math
 import random
-from timer import *
+from timer import Timer
 
 class Gun:
 
@@ -23,10 +22,7 @@ class Gun:
     def isBulletZero(self):
         """銃弾数が0ならTrue
         そうでないならFalseを返す"""
-        if self.num == 0:
-            return True
-        else:
-            return False
+        return self.num == 0
 
     def shoot(self, x, y):
         """引数は弾の発射位置(x, y)"""
@@ -125,17 +121,14 @@ class Twist_Gun(Gun):
         self.num -= 1
     
     def change_flag(self):
-        if self.shot_flag:
-            self.shot_flag = False
-        else:
-            self.shot_flag = True
+        self.shot_flag ^= True
 
     def count_angle(self):
         if self.standard_angle == 0:
             self.angle_count += 1
 
 class Beam_Gun(Gun):
-    def __init__(self, machines, principal, max, angle):
+    def __init__(self, machines, principal, max, angle=180):
         super().__init__(machines, principal, max)
         self.principal.beam_flag = 0
         self.gun_start = pygame.time.get_ticks()
@@ -144,12 +137,12 @@ class Beam_Gun(Gun):
 
     def shoot(self, x, y):
         if self.principal.beam_flag == 0 and self.beam_count == 0:
-            Beam_principal(x, y, self.machines, self.principal,"img/beam3.png",self.angle)
+            Beam_principal(x, y, self.machines, self.principal,"img/bullet/beam/beam3.png",self.angle)
             self.principal.beam_flag = 1
             self.num -= 1
             self.beam_count += 1
         elif self.principal.beam_flag == 0 and self.beam_count == 1 and pygame.time.get_ticks() - self.gun_start >= 600:
-            Beam_principal(x, y, self.machines, self.principal,"img/beam3.png", self.angle)
+            Beam_principal(x, y, self.machines, self.principal,"img/bullet/beam/beam3.png", self.angle)
             self.principal.beam_flag = 1
             self.num -= 1
 
@@ -163,10 +156,27 @@ class Missile_Gun(Gun):
 
     def shoot(self, x, y):
         if self.principal.cop_flag == 1 and R_time.get_ticks() - self.gun_start >= 1000:
-                Missile_Bullet(x, y, self.dx*-1, self.dy, self.machines, 1)
-                self.gun_start = R_time.get_ticks()
-                self.num -= 1
+            Missile_Bullet(x, y, self.dx*-1, self.dy, self.machines, 1)
+            self.gun_start = R_time.get_ticks()
         elif self.principal.cop_flag == 0:
             Missile_Bullet(x, y, self.dx, self.dy, self.machines, 0)
-            self.num -= 1
+        self.num -= 1
         
+        
+class Fluffy_Gun(Gun):
+
+    def __init__(self, machines, principal, max):
+        super().__init__(machines, principal, max)
+
+    def shoot(self, x, y):
+        Fluffy_Bullet(x, y, self.dx*-1, self.dy, self.machines)
+        self.num -= 1
+
+class Thunder_Gun(Gun):
+
+    def __init__(self, machines, principal, max):
+        super().__init__(machines, principal, max)
+
+    def shoot(self, x, y):
+        Thunder_Bullet(x, y, self.dx*-2, self.dy, self.machines)
+        self.num -= 1

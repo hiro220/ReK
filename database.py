@@ -4,11 +4,8 @@ import sqlite3
 import argparse
 
 db = 'data/savedata.db'
+cdb = 'data/cheat.db'
 
-parser = argparse.ArgumentParser(description='ReKにおけるデータベースを管理するファイル')
-parser.add_argument('-d', '--delete', action='store_true', help="すべてのデータベースを初期化する")
-parser.add_argument('-s', '--show', action='store_true', help="すべてのデータベースの中身を表示する")
-args = parser.parse_args()
 
 """
 # データベース
@@ -39,24 +36,28 @@ def create_table(table_name, keys):
         - TEXT(str)
         - REAL(float)
     """
+    for database in (db, cdb):
+        # データベース
+        conn = sqlite3.connect(database)
+        # sqliteを操作するカーソルオブジェクトを作成
+        cur = conn.cursor()
+
+        # rankingテーブルが存在しないとき、作成する
+        cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name=?", [table_name])
+        execute_text = 'CREATE TABLE ' + table_name + '(' + ', '.join(keys) + ')'
+        if cur.fetchone()[0] == 0:
+            cur.execute(execute_text)
+
+        # データベースへのコネクションを閉じる
+        conn.close()
+
+
+def insert_score(stage_id, score, cheat):
     # データベース
-    conn = sqlite3.connect(db)
-    # sqliteを操作するカーソルオブジェクトを作成
-    cur = conn.cursor()
-
-    # rankingテーブルが存在しないとき、作成する
-    cur.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name=?", [table_name])
-    execute_text = 'CREATE TABLE ' + table_name + '(' + ', '.join(keys) + ')'
-    if cur.fetchone()[0] == 0:
-        cur.execute(execute_text)
-
-    # データベースへのコネクションを閉じる
-    conn.close()
-
-
-def insert_score(stage_id, score):
-    # データベース
-    conn = sqlite3.connect(db)
+    if cheat:
+        conn = sqlite3.connect(cdb)
+    else:
+        conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
 
@@ -75,9 +76,12 @@ def insert_score(stage_id, score):
     # データベースへのコネクションを閉じる
     conn.close()
 
-def load_ranking(stage_id):
+def load_ranking(stage_id, cheat):
     # データベース
-    conn = sqlite3.connect(db)
+    if cheat:
+        conn = sqlite3.connect(cdb)
+    else:
+        conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
     ranking = [data for data in cur.execute('SELECT id, score FROM ranking WHERE stage=?', str(stage_id))]
@@ -98,13 +102,16 @@ def _save_gun(cur, values):
 def _save_equip(cur, data):
     cur.execute("SELECT COUNT(*) FROM equipment WHERE id=?", [1])
     if cur.fetchone()[0] == 0:
-        cur.execute("INSERT INTO equipment(id, gun1, gun2, gun3) values(?,?,?,?)", [1]+data)
+        cur.execute("INSERT INTO equipment(gun1, gun2, gun3) values(?,?,?)", data)
     else:
         cur.execute("UPDATE equipment SET gun1=?, gun2=?, gun3=?", data)
 
-def save(data_dic):
+def save(data_dic, cheat):
     # データベース
-    conn = sqlite3.connect(db)
+    if cheat:
+        conn = sqlite3.connect(cdb)
+    else:
+        conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
     for key, value in data_dic.items():
@@ -138,9 +145,12 @@ def _load_equip(cur):
     equipment = list(cur.execute("SELECT gun1, gun2, gun3 FROM equipment"))[0]
     return equipment
 
-def load():
+def load(flag=False):
     # データベース
-    conn = sqlite3.connect(db)
+    if flag:
+        conn = sqlite3.connect(cdb)
+    else:
+        conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
 
@@ -162,6 +172,10 @@ def load():
 if __name__=='__main__':
     # このプログラムをメインで実行したとき
         
+    parser = argparse.ArgumentParser(description='ReKにおけるデータベースを管理するファイル')
+    parser.add_argument('--delete', action='store_true', help="すべてのデータベースを初期化する")
+    parser.add_argument('-s', '--show', action='store_true', help="すべてのデータベースの中身を表示する")
+    args = parser.parse_args()
     # データベース
     conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
@@ -201,10 +215,10 @@ else:
     # このプログラムがimportなどで別ファイルから実行されたとき
 
     # rankingテーブル
-    create_table('ranking', ['id INTEGER PRYMARY KEY', 'stage INTEGER', 'score INTEGER'])
+    create_table('ranking', ['id INTEGER PRIMARY KEY', 'stage INTEGER', 'score INTEGER'])
     # dataテーブル
     create_table('data', ['key TEXT', 'value TEXT'])
     # gunテーブル
     create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_size INTEGER', 'reload_size INTEGER', 'own INTEGER', 'set_flag INTEGER'])
     # equipmentテーブル
-    create_table('equipment', ['id INTEGER PRYMARY KEY', 'gun1 INTEGER', 'gun2 INTEGER', 'gun3 INTEGER'])
+    create_table('equipment', ['id INTEGER PRIMARY KEY', 'gun1 INTEGER', 'gun2 INTEGER', 'gun3 INTEGER'])

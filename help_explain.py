@@ -1,7 +1,7 @@
 import pygame
-import sys
 from pygame.locals import *
 from help_print import *
+from define import EXIT
 
 class Help_a: 
     def __init__(self, screen):
@@ -43,8 +43,7 @@ class Help_a:
                             help_print1 = help_print.draw()
                     
                 elif event.type == QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return EXIT
             
            
             self.screen.fill((0,0,0))

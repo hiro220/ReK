@@ -31,8 +31,7 @@ class Initial_Screen:
                     if event.key == K_RETURN:
                         return self.select_num
                 elif event.type == QUIT:         #閉じるボタンが押されたならゲームを終了する
-                    pygame.quit()
-                    sys.exit()
+                    return EXIT
 
             screen.fill((0,0,0))       #画面を黒で塗りつぶす
 

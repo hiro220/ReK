@@ -7,9 +7,11 @@ from timer import *
 import random
 import math
 
+img_path = "img/cpu/"
+
 class Stage2_boss(Boss):
     def __init__(self, x, y, players, score, money):
-        image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
+        image = pygame.image.load(img_path+"cpu.png").convert_alpha() #イメージ画像をロードする
         super().__init__(10, x, y, image, players, score, money)         #superクラス(Boss)を呼び出す
         self.dx,self.dy = -2, 0
         self.score = score
@@ -35,7 +37,7 @@ class Stage2_boss(Boss):
 
 class Stage2_sub(Boss):
     def __init__(self, x, y, players, score, sub_number, boss, money):              
-        image = pygame.image.load("img/bot.png").convert_alpha()
+        image = pygame.image.load(img_path+"bot.png").convert_alpha()
         super().__init__(5, x, y, image, players, score, money)
         self.boss = boss
         self.number = sub_number

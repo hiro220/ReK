@@ -2,7 +2,6 @@
 # coding:utf-8
 
 import pygame
-from pygame.locals import *
 from define import R_time
 from timer import *
 
@@ -82,10 +81,10 @@ class Beam_principal(Beam):
 
         x,y = self.principal.rect.midright
         if self.alpha_flag == None and self.principal.cop_flag == 0 and self.lord_sub:
-            Beam_sub(x, y, self, "img/beam5.png")
+            Beam_sub(x, y, self, "img/bullet/beam/beam5.png")
             self.lord_sub = False
         elif self.alpha_flag == None and self.principal.cop_flag and self.lord_sub and self.angle == 90:
-            Beam_sub(x, y, self, "img/beam6.png")
+            Beam_sub(x, y, self, "img/bullet/beam/beam6.png")
             self.lord_sub = False
 
         #ここのコードでbeam本体をmachineに追従させる
