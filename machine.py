@@ -2,7 +2,6 @@
 # coding:utf:-8
 
 import pygame
-from pygame.locals import *
 from gun import *
 from timer import Timer, FlagTimer
 from define import WIDTH, HEIGHT
@@ -54,7 +53,6 @@ class Machine(pygame.sprite.Sprite):
             self.gun.shoot(x, y)
 
     def reload(self):
-        self.gun.reload()
         if self.reload_flag:
             self.reload_flag = False
             bullet_num = self.gun.num
@@ -114,13 +112,20 @@ class Machine(pygame.sprite.Sprite):
         self.image = image
 
     def invincible(self, millisecond):
+        if len(self.groups()) != 3:
+            return
         alpha = 100                         # 透明度
         tmp_image = self.image.copy()       # 元の画像をコピー
         self.image.fill((255, 255, 255, alpha), None, pygame.BLEND_RGBA_MULT)       # 指定の透明度に設定する
         Timer(millisecond, self.set_image, tmp_image)      # 一定時間経過後、元の画像に戻す
         group = self.groups()[2]            # 当たり判定用のグループ
         self.remove(group)                  # この機体を当たり判定のグループから取り除く
-        Timer(millisecond, self.add, group)                 # 一定時間経過後、グループに戻す
+        Timer(millisecond, self.add_group, group)                 # 一定時間経過後、グループに戻す
+    
+    def add_group(self, group):
+        if len(self.groups()) != 2:
+            return
+        self.add(group)
 
     def fall_meteorite(self, machines, num, millisecond):
         x, y = WIDTH, 0

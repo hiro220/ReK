@@ -1,11 +1,10 @@
 # coding:utf-8
-import pygame
-from pygame.locals import *
+from pygame.locals import Rect
 from rek_time import ReK_time
 
 """Rekでの、それぞれのファイルに共通の定数を定義している"""
 
-version = "1.0.0"
+version = "1.0.1"
 
 # ウィンドウのサイズ
 WIDTH = 1160
@@ -19,6 +18,7 @@ STAGE_WIDTH = 960
 START_GAME = 0          #START GAMEを選択した時
 Help = 1                #Helpを選択した時
 End = 2
+BACK = 3
 
 # メニュー画面におけるステージ名
 Stage1 = "Stage1.txt"
@@ -30,7 +30,7 @@ PLAYER_X = INFO_WIDTH + 100
 PLAYER_Y = HEIGHT // 2
 
 # stageにおける処理結果
-EXIT = 0            # ウィンドウの「閉じるボタン」を押したとき
+EXIT = 100            # ウィンドウの「閉じるボタン」を押したとき
 CONTINUE = 1        # ステージが続いているとき
 GAMEOVER = 2        # ゲームオーバーになったとき
 GAMECLEAR = 3       # ステージをクリアしたとき
@@ -69,6 +69,9 @@ Move_range = Rect(600,40,STAGE_WIDTH/2,STAGE_WIDTH/2)
 mg = Move_range
 Correction = 10
 
+#boss2の移動座標
+Move_range2 = Rect(INFO_WIDTH,0,STAGE_WIDTH,HEIGHT)
+mg2 = Move_range2
 # stage background
 SKY = "SKY"
 STAR = "STAR"
@@ -76,4 +79,5 @@ STAR = "STAR"
 # timer
 R_time = ReK_time()
 
-data_key = {"money":int, "stage_progress":int, "version":str, "death":int, "kill":int, "sum_money":int, "play_time":float}
+data_key = {"money":int, "stage_progress":int, "version":str, "death":int, "kill":int, \
+            "sum_money":int, "play_time":float, "gun_data":dict, "equip":list}

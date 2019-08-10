@@ -1,23 +1,29 @@
 from machine import Machine
 import pygame
 from define import *
-from item import *
+from item import Shield
 from gun import *
-from timer import *
+from timer import Timer
 import random
 import math
 
+img_path = "img/cpu/"
+
 class Boss(Machine):
+    killed_count = 0
     def __init__(self, hp, x, y, image, players, score, money):
         super().__init__(hp, x, y, image, players, score, money) #superクラス(machine)を呼び出す
         self.dx, self.dy = 5, 5                           #bulletの移動量を指定する
         self.x, self.y = x, y                             #機体自身の位置を入力
         self.gun_start = R_time.get_ticks()               #Bossが呼ばれた時のクロック数を入力
+        
+    def death(self):
+        Boss.killed_count += 1
 
 class Stage1_boss(Boss):                                 #ボス本体の機体
     def __init__(self, x, y, players, score, money):
-        image = pygame.image.load("img/cpu.png").convert_alpha() #イメージ画像をロードする
-        super().__init__(10000, x, y, image, players, score, money)         #superクラス(Boss)を呼び出す
+        image = pygame.image.load(img_path+"cpu.png").convert_alpha() #イメージ画像をロードする
+        super().__init__(10000, x, 280, image, players, score, money)         #superクラス(Boss)を呼び出す
         self.shield  = Timer(0,Shield,10000,self)
         self.summon_flag = False                         #subをロードしていいかの判定フラグ
         self.load_count = 0                              #何回subをロードかを確かめるためのフラグ
@@ -211,7 +217,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
 
 class Stage1_sub(Boss):                                  #ボス付属品の機体
     def __init__(self, x, y, players, score, sub_number, boss, money):              
-        image = pygame.image.load("img/boss1_sub.png").convert_alpha()
+        image = pygame.image.load(img_path+"boss1_sub.png").convert_alpha()
         super().__init__(10000, x, y, image, players, score, money)
         self.sub_number = sub_number                     #付属品のID
         self.boss = boss

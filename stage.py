@@ -9,12 +9,12 @@ from playermachine import PlayerMachine
 from cpumachine import *
 from item import *
 from define import *
-from out_range import *
+from out_range import Range, Range2
 from timer import Timer
 from score import Score
-from boss import *
+from boss import Stage1_boss
 from boss2 import *
-from money import *
+from money import Money
 import pygame.mixer
 
 class Stage:
@@ -27,6 +27,7 @@ class Stage:
         self.data = data
 
         CpuMachine.killed_count = self.data["kill"]
+        Boss.killed_count = 0
         PlayerMachine.killed_count = self.data["death"]
         
         self.initGroup()                        # グループを初期化する
@@ -44,7 +45,7 @@ class Stage:
 
         self.score = Score(10, 10)
         self.money = Money(10, 30)
-        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20))    # プレイヤーのマシンを生成する
+        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20), self.data)    # プレイヤーのマシンを生成する
 
         self.clock = pygame.time.Clock()        # 時間管理用
         R_time.restart()
@@ -82,7 +83,7 @@ class Stage:
             pygame.display.update()     # 画面更新
             if not result == CONTINUE:
                 break
-        self.data["kill"] = CpuMachine.killed_count
+        self.data["kill"] = CpuMachine.killed_count + Boss.killed_count
         self.data["death"] = PlayerMachine.killed_count
         return result, self.score.return_score(), self.money.money
 
@@ -127,7 +128,9 @@ class Stage:
                     R_time.stop()
                     pygame.mixer.music.pause()
                     self.process, self.draw = self.pause_process, self.pause_draw
-                self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
+                if event.key == K_x or event.key == K_v:
+                    self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
+                self.player.change(event.key)
         return CONTINUE
 
     def moveStage(self):
@@ -222,20 +225,39 @@ class Stage:
             self.setRule(NORMAL)                        # ステージルールをNORMALに設定する。
             self.set_background(SKY)                    # 背景をSKYに初期化
             # ファイルから情報を抽出し、ステージの形成
-            for line in fp.readlines():                 # ファイルを一行ごとに読み取り、変数lineに文字列として格納する
-                line = line.strip('\n').split()         # 改行コード'\n'を取り除き、タブ区切りでリストに分割する
+            loop_key = line_num = 0
+            lines = True                                # ファイルの一行を格納する変数の初期化(while文の条件に使う)
+            while lines:
+                lines = fp.readline()                   # ファイルを一行ごとに読み取り、変数lineに文字列として格納する
+                line_num += len(lines)                  # 文字数をカウント(ファイルポインタの移動に使う)
+                line = lines.strip('\n').split()        # 改行コード'\n'を取り除き、タブ区切りでリストに分割する
                 if len(line) == 1:                      # リストの要素数が1のとき、keyとなるx座標が記述されている
-                    key = int(line[0])                  # 文字列をintに変換
+                    key = int(line[0]) + loop_key       # 文字列をintに変換
                     self.dic[key] = []                  # 辞書にkeyを追加し、その値をリストとして初期化しておく
                     continue
                 if len(line) >= 2:                      # リストの要素数が2のとき、ステージサイズかcpu情報が記述されている(ここにアイテム追加も可)
-                    if line[0] == 'size':               # 要素の一つ目がsizeのとき、二つ目の要素にステージサイズが記述されている
+                    if line[0] == '#':          # コメントアウト
+                        pass
+                    elif line[0] == 'size':             # 要素の一つ目がsizeのとき、二つ目の要素にステージサイズが記述されている
                         self.size = int(line[1])
                     elif line[0] == 'rule':             # 要素の一つ目がruleのとき、二つ目の要素にルールを示す定数が記述されている
                         self.setRule(*line[1:])         # ルールをセットする
                     elif line[0] == 'bg':
                         self.set_background(line[1])    # 背景画像の設定
+                    elif line[0] == 'loop':
+                        loop_count = int(line[1])
+                        loop_pos = line_num             # この行の次行の位置を保持
+                    elif line[0] == 'endloop':
+                        loop_count -= 1
+                        if loop_count == 0:
+                            loop_key = 0
+                        else:
+                            fp.seek(loop_pos)           # loop行の直後にファイルポインタを移動
+                            line_num = loop_pos         # 文字数のカウントをそこまでにリセット
+                            loop_key += int(line[1])    # endloopのオプションをx座標に足す
                     else:                               # sizeでない場合はcpu(アイテム)なので、名前とy座標をリストにして辞書に追加
+                        if len(line) >= 3:
+                            line[1] = random.randrange(int(line[1]), int(line[2])+1)
                         self.dic[key].append([line[0], int(line[1])])
 
     def createCpu(self):
@@ -252,10 +274,12 @@ class Stage:
         # 辞書の定義。キーに定数、値にクラス名を指定する。（キー:値）
 
         # CPUの種類を指す辞書
-        cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU4:cpu4, CPU5:cpu5, CPU6:cpu6, CPU7:cpu7, CPU8:cpu8, CPU9:cpu9, CPU10:cpu10, CPU0:cpu0, BOSS1:Stage1_boss, BOSS2:Stage2_boss}
+        cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU4:cpu4, CPU5:cpu5, CPU6:cpu6, CPU7:cpu7, CPU8:cpu8, \
+                   CPU9:cpu9, CPU10:cpu10, CPU0:cpu0, BOSS1:Stage1_boss, BOSS2:Stage2_boss}
 
         # アイテムの種類を指す辞書
-        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, METEORITE:MeteoriteItem}
+        item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, \
+                    METEORITE:MeteoriteItem}
         sub = name.split('_')
 
         if sub[0] == 'CPU' and sub[1] in item_dic:      # CPU_〇〇という呼ばれ方をしたアイテムか
@@ -271,16 +295,17 @@ class Stage:
     
     def creatRange(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range(INFO_WIDTH-100,-100,10,HEIGHT+50)
-        #Range(0,-10,WIDTH,10)
-        #Range(0,HEIGHT,WIDTH,10)
+        Range(INFO_WIDTH-100,-50,20,HEIGHT+100)
+        Range(0,-70,WIDTH+200,20)
+        Range(0,HEIGHT+50,WIDTH+200,20)
+        Range(WIDTH+200,-50,20,HEIGHT+100)
     
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range2(INFO_WIDTH-20,0,10,HEIGHT)
-        Range2(INFO_WIDTH-10,-80,STAGE_WIDTH+20,10)
-        Range2(INFO_WIDTH-10,HEIGHT+10,STAGE_WIDTH+20,10)
-        Range2(WIDTH+80,0,10,HEIGHT)
+        Range2(INFO_WIDTH-WIDTH,-80,10,HEIGHT+160)
+        Range2(INFO_WIDTH-WIDTH+10,-80,WIDTH*3-INFO_WIDTH,10)
+        Range2(INFO_WIDTH-10,HEIGHT+80,WIDTH*3-INFO_WIDTH,10)
+        Range2(WIDTH*2,-80,10,HEIGHT+160)
 
     def set_background(self, image_id):
         dic = {SKY:"sky.jpg", STAR:"star.jpg"}
@@ -290,7 +315,7 @@ class Stage:
         self.image = pygame.image.load(path).convert_alpha()              # 背景画像
         self.sub_image = pygame.transform.flip(self.image, True, False)         # 背景画像を左右反転させた、背景画像（自然につなげるため）
         self.rect = self.image.get_rect()       # 画像のrect情報
-        self.x = self.keyx = 0                  # 背景画像の左上の位置、ステージの進行度
+        self.x = self.keyx = -20                # 背景画像の左上の位置、ステージの進行度
         self.width, _ = self.rect.midright      # 背景画像のサイズ、_は使わない部分の値
 
     def setRule(self, name, value=None):
