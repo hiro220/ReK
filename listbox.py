@@ -36,10 +36,10 @@ class ListBox:
         for text, sele in zip(text_list, selectable):
             color = (0,0,0)*sele or (100, 100, 100)
             draw_text = self.font.render(text, True, color)
-            self.screen.blit(draw_text, [x+5, y+(self.font_size+10)*i])
+            self.screen.blit(draw_text, [x+5, y+5+(self.font_size+10)*i])
             if self.selected == self.top_id+i:
                 rect = draw_text.get_rect()
-                rect.move_ip(x+5, y+(self.font_size+10)*i)
+                rect.move_ip(x+5, y+5+(self.font_size+10)*i)
                 pygame.draw.rect(self.screen, (255,0,0), rect, 2)
             i += 1
 
