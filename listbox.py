@@ -1,7 +1,6 @@
 import pygame
 from pygame.locals import *
 from define import EXIT
-import numpy as np
 
 class ListBox:
 
