@@ -13,21 +13,27 @@ class ListBox:
         その際、フォントサイズはfont_size(初期値20)に設定される。
         targetは、このリストボックスにキー入力による選択の移動、Enterキーによる選択要素の返却を受け付けるかどうかを指定する。
         """
+        # 描画領域の設定
         self.screen = screen
         self.rect = Rect(x, y, width, height)
-        self.list = data_list
         self.bg = bg
         self.outline = outline
         self.outline_color = outline_color
+        # キー入力受付の可否
         self.target = target
+        # 選択要素、描画要素の初期化
         self.selected = 0
         self.top_id = 0
-        self.font = pygame.font.Font("freesansbold.ttf", font_size)
-        self.draw_num = height // (font_size+10)
+        # テキストのフォント
         self.font_size = font_size
-        self.list_size = len(self.list)
+        self.font = pygame.font.Font("freesansbold.ttf", font_size)
+        # 一度に描画する要素数
+        self.draw_num = height // (font_size+10)
+        # 要素の保持
+        self.list = data_list
         self.selectable = [False for _ in self.list]
         self.color_list = [(0,0,0) for _ in self.list]
+        self.list_size = len(self.list)
 
     def draw(self):
         """self.screenで指定される画面にリストボックスを描画する。"""
@@ -86,8 +92,11 @@ class ListBox:
                     self.target = False
                     return self.selected
             else:
+                # 上下キー、Enterキー以外の入力があったとき、キー入力の受付をやめる
                 self.target = False
+            # 選択がリストボックスのid外になったなら収まるようにする
             self.selected = (self.selected+self.list_size) % self.list_size
+            # 描画する要素の一番上のidを更新する
             self.top_id = (self.top_id <= self.selected <= self.top_id+self.draw_num-1) * self.top_id or \
                           (self.top_id+self.draw_num-1 < self.selected) * (self.selected-self.draw_num+1) or \
                           (self.top_id > self.selected) * (self.selected)
@@ -97,6 +106,8 @@ class ListBox:
         return self.list
 
     def set_selectable(self, selectable_list):
+        """リストボックス内の要素が選択可能か指定する。
+        引数のselectable_listはTrue、Falseのリストで、サイズはリストボックスのサイズと同じにしなければならない。"""
         color_list = []
         for tf, color in zip(selectable_list, self.color_list):
             if color in ((0,0,0), (100,100,100)):
@@ -107,15 +118,19 @@ class ListBox:
         self.selectable = selectable_list
 
     def set_color(self, id_list, color):
+        """引数id_listにリストとして指定したidの要素の色をcolorに設定する。
+        ただし、idはすべて自然数で指定する。(リストの後ろから指定することができない)"""
         for i in id_list:
-            if i == -1:
+            if i < 0:
                 continue
             self.color_list[i] = color
 
     def color_reset(self):
+        """テキストの色を選択可能かで黒色と灰色のどちらかに初期化する。"""
         self.color_list = [(0,0,0)*tf or (100,100,100) for tf in self.selectable]
 
     def __call__(self):
+        """呼ぶことで、このリストボックスがキー入力を受け付ける。"""
         self.target = True
 
     def __len__(self):
