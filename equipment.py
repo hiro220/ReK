@@ -16,8 +16,9 @@ class Equipment:
         self.screen_info = pygame.font.Font("freesansbold.ttf" ,70).render("Equip", True, (255,255,255))
         self.back_info = pygame.font.Font("freesansbold.ttf" ,50).render("'Q' : Back", True, (255,255,255))
         texts = [data["name"] for data in self.data["gun_data"].values()]
-        self.listbox = ListBox(self.screen, 80, 150, 300, 250, texts, font_size=40)
-        self.listbox()
+        self.listbox = ListBox(self.screen, 80, 150, 300, 250, texts, font_size=40, target=True)
+        self.listbox.set_selectable([data["own"]==1 for data in self.data["gun_data"].values()])
+        self.listbox += ["test", "sample"]
     
     def do(self):
         while True:
