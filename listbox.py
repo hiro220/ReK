@@ -45,7 +45,7 @@ class ListBox:
             rect = Rect(self.rect.right-18, self.rect.top+3, 15, self.rect.bottom-self.rect.top-6)
             pygame.draw.rect(self.screen, (80,80,80), rect, 3)
             # スクロールバーを描画
-            par = self.draw_num / self.list_size
+            par = self.list_size<=self.draw_num or self.draw_num / self.list_size
             size = (rect.bottom-rect.top-6)
             height = size * par
             par = self.top_id / self.list_size
