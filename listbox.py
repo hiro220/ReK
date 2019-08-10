@@ -55,8 +55,9 @@ class ListBox:
             elif event.key == K_DOWN:
                 self.selected += 1
             elif event.key == K_RETURN:
-                self.target = False
-                return self.selected
+                if self.selectable[self.selected]:
+                    self.target = False
+                    return self.selected
             else:
                 self.target = False
             self.selected = (self.selected+self.list_size) % self.list_size
@@ -72,7 +73,7 @@ class ListBox:
         self.selectable = selectable_list
 
     def __call__(self):
-        self.target ^= True
+        self.target = True
 
     def __len__(self):
         """ len()で呼ばれたとき、保持しているテキストのリストのサイズを返す。"""
@@ -82,4 +83,5 @@ class ListBox:
         """ +=演算子が用いられたとき、右辺のリストをself.listに結合する。"""
         self.list += others_list
         self.list_size += len(others_list)
+        self.selectable += [False for i in others_list]
         return self
