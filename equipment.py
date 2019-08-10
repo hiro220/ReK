@@ -28,8 +28,8 @@ class Equipment:
 
     def process(self):
         # 内部処理
-        self.listbox.process()
         for event in pygame.event.get():
+            self.listbox.process(event)
             if event.type == QUIT:
                 return EXIT
             if event.type == KEYDOWN:
