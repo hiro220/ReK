@@ -23,30 +23,32 @@ class ListBox:
         self.draw_num = height // (font_size+10)
         self.font_size = font_size
         self.list_size = len(self.list)
+        self.selectable = [False for _ in range(self.list_size)]
 
     def draw(self):
         """self.screenで指定される画面にリストボックスを描画する。"""
         pygame.draw.rect(self.screen, self.bg, self.rect)
         pygame.draw.rect(self.screen, (0,0,0), self.rect, self.outline)
         text_list = self.list[self.top_id:self.top_id+self.draw_num]
+        selectable = self.selectable[self.top_id:self.top_id+self.draw_num]
         x, y = self.rect.left, self.rect.top
-        for i, text in enumerate(text_list):
-            color = (0,0,0)
+        i = 0
+        for text, sele in zip(text_list, selectable):
+            color = (0,0,0)*sele or (100, 100, 100)
             draw_text = self.font.render(text, True, color)
             self.screen.blit(draw_text, [x+5, y+(self.font_size+10)*i])
             if self.selected == self.top_id+i:
                 rect = draw_text.get_rect()
                 rect.move_ip(x+5, y+(self.font_size+10)*i)
                 pygame.draw.rect(self.screen, (255,0,0), rect, 2)
+            i += 1
 
 
     def process(self, event):
         """pygameでの処理を行う。引数のeventには、pygame.event.get()で得られる要素を与える。"""
         # このListBoxがターゲットされていないなら処理はなし
         if not self.target:
-            return
-        if event.type == QUIT:
-            return EXIT
+            return None
         if event.type == KEYDOWN:
             if event.key == K_UP:
                 self.selected -= 1
@@ -67,7 +69,7 @@ class ListBox:
         return self.list
 
     def set_selectable(self, selectable_list):
-        pass
+        self.selectable = selectable_list
 
     def __call__(self):
         self.target ^= True
