@@ -4,7 +4,7 @@ from pygame.locals import *
 class ListBox:
 
     def __init__(self, screen, x, y, width, height, data_list=[], bg=(255,255,255), outline=3, \
-                 outline_color=(155,155,155),target=False, font_size=20):
+                 outline_color=(155,155,155), target=False, font_size=20):
         """リストボックスを作成する。
         Rect(x, y, width, height)で背景色bg(初期値では白)、外枠の大きさがoutline(初期値3)の描画領域を作成。
         その描画領域内に、data_listに指定したテキストのリストを縦にリストアップする。
@@ -53,6 +53,7 @@ class ListBox:
             rect = Rect(rect.left+3, top, 9, height)
             pygame.draw.rect(self.screen, (100,100,100), rect)
         scroll = scroll * 20
+        self.left += 1
 
         # 表示する範囲のデータを抽出
         s, l = self.top_id, self.top_id+self.draw_num
@@ -60,23 +61,24 @@ class ListBox:
         colors = self.color_list[s:l]
         # 描画位置、サイズなどの設定
         x, y = self.rect.left, self.rect.top
-        size = (self.left,0,self.rect.right-self.rect.left-10-self.outline+self.left-scroll, self.font_size)
         i = 0
         for text, color in zip(text_list, colors):
             # テキストを描画範囲に収まるように描画
+            size = (0,0,self.rect.right-self.rect.left-10-self.outline-scroll, self.font_size)
             draw_text = self.font.render(text, True, color)
-            self.screen.blit(draw_text, [x+5, y+5+(self.font_size+10)*i], size)
+            rect = draw_text.get_rect()
             # 選択中の要素に枠線を描画する
             if self.selected == self.top_id+i:
-                rect = draw_text.get_rect()
                 # 描画範囲を超える大きさなら、収まるように調整
+                self.left = self.left * (rect.right-self.left+10 > self.rect.right-self.rect.left-5-self.outline-scroll)
                 if rect.right > self.rect.right-self.rect.left-5-self.outline-scroll:
+                    size = (self.left,0,self.rect.right-self.rect.left-15-self.outline-scroll, self.font_size)
                     rect = Rect(0,0,self.rect.right-self.rect.left-5-self.outline-scroll, rect.bottom)
                 rect.move_ip(x+5, y+5+(self.font_size+10)*i)
                 # 描画
                 pygame.draw.rect(self.screen, (255,0,0), rect, 2)
+            self.screen.blit(draw_text, [x+5, y+5+(self.font_size+10)*i], size)
             i += 1
-
 
     def process(self, event):
         """pygameでの処理を行う。引数のeventには、pygame.event.get()で得られる要素を与える。"""
@@ -84,6 +86,7 @@ class ListBox:
         if not self.target:
             return None
         if event.type == KEYDOWN:
+            self.left = 0
             if event.key == K_UP:
                 self.selected -= 1
             elif event.key == K_DOWN:
