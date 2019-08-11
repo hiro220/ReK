@@ -51,7 +51,7 @@ class Menu:
                 option_num = self.option_listbox.process(event)
                 if event.type == KEYDOWN:
                     self.Key_Event(event)       #押されたキーによって異なる処理
-                    if event.key == K_RETURN and self.select_num == 1:
+                    if event.key == K_RETURN and self.select_num == 1 and self.file_id != None:
                         return self.Return_Stage()
                 if event.type == QUIT:
                     return EXIT, None
