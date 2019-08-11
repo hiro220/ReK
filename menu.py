@@ -39,18 +39,25 @@ class Menu:
     def draw(self):
 
         while True:
-
             self.option_listbox.draw(False)
             self.file_listbox.draw()
-            
             self.Select_Stage(self.file_id)     #ステージ選択処理
-
             pygame.display.update()
             for event in pygame.event.get():
                 file_id = self.file_listbox.process(event)
+                option_num = self.option_listbox.process(event)
+                if event.type == KEYDOWN:
+                    self.Key_Event(event)       #押されたキーによって異なる処理
+                    if event.key == K_RETURN and self.select_num == 1:
+                        return self.Return_Stage()
+                if event.type == QUIT:
+                    return EXIT, None
+
                 if file_id != None:
                     self.file_id = file_id
-                option_num = self.option_listbox.process(event)
+                    self.select_num += 1
+                    self.file_listbox.process(event)
+
                 if option_num != None:
                     if option_num == 0:
                         return None, '0'
@@ -59,19 +66,14 @@ class Menu:
                     elif option_num == 2:
                         Equipment(self.screen, self.data).do()
                         break
-                if event.type == KEYDOWN:
-                    
-                    self.Key_Event(event)       #押されたキーによって異なる処理
-                    if event.key == K_RETURN and self.select_num == 1:
-                        return self.Return_Stage()
-                if event.type == QUIT:
-                    return EXIT, None
+                
             self.screen.fill((0,0,0))
             
     
     def Select_Stage(self, file_id):
         #選択しているステージを描画
-        pygame.draw.rect(self.screen,(100,100,100),Rect(350,100,550,450))
+        color = (self.select_num==1)*(255,100,100) or (100,100,100)
+        pygame.draw.rect(self.screen,color,Rect(350,100,550,450))
         self.screen.blit(self.StageSelect_text, [105, 5])     #テキストStageSelectを描画
         if file_id != None:
             color = [(0,0,255),(0,255,0), (255,0,0)]
