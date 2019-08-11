@@ -48,8 +48,8 @@ class ListBox:
             par = self.list_size<=self.draw_num or self.draw_num / self.list_size
             size = (rect.bottom-rect.top-6)
             height = size * par
-            par = self.top_id / self.list_size
-            top = rect.top + 3 + size * par
+            par = int(self.list_size == 0) or 1 - self.top_id / self.list_size
+            top = rect.top + 3 + size * (1-par)
             rect = Rect(rect.left+3, top, 9, height)
             pygame.draw.rect(self.screen, (100,100,100), rect)
         scroll = scroll * 20
