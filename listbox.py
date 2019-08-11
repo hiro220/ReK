@@ -31,7 +31,7 @@ class ListBox:
         # 要素の保持
         self.list = data_list
         self.selectable = [False for _ in self.list]
-        self.color_list = [(0,0,0) for _ in self.list]
+        self.color_reset()
         self.list_size = len(self.list)
 
     def draw(self, scroll=True):
