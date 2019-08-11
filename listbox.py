@@ -68,7 +68,7 @@ class ListBox:
             draw_text = self.font.render(text, True, color)
             rect = draw_text.get_rect()
             # 選択中の要素に枠線を描画する
-            if self.selected == self.top_id+i:
+            if self.selected == self.top_id+i and self.target:
                 # 描画範囲を超える大きさなら、収まるように調整
                 self.left = self.left * (rect.right-self.left+10 > self.rect.right-self.rect.left-5-self.outline-scroll)
                 if rect.right > self.rect.right-self.rect.left-5-self.outline-scroll:
