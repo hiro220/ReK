@@ -4,7 +4,7 @@ from pygame.locals import *
 class ListBox:
 
     def __init__(self, screen, x, y, width, height, data_list=[], bg=(255,255,255), outline=3, \
-                 outline_color=(155,155,155), target=False, font_size=20):
+                 outline_color=(155,155,155), target=False, font_size=20, title="", title_size=40):
         """リストボックスを作成する。
         Rect(x, y, width, height)で背景色bg(初期値では白)、外枠の大きさがoutline(初期値3)の描画領域を作成。
         その描画領域内に、data_listに指定したテキストのリストを縦にリストアップする。
@@ -26,6 +26,8 @@ class ListBox:
         # テキストのフォント
         self.font_size = font_size
         self.font = pygame.font.Font("freesansbold.ttf", font_size)
+        self.title_size = title_size
+        self.title = pygame.font.Font("freesansbold.ttf", title_size).render(title, True, (255,255,255))
         # 一度に描画する要素数
         self.draw_num = height // (font_size+10)
         # 要素の保持
@@ -40,6 +42,9 @@ class ListBox:
         pygame.draw.rect(self.screen, self.bg, self.rect)
         # 枠線を描画
         pygame.draw.rect(self.screen, self.outline_color, self.rect, self.outline)
+        # titleの描画
+        x, y = self.rect.left, self.rect.top - self.title_size
+        self.screen.blit(self.title, [x, y])
         if scroll:
             # スクロールバーの枠を描画
             rect = Rect(self.rect.right-18, self.rect.top+3, 15, self.rect.bottom-self.rect.top-6)

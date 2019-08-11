@@ -30,9 +30,9 @@ class Menu:
             self.stage_text.append(Stage_font.render(text, True, (255,255,255)))
 
         # リストボックスの設定
-        self.option_listbox = ListBox(self.screen, 50, 100, 250, 200, ['Back', 'Shop', 'Equip'], font_size=55)
+        self.option_listbox = ListBox(self.screen, 50, 100, 250, 200, ['Back', 'Shop', 'Equip'], font_size=55, title="Menu")
         self.option_listbox.set_selectable([True, True, True])
-        self.file_listbox = ListBox(self.screen, 950, 100, 100, 400, ["Stage1"])
+        self.file_listbox = ListBox(self.screen, 950, 100, 100, 400, ["Stage1"], title="File")
         self.file_listbox.set_selectable([True])
         self.file_listbox()
         self.file_id = None
@@ -80,7 +80,7 @@ class Menu:
         #選択しているステージを描画
         color = (self.select_num==1)*(255,100,100) or (100,100,100)
         pygame.draw.rect(self.screen,color,Rect(350,100,550,450))
-        self.screen.blit(self.StageSelect_text, [105, 5])     #テキストStageSelectを描画
+        self.screen.blit(self.StageSelect_text, [350, 40])     #テキストStageSelectを描画
         # ステージファイルが選択されていないとき、ステージを表示しない
         if file_id != None:
             color = [(0,0,255),(0,255,0), (255,0,0)]
