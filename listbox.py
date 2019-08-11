@@ -83,7 +83,7 @@ class ListBox:
     def process(self, event):
         """pygameでの処理を行う。引数のeventには、pygame.event.get()で得られる要素を与える。"""
         # このListBoxがターゲットされていないなら処理はなし
-        if not self.target:
+        if not self.target or self.list_size == 0:
             return None
         if event.type == KEYDOWN:
             self.left = 0
