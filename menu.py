@@ -29,6 +29,7 @@ class Menu:
             text = "Stage" + str(i+1)
             self.stage_text.append(Stage_font.render(text, True, (255,255,255)))
 
+        # リストボックスの設定
         self.option_listbox = ListBox(self.screen, 50, 100, 250, 200, ['Back', 'Shop', 'Equip'], font_size=55)
         self.option_listbox.set_selectable([True, True, True])
         self.file_listbox = ListBox(self.screen, 950, 100, 100, 400, ["Stage1"])
@@ -39,11 +40,13 @@ class Menu:
     def draw(self):
 
         while True:
+            # リストボックスの描画
             self.option_listbox.draw(False)
             self.file_listbox.draw()
             self.Select_Stage(self.file_id)     #ステージ選択処理
             pygame.display.update()
             for event in pygame.event.get():
+                # リストボックスに入力
                 file_id = self.file_listbox.process(event)
                 option_num = self.option_listbox.process(event)
                 if event.type == KEYDOWN:
@@ -54,11 +57,14 @@ class Menu:
                     return EXIT, None
 
                 if file_id != None:
+                    # ファイルが選択されたとき
                     self.file_id = file_id
                     self.select_num += 1
+                    # file_listboxからターゲットを外す
                     self.file_listbox.process(event)
 
                 if option_num != None:
+                    # オプションが選択されたとき
                     if option_num == 0:
                         return None, '0'
                     elif option_num == 1:
@@ -75,6 +81,7 @@ class Menu:
         color = (self.select_num==1)*(255,100,100) or (100,100,100)
         pygame.draw.rect(self.screen,color,Rect(350,100,550,450))
         self.screen.blit(self.StageSelect_text, [105, 5])     #テキストStageSelectを描画
+        # ステージファイルが選択されていないとき、ステージを表示しない
         if file_id != None:
             color = [(0,0,255),(0,255,0), (255,0,0)]
             self.screen.blit(self.stage_text[self.stage_num-1], [410, 210])
@@ -83,15 +90,18 @@ class Menu:
             self.screen.blit(self.LeftArrow_text, [575, 450])     #テキスト ＞ を描画
     
     def Key_Event(self,event):
+        # 左右キーで大枠の選択
         if event.key == K_RIGHT:
             self.select_num -= 1
         elif event.key == K_LEFT:
             self.select_num += 1
         self.select_num = (self.select_num+3) % 3
+        # リストボックスが選択されているとき、ターゲットする
         if self.select_num == 0:
             self.file_listbox()
         elif self.select_num == 2:
             self.option_listbox()
+        # ステージ選択のとき、上下キーでステージ選択の移動
         if event.key == K_UP:
             self.stage_num += (self.select_num==1)
         elif event.key == K_DOWN:
