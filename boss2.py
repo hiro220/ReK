@@ -143,3 +143,13 @@ class Stage2_sub(Boss):
     
     def change_number(self, number):
         self.sel_number = number
+    
+    def del_timer(self, number=all):
+        if number == "all":
+            for list in self.move_timer:
+                list.kill()
+        for index,list in enumerate(self.move_timer):
+            if list.arg[0] = number:
+                self.move_timer[index].kill()
+
+                
