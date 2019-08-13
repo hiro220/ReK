@@ -16,7 +16,7 @@ class Stage2_boss(Boss):
         self.dx,self.dy = -2, 0
         self.score = score
         self.money = money
-        self.lord_flag = True
+        self.lord_flag = False
         #self.load_count = True
 
         Stage2_sub(self.rect.centerx,self.rect.centery-100, players, self.score, 0, self, self.money)
@@ -26,10 +26,13 @@ class Stage2_boss(Boss):
         if self.rect.centerx <= 1000:
             self.dx = 0
         self.move(self.dx,self.dy)
+        
+        if self.hp.hp <= 5 and self.lord_flag == False:
+            self.lord_flag = True
 
-        if self.hp.hp == 5 and self.lord_flag:
+        if self.lord_flag:
             self.lord_sub()
-            self.lord_flag = False
+            self.lord_flag = None
     
     def lord_sub(self):
         for number in range(3,7):
