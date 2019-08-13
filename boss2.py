@@ -46,6 +46,7 @@ class Stage2_sub(Boss):
         self.number = sub_number
         self.sel_number = 0
         self.lord_count = 0
+        self.move_timer = []
         self.move_dic = {0:self.move_pack0, 1:self.move_pack1, 2:self.move_pack2, 3:self.move_pack3, 4:self.move_pack4, 5:self.move_pack5, \
         6:self.move_pack6, 7:self.move_pack7, 8:self.move_pack8, 100:self.move_flesh}
         Timer(3000,self.change_number, 8)
@@ -64,8 +65,7 @@ class Stage2_sub(Boss):
         self.dx,self.dy = 0, 0
     
     #def setting_sub(self):
-
-    
+   
     def move_pack0(self):
         self.dx,self.dy = self.boss.dx,self.boss.dy
     
@@ -132,3 +132,14 @@ class Stage2_sub(Boss):
             self.rect.center = self.machines.sprites()[0].rect.centerx, 100
         if self.number == 1:
             self.rect.center = self.machines.sprites()[0].rect.centerx, mg2.bottom -100
+        self.sel_number = 100
+        self.move_timer.append(Timer(500, self.change_number , 9))
+        self.move_timer.append(Timer(500, self.change_number , 100))
+    def move_pack9(self):
+        if self.rect.centerx - self.players.rect.centerx > 0:
+            self.dx = -2
+        elif self.rect.centerx - self.players.rect.centerx < 0:
+            self.dx = 2
+    
+    def change_number(self, number):
+        self.sel_number = number
