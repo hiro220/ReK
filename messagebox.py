@@ -17,7 +17,7 @@ class MessageBox:
         self.message_list = message_list
         self.bg = bg
         self.font_size = font_size
-        self.font = pygame.font.Font("freesansbold.tff", font_size)
+        self.font = pygame.font.Font("freesansbold.ttf", font_size)
         self.outline_color = outline_color
         self.select = select
         self.i = 0
