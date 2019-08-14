@@ -47,3 +47,7 @@ class MessageBox:
         size = len(self.message_list)
         self.i = (self.i + size + 1) % size
         self.x = -self.rect.right+self.rect.left+10
+
+    def __iadd__(self, message_list):
+        self.message_list += message_list
+        return self
