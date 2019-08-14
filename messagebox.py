@@ -3,7 +3,7 @@ import random
 
 class MessageBox:
 
-    def __init__(self, screen, x, y, width, height, message_list=[], bg=(255,255,255), font_size=30, \
+    def __init__(self, screen, x, y, width, message_list=[], bg=(255,255,255), font_size=30, \
                  outline_color=(100,100,100), select="standard"):
         """
         x, y, height, widthの範囲にメッセージ表示枠を作成する。背景色bg, フォントサイズfont_size, 枠線の色outline_color。
@@ -13,7 +13,7 @@ class MessageBox:
 
         assert select in ('standard', 'random'), "selectに指定できるキーワード。'standard', 'random'"
         self.screen = screen
-        self.rect = pygame.Rect(x, y, height, width)
+        self.rect = pygame.Rect(x, y, width, font_size+20)
         self.message_list = message_list
         self.bg = bg
         self.font_size = font_size
@@ -33,9 +33,8 @@ class MessageBox:
         mask = (self.x, 0, self.rect.right-self.rect.left-10, self.font_size)
         color = (0,0,0)
         draw_message = self.font.render(self.message, True, color)
-        x, y = self.rect.left+5, self.rect.top + 5
+        x, y = self.rect.left+5, self.rect.top + 10
         self.screen.blit(draw_message, [x, y], mask)
-        print(x, y, mask)
         self.x += 3
         rect = draw_message.get_rect()
         self.chenge_message = (rect.right+50 < self.x)
