@@ -3,7 +3,7 @@ import random
 
 class MessageBox:
 
-    def __init__(self, screen, x, y, height, width, message_list=[], bg=(255,255,255), font_size=30, \
+    def __init__(self, screen, x, y, width, height, message_list=[], bg=(255,255,255), font_size=30, \
                  outline_color=(100,100,100), select="standard"):
         """
         x, y, height, widthの範囲にメッセージ表示枠を作成する。背景色bg, フォントサイズfont_size, 枠線の色outline_color。
@@ -34,9 +34,9 @@ class MessageBox:
         color = (0,0,0)
         draw_message = self.font.render(self.message, True, color)
         x, y = self.rect.left + self.x, self.rect.top + 5
-        self.screen.blit(draw_text, [x, y], mask)
+        self.screen.blit(draw_message, [x, y], mask)
         self.x += 1
-        rect = draw_message.get.rect()
+        rect = draw_message.get_rect()
         self.chenge_message = (rect.right < self.x)
 
     def select_message(self):
