@@ -30,14 +30,15 @@ class MessageBox:
         pygame.draw.rect(self.screen, self.outline_color, self.rect, 5)
         if self.chenge_message:
             self.select_message()
-        mask = (self.x, 0, self.rect.right-self.rect.left+self.x-10, self.font_size)
+        mask = (self.x, 0, self.rect.right-self.rect.left-10, self.font_size)
         color = (0,0,0)
         draw_message = self.font.render(self.message, True, color)
-        x, y = self.rect.left + self.x, self.rect.top + 5
+        x, y = self.rect.left+5, self.rect.top + 5
         self.screen.blit(draw_message, [x, y], mask)
-        self.x += 1
+        print(x, y, mask)
+        self.x += 3
         rect = draw_message.get_rect()
-        self.chenge_message = (rect.right < self.x)
+        self.chenge_message = (rect.right+50 < self.x)
 
     def select_message(self):
         if self.select == 'random':
@@ -46,4 +47,4 @@ class MessageBox:
             self.message = self.message_list[self.i]
         size = len(self.message_list)
         self.i = (self.i + size + 1) % size
-        self.x = -self.rect.right+self.rect.left
+        self.x = -self.rect.right+self.rect.left+10
