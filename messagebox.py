@@ -4,7 +4,7 @@ import random
 class MessageBox:
 
     def __init__(self, screen, x, y, width, message_list=[], bg=(255,255,255), font_size=30, \
-                 outline_color=(100,100,100), select="standard"):
+                 outline_color=(100,100,100), select="standard", scroll=True):
         """
         x, y, height, widthの範囲にメッセージ表示枠を作成する。背景色bg, フォントサイズfont_size, 枠線の色outline_color。
         message_listで指定した文章を、一つずつ作成した枠内に表示する。
@@ -29,6 +29,7 @@ class MessageBox:
         # 最初に表示するメッセージの設定
         self.i = 0
         self.chenge_message = True
+        self.scroll = scroll
 
     def draw(self):
         # 背景の塗りつぶし
@@ -38,7 +39,7 @@ class MessageBox:
         if self.chenge_message:
             self.select_message()
         # 枠ないにメッセージが収まるサイズ
-        mask = (self.x, 0, self.rect.right-self.rect.left-10, self.font_size)
+        mask = (self.x * self.scroll, 0, self.rect.right-self.rect.left-10, self.font_size)
         color = (0,0,0)
         draw_message = self.font.render(self.message, True, color)
         x, y = self.rect.left+5, self.rect.top + 10
