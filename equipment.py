@@ -10,7 +10,6 @@ class Equipment:
         self.equipment = data["equip"]
         self.screen = screen
         self.change_gun = 0             # 現在選択している装備場所
-        self.guns_num = len(self.gun_data)
         self.back = False               # 一つ前の画面にもどるか
         self.screen_info = pygame.font.Font("freesansbold.ttf" ,70).render("Equip", True, (255,255,255))
         self.back_info = pygame.font.Font("freesansbold.ttf" ,50).render("'Q' : Back", True, (255,255,255))
