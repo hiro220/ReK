@@ -47,19 +47,35 @@ class Stage2_sub(Boss):
         self.sel_number = 0
         self.lord_count = 0
         self.move_timer = []
+        self.natural = True
+        self.shoot_flag = False
         self.move_dic = {0:self.move_pack0, 1:self.move_pack1, 2:self.move_pack2, 3:self.move_pack3, 4:self.move_pack4, 5:self.move_pack5, \
         6:self.move_pack6, 7:self.move_pack7, 8:self.move_pack8, 100:self.move_flesh}
-        Timer(3000,self.change_number, 8)
 
     def update(self):
+        if self.natural:
+            self.move_rutin(0)
+            self.natural = False
+        
+        #print(self.shoot_flag)
+
         self.move_select(self.sel_number)
         self.move(self.dx,self.dy)
     
     def move_select(self, select_number):
         self.move_dic[select_number]()
 
-    def change_number(self,number):
+    def change_number(self, number, bool=False):
         self.sel_number = number
+        self.shoot_flag = boolean
+    
+    def test(self, number, title=0):
+        print(number, title)
+
+    def move_rutin(self, number):
+        self.move_timer.append(Timer(3000, self.change_number , 8))
+        self.move_timer.append(Timer(4000, self.change_number , 100, True))
+        self.move_timer.append(Timer(5000, self.change_number , 8))
     
     def move_flesh(self):
         self.dx,self.dy = 0, 0
@@ -75,6 +91,7 @@ class Stage2_sub(Boss):
             self.dy -= 100
         elif self.number == 1:
             self.dy += 100
+        self.natural = True
             
     def move_pack2(self): #画面後方に配置
         self.dx,self.dy = mg2.right - self.rect.right, mg2.centery - self.rect.centery
@@ -127,14 +144,12 @@ class Stage2_sub(Boss):
                 self.rect.bottom = mg2.top
 
     def move_pack8(self):
-        self.move_flesh()
+        #self.move_flesh()
         if self.number == 0:
             self.rect.center = self.machines.sprites()[0].rect.centerx, 100
         if self.number == 1:
             self.rect.center = self.machines.sprites()[0].rect.centerx, mg2.bottom -100
-        self.sel_number = 100
-        self.move_timer.append(Timer(500, self.change_number , 9))
-        self.move_timer.append(Timer(500, self.change_number , 100))
+
     def move_pack9(self):
         if self.rect.centerx - self.players.rect.centerx > 0:
             self.dx = -2
@@ -144,12 +159,12 @@ class Stage2_sub(Boss):
     def change_number(self, number):
         self.sel_number = number
     
-    def del_timer(self, number=all):
+    def del_timer(self, number="all"):
         if number == "all":
-            for list in self.move_timer:
-                list.kill()
-        for index,list in enumerate(self.move_timer):
-            if list.arg[0] = number:
+            for t_list in self.move_timer:
+                t_list.kill()
+        for index,t_list in enumerate(self.move_timer):
+            if t_list.arg[0] == number:
                 self.move_timer[index].kill()
 
                 
