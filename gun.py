@@ -187,3 +187,13 @@ class Thunder_Gun(Gun):
     def shoot(self, x, y):
         Thunder_Bullet(x, y, self.dx*-2, self.dy, self.machines)
         self.num -= 1
+
+class fire_Gun(Gun):
+
+    def __init__(self, machines, principal, max):
+        super().__init__(machines, principal, max)
+
+    def shoot(self, x, y):
+        fire_Bullet(x, y, self.dx*-2, self.dy, self.machines)
+        self.num -= 1
+

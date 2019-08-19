@@ -298,6 +298,77 @@ class subThunder_Bullet(Bullet):
                 machine.hit(0.35)
 
 
+class fire_Bullet(Bullet):
+    
+    def __init__(self, x, y, dx, dy, machines):
+        """引数は初期位置(x, y)、移動量(dx, dy)、弾の当たり判定を行う対象の機体グループ"""
+        pygame.sprite.Sprite.__init__(self, self.containers)
+        self.image = pygame.image.load("img/fireball1.png").convert()
+        self.image = pygame.transform.smoothscale(self.image, (50,50))
+        self.image.set_alpha(120)
+        colorkey = self.image.get_at((0,0))
+        self.image.set_colorkey(colorkey, RLEACCEL)
+        self.rect = self.image.get_rect()   # 画像からrectを読み取る
+        self.rect.move_ip(x, y)
+        self.x, self.y = x, y
+        self.dx, self.dy = 10, 0       # 移動量
+        self.machines = machines
+        self.burning_count = 0
+        self.image_num = 1
+        self.shot_flag = 0
+        
+        self.update = self.move         # updateで呼ばれるメソッドをmoveに設定する。
+        self.count = 0                  # 壁に反射した回数を保存
+
+        Timer(3000, self.kill) 
+
+    def move(self):
+        if self.shot_flag == 0:
+            pressed_key = pygame.key.get_pressed()
+            if pressed_key[K_x]:
+                self.image.set_alpha(120)
+                colorkey = self.image.get_at((0,0))
+                self.image.set_colorkey(colorkey, RLEACCEL)
+                self.rect.move_ip(self.dx, self.dy)
+            else:
+                self.shot_flag = 1
+                self.dx, self.dy = 0, 0
+                self.shot_pos = self.rect
+        elif self.shot_flag == 1:
+            if self.burning_count <= 40:
+                text = "img/fireball{}.png"
+                self.image = pygame.image.load(text.format(self.image_num)).convert()
+                self.image = pygame.transform.smoothscale(self.image, (50,50))
+                self.image.set_alpha(255)
+                colorkey = self.image.get_at((0,0))
+                self.image.set_colorkey(colorkey, RLEACCEL)
+                self.image_num += 1
+                if self.image_num == 9:
+                    self.image_num = 1
+            elif self.burning_count == 41:
+                self.image_num = 1
+                text = "img/fire{}.png"
+                self.image = pygame.image.load(text.format(self.image_num)).convert_alpha()
+                self.image = pygame.transform.smoothscale(self.image, (100,110))
+                self.rect = self.image.get_rect()
+                self.rect.move_ip(self.shot_pos.left - 25, self.shot_pos.top -30)
+                self.image_num += 1
+            elif self.burning_count <= 100:
+                text = "img/fire{}.png"
+                self.image = pygame.image.load(text.format(self.image_num)).convert_alpha()
+                self.image = pygame.transform.smoothscale(self.image, (100,110))
+                self.image_num += 1
+                if self.image_num == 6:
+                    self.image_num = 1
+
+                collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+                if collide_list:
+                    for machine in collide_list:  
+                        machine.hit(0.1, lasting=True)
+
+        self.rect.move_ip(self.dx, self.dy)
+        self.burning_count += 1
+
 class Meteorite(Bullet):
 
     def __init__(self, x, y, dx, dy, machines):
