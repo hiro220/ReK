@@ -24,7 +24,7 @@ class Hp:
 
 class Machine(pygame.sprite.Sprite):
 
-    def __init__(self, hp, x, y, img, machines, score, money):
+    def __init__(self, hp, x, y, img, machines, score, money, data):
         """引数は、機体の体力を表すhp、機体の初期位置(x, y)、描画する画像、発射する弾の当たり判定対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.hp = Hp(hp)
@@ -42,6 +42,7 @@ class Machine(pygame.sprite.Sprite):
         self.dx = self.dy = 0
         self.score = score
         self.money = money
+        self.data = data
 
     def move(self, dx, dy):
         """機体を(dx, dy)だけ移動させる"""
@@ -52,14 +53,17 @@ class Machine(pygame.sprite.Sprite):
         if not self.gun.isBulletZero():     # 残弾数が0でないなら弾を発射する
             self.gun.shoot(x, y)
 
-    def reload(self):
-        if self.reload_flag:
-            self.reload_flag = False
-            bullet_num = self.gun.num
-            bullet_num /= self.gun.max/10
-            self.gun.num = 0
-            Timer(1000+bullet_num*500, self.gun.reload)
-            Timer(1500+bullet_num*500, self.change_flag)
+    def reload(self, count):
+        reload_count = self.data['gundata'][count]['reload_size']
+        if reload_count != 0
+            if self.reload_flag:
+                self.reload_flag = False
+                bullet_num = self.gun.num
+                bullet_num /= self.gun.max/10
+                self.gun.num = 0
+                Timer(1000+bullet_num*500, self.gun.reload)
+                Timer(1500+bullet_num*500, self.change_flag)
+                reload_count -= 1
     
     def BulletZero(self):
         self.gun.BulletZero()
