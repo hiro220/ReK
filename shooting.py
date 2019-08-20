@@ -4,6 +4,7 @@
 import pygame
 from pygame.locals import *
 import sys
+import os
 from stage import Stage
 from initial_screen import Initial_Screen
 from menu import Menu
@@ -11,34 +12,59 @@ import pygame.mixer
 import database as db
 from define import *
 from help_explain import Help_a, Help_print
+from shop import *
+import json
+import argparse
+
+parser = argparse.ArgumentParser(description='ReK')
+parser.add_argument('-c', '--cheat', action='store_true', help="チート")
+args = parser.parse_args()
+
 
 class Main(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, cheat):
         """pygame、ウィンドウなどの初期化処理"""
         pygame.init()   # pygameの初期化
-        self.data = db.load()
+        self.data = db.load(cheat)
+        self.cheat = cheat
         self.data_check()
         print(self.data)
 
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.RESIZABLE)   # ウィンドウをWIDTH×HEIGHTで作成する
+        if os.name == 'posix':
+            # Linux系OSの場合
+            self.screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.RESIZABLE)   # ウィンドウをWIDTH×HEIGHTで作成する
+        if os.name == 'nt':
+            # Windows
+            self.screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウをWIDTH×HEIGHTで作成する
+
+        self.shop = Shop(self.screen, self.data)
         
     def do(self):
          while True:
             init_screen = Initial_Screen()              #初期画面の描画              
             init_num = init_screen.draw(self.screen)    
+            if init_num == EXIT:
+                self.exit()
 
             if init_num == START_GAME:      #選択したモードがSTART GAMEならメニュー画面に移動
 
                 while True:
-                    menu = Menu(self.screen)    #メニュー画面の描画
+                    menu = Menu(self.screen, self.data)    #メニュー画面の描画
                     stage_id, stageTxt = menu.draw()
-                    if stage_id == None:
+                    if stage_id == EXIT:
+                        self.exit()
+                    if stageTxt == "0":
                         break
-                    self.Stage_draw(stage_id, stageTxt)                
+                    elif stageTxt == "1":
+                        self.shop_own = self.shop.draw()
+                    else:
+                        self.Stage_draw(stage_id, stageTxt)             
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
                 help_c = Help_a(self.screen)
                 help_b = help_c.draw()
+                if help_b == EXIT:
+                    self.exit()
             elif init_num == End:
                 self.exit()
 
@@ -53,13 +79,11 @@ class Main(pygame.sprite.Sprite):
         elif result[0] == RETIRE:
             return
         self.StageResult_draw(stage_id, result)
-        return
 
     def StageResult_draw(self, stage_id, result):
         """ステージ結果画面を描画する"""
         self.screen.fill((0,0,0))
 
-        Score_font = pygame.font.Font("freesansbold.ttf", 50)
         Enter_font = pygame.font.Font("freesansbold.ttf", 20)
 
         #Score_text = Score_font.render("SCORE: " + str(result[1]), True, (255,255,255))
@@ -76,15 +100,14 @@ class Main(pygame.sprite.Sprite):
             self.screen.blit(image, [255, 50])
             self.data["money"] += money
             self.data["sum_money"] += money
-            db.insert_score(stage_id, score)
-            self.draw_ranking(db.load_ranking(stage_id))
+            db.insert_score(stage_id, score, self.cheat)
+            self.draw_ranking(db.load_ranking(stage_id, self.cheat))
         elif result == GAMEOVER:
             image = pygame.image.load("img/gameover.jpg").convert_alpha()
             self.screen.blit(image, [270, 10])
 
         while True:
-            pygame.display.update()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-
+            pygame.display.update()
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_RETURN:
@@ -114,21 +137,44 @@ class Main(pygame.sprite.Sprite):
                 self.screen.blit(score, [550, 180+50*(pos+1)])
                 pos += 1
             
+    def _check_gun(self):
+        dic = json.load(open("data/gun.json", "r"))
+        i = 0
+        for name, data in dic.items():
+            if i in self.data['gun_data']:
+                if self.data['version'] == '1.0.0' and i == 0:
+                    data = self.data['gun_data']
+                    data[0]['own'] = 1
+                i += 1
+                continue
+            data['name'] = name
+            data['own'] = int(self.cheat or i==0)
+            self.data['gun_data'][i] = data
+            i += 1
+
+    def _check_equip(self):
+        # 何も装備されていないとき、Gunを装備する
+        if self.data['equip'] == []:
+            self.data['equip'] = [0, -1, -1]
+        
     def data_check(self):
         for key, cast in data_key.items():
             if key in self.data:
                 self.data[key] = cast(self.data[key])
             else:
                 self.data[key] = cast()
+        self._check_gun()
+        self._check_equip()
+
+        # versionを最新に更新する
         self.data['version'] = version
 
     def exit(self):
         self.data["play_time"] += pygame.time.get_ticks()
-        db.save(self.data)
+        db.save(self.data, self.cheat)
         pygame.quit()
         sys.exit()
 
 if __name__=='__main__':
-
-    game = Main()
+    game = Main(args.cheat)
     game.do()
