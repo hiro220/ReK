@@ -3,6 +3,7 @@
 
 import pygame
 import math
+from pygame.locals import RLEACCEL, K_x
 from define import R_time, INFO_WIDTH, WIDTH, HEIGHT
 from timer import Timer
 
@@ -307,7 +308,7 @@ class fire_Bullet(Bullet):
         """引数は初期位置(x, y)、移動量(dx, dy)、弾の当たり判定を行う対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.image = pygame.image.load("img/fireball1.png").convert()
-        self.image = pygame.transform.smoothscale(self.image, (50,50))
+        self.image = pygame.transform.smoothscale(self.image, (25,25))
         self.image.set_alpha(120)
         colorkey = self.image.get_at((0,0))
         self.image.set_colorkey(colorkey, RLEACCEL)
@@ -341,7 +342,7 @@ class fire_Bullet(Bullet):
             if self.burning_count <= 40:
                 text = "img/fireball{}.png"
                 self.image = pygame.image.load(text.format(self.image_num)).convert()
-                self.image = pygame.transform.smoothscale(self.image, (50,50))
+                self.image = pygame.transform.smoothscale(self.image, (25,25))
                 self.image.set_alpha(255)
                 colorkey = self.image.get_at((0,0))
                 self.image.set_colorkey(colorkey, RLEACCEL)
@@ -352,14 +353,14 @@ class fire_Bullet(Bullet):
                 self.image_num = 1
                 text = "img/fire{}.png"
                 self.image = pygame.image.load(text.format(self.image_num)).convert_alpha()
-                self.image = pygame.transform.smoothscale(self.image, (100,110))
+                self.image = pygame.transform.smoothscale(self.image, (25, 25))
                 self.rect = self.image.get_rect()
-                self.rect.move_ip(self.shot_pos.left - 25, self.shot_pos.top -30)
+                self.rect.move_ip(self.shot_pos.left - 5, self.shot_pos.top -5)
                 self.image_num += 1
             elif self.burning_count <= 100:
                 text = "img/fire{}.png"
                 self.image = pygame.image.load(text.format(self.image_num)).convert_alpha()
-                self.image = pygame.transform.smoothscale(self.image, (100,110))
+                self.image = pygame.transform.smoothscale(self.image, (30,30))
                 self.image_num += 1
                 if self.image_num == 6:
                     self.image_num = 1
