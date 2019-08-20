@@ -49,14 +49,22 @@ class Stage2_sub(Boss):
         self.move_timer = []
         self.natural = True
         self.shoot_flag = False
+        self.shoot_times = 0
         self.move_dic = {0:self.move_pack0, 1:self.move_pack1, 2:self.move_pack2, 3:self.move_pack3, 4:self.move_pack4, 5:self.move_pack5, \
-        6:self.move_pack6, 7:self.move_pack7, 8:self.move_pack8, 100:self.move_flesh}
+        6:self.move_pack6, 7:self.move_pack7, 8:self.move_pack8, 10:self.move_pack10, 100:self.move_flesh}
+        if sub_number == 0:
+            self.gun = Opposite_Gun(self.machines, self, -1)
+        else:
+            self.gun = Beam_Gun(self.machines, self, -1)
 
     def update(self):
         if self.natural:
-            self.move_rutin(0)
+            self.move_rutin(1)
             self.natural = False
         
+        if self.shoot_flag and self.shoot_times != 0:
+            super().shoot(self.rect.centerx, self.rect.centery)
+            self.shoot_times -= 1
         #print(self.shoot_flag)
 
         self.move_select(self.sel_number)
@@ -65,22 +73,24 @@ class Stage2_sub(Boss):
     def move_select(self, select_number):
         self.move_dic[select_number]()
 
-    def change_number(self, number, bool=False):
+    def change_number(self, number,boolean=False, times=0):
         self.sel_number = number
         self.shoot_flag = boolean
-    
-    def test(self, number, title=0):
-        print(number, title)
+        self.shoot_times = times
 
     def move_rutin(self, number):
-        self.move_timer.append(Timer(3000, self.change_number , 8))
-        self.move_timer.append(Timer(4000, self.change_number , 100, True))
-        self.move_timer.append(Timer(5000, self.change_number , 8))
-    
+        if number == 0:
+            self.move_timer.append(Timer(3000, self.change_number, 8))
+            self.move_timer.append(Timer(4000, self.change_number, 100, True, 1))
+            self.move_timer.append(Timer(9000, self.change_number, 8))
+            self.move_timer.append(Timer(10000, self.change_number, 100, True, 1))
+            self.move_timer.append(Timer(15000, self.change_number, 8))
+            self.move_timer.append(Timer(16000, self.change_number, 100))
+        elif number == 1:
+            self.move_timer.append(Timer(2000, self.change_number, 10))
+            self.move_timer.append(Timer(3000, self.change_number, 3))
     def move_flesh(self):
         self.dx,self.dy = 0, 0
-    
-    #def setting_sub(self):
    
     def move_pack0(self):
         self.dx,self.dy = self.boss.dx,self.boss.dy
@@ -103,7 +113,7 @@ class Stage2_sub(Boss):
             self.dy += 200
         self.sel_number = 1
     
-    def move_pack3(self): #前から後ろに移動
+    def move_pack3(self): #後ろから前に移動
         self.dx,self.dy = -10,0
         if self.rect.right <= mg2.left:
             self.rect.left = mg2.right
@@ -146,9 +156,9 @@ class Stage2_sub(Boss):
     def move_pack8(self):
         #self.move_flesh()
         if self.number == 0:
-            self.rect.center = self.machines.sprites()[0].rect.centerx, 100
+            self.rect.center = self.machines.sprites()[0].rect.centerx, 50
         if self.number == 1:
-            self.rect.center = self.machines.sprites()[0].rect.centerx, mg2.bottom -100
+            self.rect.center = self.machines.sprites()[0].rect.centerx, mg2.bottom -50
 
     def move_pack9(self):
         if self.rect.centerx - self.players.rect.centerx > 0:
@@ -156,8 +166,11 @@ class Stage2_sub(Boss):
         elif self.rect.centerx - self.players.rect.centerx < 0:
             self.dx = 2
     
-    def change_number(self, number):
-        self.sel_number = number
+    def move_pack10(self):
+        if self.number == 0:
+            self.rect.center = mg2.right - 50,50
+        if self.number == 1:
+            self.rect.center = mg2.right - 50,mg2.bottom - 50
     
     def del_timer(self, number="all"):
         if number == "all":

@@ -49,11 +49,43 @@ class Tracking_Gun(Gun):
         self.num -= 1     #弾の残弾数を減らす                                                                       
 
 class Opposite_Gun(Gun): #右から左に弾を飛ばす
-    def shoot(self, x, y):
-        if self.principal.cop_flag:
-            Bullet(x-self.principal.rect.width, y, self.dx, self.dy, self.machines)
-        else:
+    def shoot(self, x, y, angle=0):
+        if angle == 0:
             Bullet(x, y, self.dx, self.dy, self.machines)
+        elif angle == 45:
+            Bullet(x, y, self.dx=-5, self.dy=5, self.machines)
+        elif angle == 90:
+            Bullet(x, y, self.dx=0, self.dy=10, self.machines)
+        elif angle == 135:
+            Bullet(x, y, self.dx=5, self.dy=5, self.machines)
+        elif angle == 180:
+            Bullet(x, y, self.dx=10, self.dy=0, self.machines)
+        elif angle == 225:
+            Bullet(x, y, self.dx=5, self.dy=-5, self.machines)
+        elif angle == 270:
+            Bullet(x, y, self.dx=0, self.dy=-10, self.machines)
+        elif angle == 315:
+            Bullet(x, y, self.dx=-5, self.dy=-5, self.machines)
+        self.num -= 1
+
+class Obot_Gun(Gun):
+    def shoot(self, x, y, angle=0)
+        if angle == 0:
+            Bullet(x, y, self.dx, self.dy, self.machines)
+        elif angle == 45:
+            Bullet(x, y, self.dx=-5, self.dy=5, self.machines)
+        elif angle == 90:
+            Bullet(x, y, self.dx=0, self.dy=10, self.machines)
+        elif angle == 135:
+            Bullet(x, y, self.dx=5, self.dy=5, self.machines)
+        elif angle == 180:
+            Bullet(x, y, self.dx=10, self.dy=0, self.machines)
+        elif angle == 225:
+            Bullet(x, y, self.dx=5, self.dy=-5, self.machines)
+        elif angle == 270:
+            Bullet(x, y, self.dx=0, self.dy=-10, self.machines)
+        elif angle == 315:
+            Bullet(x, y, self.dx=-5, self.dy=-5, self.machines)
         self.num -= 1
         
 class Reflection_Gun(Gun): #左から右に弾を飛ばす
