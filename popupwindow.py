@@ -8,7 +8,7 @@ class PopupWindow:
         self.text = text
         self.buttons = buttons
         self.button_id = 0
-        self.button_size = len(buttons)
+        self.button_size = len(buttons) or 1
         self.clock = pygame.time.Clock()
 
     def loop(self):
