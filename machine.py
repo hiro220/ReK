@@ -2,7 +2,6 @@
 # coding:utf:-8
 
 import pygame
-from pygame.locals import *
 from gun import *
 from timer import Timer, FlagTimer
 from define import WIDTH, HEIGHT
@@ -54,7 +53,6 @@ class Machine(pygame.sprite.Sprite):
             self.gun.shoot(x, y)
 
     def reload(self):
-        self.gun.reload()
         if self.reload_flag:
             self.reload_flag = False
             bullet_num = self.gun.num

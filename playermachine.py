@@ -8,7 +8,7 @@ from define import INFO_WIDTH, WIDTH, HEIGHT
 
 class PlayerMachine(Machine):
     killed_count = 0
-    def __init__(self, x, y, cpus, score, money):
+    def __init__(self, x, y, cpus, score, money, data):
         """引数は、初期位置(x, y)、弾の当たり判定対象となる敵機グループ"""
         image = pygame.image.load("img/player.png").convert_alpha()
         super().__init__(2, x, y, image, cpus, score, money)
@@ -16,6 +16,10 @@ class PlayerMachine(Machine):
         self.wait_flag = 0
         self.count = 0
         self.cop_flag = True
+        self.equip = data["equip"]
+        self.gun_data = data["gun_data"]
+        self.gun_base()
+        self.gun = self.gun_file[0]
         self.gun = fire_Gun(self.machines, self, 100)
 
     def move(self):
@@ -39,6 +43,24 @@ class PlayerMachine(Machine):
             super().shoot(x, y)
         elif key == K_v:
             super().reload()
+
+    def change(self, key):
+        gun_number = 1 * (key==K_a) or 2 * (key==K_s) or 3 * (key==K_d)
+        if gun_number == 0 or self.gun_file[gun_number - 1] == None:
+            return
+        self.gun = self.gun_file[gun_number - 1]
+        
+    def gun_base(self):
+        self.gun_file = []   
+        for i in range(3):
+            gun_num = self.equip[i]
+            if gun_num == -1:
+                self.gun_file.append(None)
+            else:
+                class_name = self.gun_data[gun_num]['name']
+                bullet_count = self.gun_data[gun_num]['bullet_size']
+                exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + "))") 
+            
     
     def isGameOver(self):
         return not self.alive()

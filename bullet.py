@@ -3,17 +3,16 @@
 
 import pygame
 import math
-from define import R_time
-from timer import *
-from pygame.locals import *
-from define import INFO_WIDTH, WIDTH, HEIGHT
+from define import R_time, INFO_WIDTH, WIDTH, HEIGHT
+from timer import Timer
 
 class Bullet(pygame.sprite.Sprite):
 
     def __init__(self, x, y, dx, dy, machines):
         """引数は初期位置(x, y)、移動量(dx, dy)、弾の当たり判定を行う対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
-        self.image = pygame.image.load("img/bullet1.png").convert_alpha()   # 相対パスで画像を読み込む
+        self.img_path = "img/bullet/"
+        self.image = pygame.image.load(self.img_path+"bullet1.png").convert_alpha()   # 相対パスで画像を読み込む
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
         self.rect.move_ip(x, y)             # 引数で指定された位置に移動させる
         self.dx, self.dy = dx, dy       # 移動量
@@ -34,7 +33,8 @@ class Reflection_Bullet(Bullet):
     def __init__(self, x, y, dx, dy, machines):
         """引数は初期位置(x, y)、移動量(dx, dy)、弾の当たり判定を行う対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
-        self.image = pygame.image.load("img/bullet2.png").convert_alpha()   # 相対パスで画像を読み込む
+        self.img_path = "img/bullet/"
+        self.image = pygame.image.load(self.img_path+"bullet2.png").convert_alpha()   # 相対パスで画像を読み込む
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
         self.rect.move_ip(x, y)             # 引数で指定された位置に移動させる
         self.dx, self.dy = dx, dy       # 移動量
@@ -45,10 +45,10 @@ class Reflection_Bullet(Bullet):
 
     def move(self):
         self.rect.move_ip(self.dx, self.dy)
-        if self.rect.bottom >= HEIGHT or self.rect.top <= 0 and self.count <= 5:
+        if self.rect.bottom >= HEIGHT or self.rect.top <= 0 and self.count <= 1:
             self.dy *= -1                                      #bulletの進行方向を逆転
             self.count += 1
-        elif self.rect.right >= WIDTH or self.rect.left <= INFO_WIDTH and self.count <= 5:
+        elif self.rect.right >= WIDTH or self.rect.left <= INFO_WIDTH and self.count <= 1:
             self.dx *= -1                                      #bulletの進行方向を逆転
             self.count += 1
         
@@ -67,9 +67,9 @@ class Missile_Bullet(Bullet):
         self.tracking_flag = 0
 
         if self.cop_flag:
-            self.image = pygame.image.load("img/Pmissile.png").convert_alpha()
+            self.image = pygame.image.load(self.img_path+"Pmissile.png").convert_alpha()
         else:
-            self.image = pygame.image.load("img/missile.png").convert_alpha()
+            self.image = pygame.image.load(self.img_path+"missile.png").convert_alpha()
 
         self.rect = self.image.get_rect()
         self.rect.move_ip(x, y)
@@ -83,7 +83,7 @@ class Missile_Bullet(Bullet):
                 distance = math.sqrt((play.rect.centerx - x)**2 + (play.rect.centery - y)**2)
                 angle = math.degrees(math.atan2(play.rect.centery - y, x - play.rect.centerx))
                 if distance >= 150 and self.rect.centerx >= play.rect.centerx:
-                    self.image = pygame.image.load("img/missile.png").convert_alpha()
+                    self.image = pygame.image.load(self.img_path+"missile.png").convert_alpha()
                     distance2 = distance / 5
                     self.dx, self.dy = (play.rect.centerx - x) / distance2, (play.rect.centery - y) / distance2
                     self.rect.move_ip(self.dx, self.dy)
@@ -107,7 +107,7 @@ class Missile_Bullet(Bullet):
             except:
                 return
             if distance >= 150:
-                self.image = pygame.image.load("img/Pmissile.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Pmissile.png").convert_alpha()
                 distance2 = distance / 4
                 angle = math.degrees(math.atan2(y - target.rect.centery, target.rect.centerx - x))
                 self.dx, self.dy = (target.rect.centerx - x) / distance2, (target.rect.centery - y) / distance2
@@ -126,7 +126,8 @@ class Fluffy_Bullet(Bullet):
     
     def __init__(self, x, y, dx, dy, machines):
         pygame.sprite.Sprite.__init__(self, self.containers)
-        self.image = pygame.image.load("img/Fluffy.png").convert_alpha()
+        self.img_path = "img/bullet/fluffy/"
+        self.image = pygame.image.load(self.img_path+"Fluffy.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.move_ip(x, y)
         self.dx, self.dy = dx, dy 
@@ -161,25 +162,25 @@ class Fluffy_Bullet(Bullet):
                     machine.hit(0.5)
         elif self.collide_flag ==  1:
             if self.swap_count == 0:
-                self.image = pygame.image.load("img/Fluffy.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Fluffy.png").convert_alpha()
             elif self.swap_count ==  1:
-                self.image = pygame.image.load("img/Fluffy2.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Fluffy2.png").convert_alpha()
             elif self.swap_count ==  2:
-                self.image = pygame.image.load("img/Fluffy3.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Fluffy3.png").convert_alpha()
             elif self.swap_count ==  3:
-                self.image = pygame.image.load("img/Fluffy4.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Fluffy4.png").convert_alpha()
             elif self.swap_count ==  4:
-                self.image = pygame.image.load("img/Fluffy5.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Fluffy5.png").convert_alpha()
             elif self.swap_count ==  5:
-                self.image = pygame.image.load("img/Fluffy6.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Fluffy6.png").convert_alpha()
             elif self.swap_count ==  6:
-                self.image = pygame.image.load("img/Fluffy7.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Fluffy7.png").convert_alpha()
             elif self.swap_count ==  7:
-                self.image = pygame.image.load("img/Fluffy8.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Fluffy8.png").convert_alpha()
             elif self.swap_count ==  8:
-                self.image = pygame.image.load("img/Fluffy9.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Fluffy9.png").convert_alpha()
             elif self.swap_count ==  9:
-                self.image = pygame.image.load("img/Fluffy10.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Fluffy10.png").convert_alpha()
 
             self.image = pygame.transform.scale(self.image, (self.current_width, self.current_height))
             self.rect = self.image.get_rect()
@@ -216,7 +217,8 @@ class Thunder_Bullet(Bullet):
     
     def __init__(self, x, y, dx, dy, machines):
         pygame.sprite.Sprite.__init__(self, self.containers)
-        self.image = pygame.image.load("img/Thunder11.png").convert_alpha()
+        self.img_path = "img/bullet/thunder/"
+        self.image = pygame.image.load(self.img_path+"Thunder11.png").convert_alpha()
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
         self.rect2 = self.rect
         self.rect.move_ip(x, y)             # 引数で指定された位置に移動させる
@@ -231,10 +233,10 @@ class Thunder_Bullet(Bullet):
     def move(self):
         if self.flag == 0:
             if self.image_flag == 0:
-                self.image = pygame.image.load("img/Thunder11.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Thunder11.png").convert_alpha()
                 self.image_flag = 1
             elif self.image_flag == 1:
-                self.image = pygame.image.load("img/Thunder12.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Thunder12.png").convert_alpha()
                 self.image_flag = 0
 
             self.rect.move_ip(self.dx, self.dy)
@@ -249,10 +251,10 @@ class Thunder_Bullet(Bullet):
                     machine.hit(0.5)
         elif self.flag == 1:
             if self.image_flag == 0:
-                self.image = pygame.image.load("img/Thunder21.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Thunder21.png").convert_alpha()
                 self.image_flag = 1
             elif self.image_flag == 1:
-                self.image = pygame.image.load("img/Thunder22.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Thunder22.png").convert_alpha()
                 self.image_flag = 0
 
             self.dx, self.dy = 0, -20
@@ -270,7 +272,8 @@ class Thunder_Bullet(Bullet):
 class subThunder_Bullet(Bullet):
     def __init__(self, x, y, dx, dy, machines):
         pygame.sprite.Sprite.__init__(self, self.containers)
-        self.image = pygame.image.load("img/Thunder31.png").convert_alpha()
+        self.img_path = "img/bullet/thunder/"
+        self.image = pygame.image.load(self.img_path+"Thunder31.png").convert_alpha()
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
         self.rect.move_ip(x, y)             # 引数で指定された位置に移動させる
         self.dx, self.dy = dx, dy       # 移動量
@@ -283,10 +286,10 @@ class subThunder_Bullet(Bullet):
 
     def move(self):
         if self.image_flag == 0:
-            self.image = pygame.image.load("img/Thunder31.png").convert_alpha()
+            self.image = pygame.image.load(self.img_path+"Thunder31.png").convert_alpha()
             self.image_flag = 1
         elif self.image_flag == 1:
-            self.image = pygame.image.load("img/Thunder32.png").convert_alpha()
+            self.image = pygame.image.load(self.img_path+"Thunder32.png").convert_alpha()
             self.image_flag = 0
 
         self.rect.move_ip(self.dx, self.dy)
@@ -374,7 +377,7 @@ class Meteorite(Bullet):
     def __init__(self, x, y, dx, dy, machines):
         """引数は初期位置(x, y)、移動量(dx, dy)、弾の当たり判定を行う対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
-        self.image = pygame.image.load("img/meteorite.png").convert_alpha()   # 相対パスで画像を読み込む
+        self.image = pygame.image.load(self.img_path+"meteorite.png").convert_alpha()   # 相対パスで画像を読み込む
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
         self.rect.move_ip(x, y)             # 引数で指定された位置に移動させる
         self.dx, self.dy = dx, dy       # 移動量

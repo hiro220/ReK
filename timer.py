@@ -1,8 +1,7 @@
 # coding:utf-8
 
 import pygame
-from pygame.locals import *
-from define import *
+from define import R_time
 
 class Timer(pygame.sprite.Sprite):
 
