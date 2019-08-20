@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from define import WIDTH, HEIGHT
 
 class PopupWindow:
 
@@ -20,7 +21,11 @@ class PopupWindow:
                 return self.button_id
 
     def draw(self):
-        pass
+        center_x, center_y = WIDTH // 2, HEIGHT // 2
+        box = Rect(center_x-250, center_y-150, 500, 300)
+        pygame.draw.rect(self.screen, (255,255,255), box)
+        pygame.draw.rect(self.screen, (150,150,150), box, 5)
+        pygame.display.update()
 
     def process(self):
         for event in pygame.event.get():
