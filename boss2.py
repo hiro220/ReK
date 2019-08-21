@@ -53,9 +53,9 @@ class Stage2_sub(Boss):
         self.move_dic = {0:self.move_pack0, 1:self.move_pack1, 2:self.move_pack2, 3:self.move_pack3, 4:self.move_pack4, 5:self.move_pack5, \
         6:self.move_pack6, 7:self.move_pack7, 8:self.move_pack8, 10:self.move_pack10, 100:self.move_flesh}
         if sub_number == 0:
-            self.gun = Opposite_Gun(self.machines, self, -1)
+            self.gun = Obot_Gun(self.machines, self,-1, 270, 500)
         else:
-            self.gun = Beam_Gun(self.machines, self, -1)
+            self.gun = Obot_Gun(self.machines, self,-1, 90, 500)
 
     def update(self):
         if self.natural:
@@ -63,7 +63,7 @@ class Stage2_sub(Boss):
             self.natural = False
         
         if self.shoot_flag and self.shoot_times != 0:
-            super().shoot(self.rect.centerx, self.rect.centery)
+            super().shoot(self.rect.left, self.rect.top)
             self.shoot_times -= 1
         #print(self.shoot_flag)
 
@@ -88,7 +88,7 @@ class Stage2_sub(Boss):
             self.move_timer.append(Timer(16000, self.change_number, 100))
         elif number == 1:
             self.move_timer.append(Timer(2000, self.change_number, 10))
-            self.move_timer.append(Timer(3000, self.change_number, 3))
+            self.move_timer.append(Timer(3000, self.change_number, 3, True, -1))
     def move_flesh(self):
         self.dx,self.dy = 0, 0
    

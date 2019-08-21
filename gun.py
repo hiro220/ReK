@@ -49,44 +49,39 @@ class Tracking_Gun(Gun):
         self.num -= 1     #弾の残弾数を減らす                                                                       
 
 class Opposite_Gun(Gun): #右から左に弾を飛ばす
-    def shoot(self, x, y, angle=0):
-        if angle == 0:
+    def __init__(self, machines, principal, max, angle=0):
+        super().__init__(machines, principal, max)
+        self.angle = angle
+        self.move_copy = self.dx
+        self.dx = int(self.move_copy*math.cos(math.radians(angle)))
+        self.dy = int(self.move_copy*math.sin(math.radians(angle)))
+
+    def shoot(self, x, y):
+        
+        if 270 <= self.angle < 360 or 0 <= self.angle <= 90 :
             Bullet(x, y, self.dx, self.dy, self.machines)
-        elif angle == 45:
-            Bullet(x, y, self.dx=-5, self.dy=5, self.machines)
-        elif angle == 90:
-            Bullet(x, y, self.dx=0, self.dy=10, self.machines)
-        elif angle == 135:
-            Bullet(x, y, self.dx=5, self.dy=5, self.machines)
-        elif angle == 180:
-            Bullet(x, y, self.dx=10, self.dy=0, self.machines)
-        elif angle == 225:
-            Bullet(x, y, self.dx=5, self.dy=-5, self.machines)
-        elif angle == 270:
-            Bullet(x, y, self.dx=0, self.dy=-10, self.machines)
-        elif angle == 315:
-            Bullet(x, y, self.dx=-5, self.dy=-5, self.machines)
+        elif 90 < self.angle < 270:
+            Bullet(x+self.principal.rect.width, y, self.dx, self.dy, self.machines)
         self.num -= 1
 
 class Obot_Gun(Gun):
-    def shoot(self, x, y, angle=0)
-        if angle == 0:
-            Bullet(x, y, self.dx, self.dy, self.machines)
-        elif angle == 45:
-            Bullet(x, y, self.dx=-5, self.dy=5, self.machines)
-        elif angle == 90:
-            Bullet(x, y, self.dx=0, self.dy=10, self.machines)
-        elif angle == 135:
-            Bullet(x, y, self.dx=5, self.dy=5, self.machines)
-        elif angle == 180:
-            Bullet(x, y, self.dx=10, self.dy=0, self.machines)
-        elif angle == 225:
-            Bullet(x, y, self.dx=5, self.dy=-5, self.machines)
-        elif angle == 270:
-            Bullet(x, y, self.dx=0, self.dy=-10, self.machines)
-        elif angle == 315:
-            Bullet(x, y, self.dx=-5, self.dy=-5, self.machines)
-        self.num -= 1
+    def __init__(self, machines, principal, max, angle=0, time=0):
+        super().__init__(machines, principal, max)
+        self.angle = angle
+        self.time = time
+        self.move_copy = self.dx
+        self.dx = int(self.move_copy*math.cos(math.radians(angle)))
+        self.dy = int(self.move_copy*math.sin(math.radians(angle)))
+        self.point_x = {0:0, 45:0, 90:self.principal.rect.width/2, 135:self.principal.rect.width, 180:self.principal.rect.width, \
+                        225:self.principal.rect.width, 270:self.principal.rect.width/2, 315:0}
+        self.point_y = {0:self.principal.rect.height/2, 45:0, 90:0, 135:0, 180:self.principal.rect.height/2, 225:self.principal.rect.height,\
+                         270:self.principal.rect.height, 315:self.principal.rect.height}
+
+    def shoot(self, x, y):
+        if R_time.get_ticks() - self.gun_start >= self.time:
+            Bullet(x, y, self.dx+self.point_x[self.angle], self.dy+self.point_y[self.angle], self.machines)
+            self.gun_start = R_time.get_ticks()
+            self.num -= 1
         
 class Reflection_Gun(Gun): #左から右に弾を飛ばす
     def __init__(self, machines,principal, max):
