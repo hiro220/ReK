@@ -79,8 +79,9 @@ class Obot_Gun(Gun):
 
     def shoot(self, x, y):
         if R_time.get_ticks() - self.gun_start >= self.time:
-            Bullet(x, y, self.dx+self.point_x[self.angle], self.dy+self.point_y[self.angle], self.machines)
+            Bullet(x+self.point_x[self.angle], y+self.point_y[self.angle], self.dx, self.dy, self.machines)
             self.gun_start = R_time.get_ticks()
+            print(self.dx,self.dy)
             self.num -= 1
         
 class Reflection_Gun(Gun): #左から右に弾を飛ばす

@@ -50,6 +50,7 @@ class Stage2_sub(Boss):
         self.natural = True
         self.shoot_flag = False
         self.shoot_times = 0
+        self.move_count = {0:0, 1:0, 2:0, 3:0}
         self.move_dic = {0:self.move_pack0, 1:self.move_pack1, 2:self.move_pack2, 3:self.move_pack3, 4:self.move_pack4, 5:self.move_pack5, \
         6:self.move_pack6, 7:self.move_pack7, 8:self.move_pack8, 10:self.move_pack10, 100:self.move_flesh}
         if sub_number == 0:
@@ -72,11 +73,12 @@ class Stage2_sub(Boss):
     
     def move_select(self, select_number):
         self.move_dic[select_number]()
-
-    def change_number(self, number,boolean=False, times=0):
+                                                        #カウントする回数 次にするパックナンバー
+    def change_number(self, number,boolean=False, times=0, option=[None,None]):
         self.sel_number = number
         self.shoot_flag = boolean
         self.shoot_times = times
+        self.option = option
 
     def move_rutin(self, number):
         if number == 0:
@@ -88,7 +90,8 @@ class Stage2_sub(Boss):
             self.move_timer.append(Timer(16000, self.change_number, 100))
         elif number == 1:
             self.move_timer.append(Timer(2000, self.change_number, 10))
-            self.move_timer.append(Timer(3000, self.change_number, 3, True, -1))
+            self.move_timer.append(Timer(3000, self.change_number, 3,))
+            #self.move_timer.append(Timer(4000, self.change_number, 100, True, -1))
     def move_flesh(self):
         self.dx,self.dy = 0, 0
    
@@ -117,6 +120,10 @@ class Stage2_sub(Boss):
         self.dx,self.dy = -10,0
         if self.rect.right <= mg2.left:
             self.rect.left = mg2.right
+            if self.option[0] != None:
+                self.move_count[3] += 1
+        if self.move_count[3] == self.option[0]:
+            self.sel_number = self.option[1]
     
     def move_pack4(self): #boss前方に配置
         self.dx,self.dy = self.boss.rect.centerx - self.rect.centerx, self.boss.rect.centery - self.rect.centery
