@@ -35,29 +35,41 @@ class TextBox:
     def create_text(self, texts, full_font, half_font):
         """枠内に収まるサイズになるよう、全角、半角それぞれのテキストを画像化してリスト(二次元)に格納し、返却する。
         リストは各要素が一行に表示する文字列の画像で、要素の一つ一つが全角、半角ごとでリストにされている。"""
+        # 全角、半角対応のフォント
         full_font = pygame.font.Font(full_font, self.font_size)
         half_font = pygame.font.Font(half_font, self.font_size)
-        font_texts = []
+        # 枠内判定に用いるテキストの幅と枠の幅
         width = 0
         frame_width = self.rect.right - self.rect.right - 10
-        one_line = []
+        font_texts = []     # 枠内に表示するすべてのテキスト
+        one_line = []       # 一行に表示するテキスト
+        # 全角半角ごとに分割したテキスト全てを描画形式に変換
         for char_type, text in texts:
+            # このtext幅を加算
             width += len(text) * self.font_size * (1+char_type)
             if frame_width <= width:
+                # 枠内に収まるとき
                 text = char_type * full_font.render(text, True, self.text_color) or \
                        half_font.render(text, True, self.text_color)
                 one_line.append(text)
             else:
+                # 枠内に収まらないとき
                 diff = width
                 i = 0
                 while diff >= 0:
+                    # 枠内に収まる範囲のテキストを抽出
                     diff -= frame_width
                     j = diff // (self.font_size * (1+char_type))
                     text = char_type * full_font.render(text[i:-j], True, self.text_color) or \
                            half_font.render(text[i:-j], True, self.text_color)
                     i = -j
+                    # テキストを一行のリストに追加
                     one_line.append(text)
+                    # 一行分のリストを全体のリストに追加
                     font_texts.append(one_line)
+                    # 次の行へ
+                    one_line = []
+                # 次の行で使っている幅
                 width = -diff
         font_texts.append(one_line)
         return font_texts
