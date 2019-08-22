@@ -60,7 +60,7 @@ class TextBox:
             # このtext幅を加算
             width += len(text) * self.font_size * (1+char_type)
             font = pygame.font.Font(full_font*char_type or half_font, self.font_size)
-            if frame_width <= width:
+            if frame_width >= width:
                 # 枠内に収まるとき
                 text = font.render(text, True, self.text_color)
                 one_line.append(text)
