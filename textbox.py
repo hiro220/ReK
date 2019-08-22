@@ -40,7 +40,7 @@ class TextBox:
         half_font = pygame.font.Font(half_font, self.font_size)
         # 枠内判定に用いるテキストの幅と枠の幅
         width = 0
-        frame_width = self.rect.right - self.rect.right - 10
+        frame_width = self.rect.right - self.rect.left - 10
         font_texts = []     # 枠内に表示するすべてのテキスト
         one_line = []       # 一行に表示するテキスト
         # 全角半角ごとに分割したテキスト全てを描画形式に変換
