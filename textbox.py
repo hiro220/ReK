@@ -15,14 +15,17 @@ class TextBox:
         self.texts = self.create_text(texts, full_font, half_font)
 
     def separate_text(self, text):
+        """入力したテキストを、全角部分と半角部分で分割し、順番はそのままにリストにする。"""
         texts = []
         one_text = ''
         char_type = self.isfull_size(text[0])
         for char in text:
             isfull = self.isfull_size(char)
             if char_type * isfull:
+                # 文字が一文字前と同じサイズのとき
                 one_text += char
             else:
+                # 文字が一文字前と違うサイズ
                 texts.append([char_type, one_text])
                 char_type = isfull
                 one_text = char
@@ -30,16 +33,35 @@ class TextBox:
         return texts
 
     def create_text(self, texts, full_font, half_font):
+        """枠内に収まるサイズになるよう、全角、半角それぞれのテキストを画像化してリスト(二次元)に格納し、返却する。
+        リストは各要素が一行に表示する文字列の画像で、要素の一つ一つが全角、半角ごとでリストにされている。"""
         full_font = pygame.font.Font(full_font, self.font_size)
         half_font = pygame.font.Font(half_font, self.font_size)
         font_texts = []
         width = 0
         frame_width = self.rect.right - self.rect.right - 10
+        one_line = []
         for char_type, text in texts:
-
-            text = char_type * full_font.render(text, True, self.text_color) or \
-                   half_font.render(text, True, self.text_color)
+            width += len(text) * self.font_size * (1+char_type)
+            if frame_width <= width:
+                text = char_type * full_font.render(text, True, self.text_color) or \
+                       half_font.render(text, True, self.text_color)
+                one_line.append(text)
+            else:
+                diff = width
+                i = 0
+                while diff >= 0:
+                    diff -= frame_width
+                    j = diff // (self.font_size * (1+char_type))
+                    text = char_type * full_font.render(text[i:-j], True, self.text_color) or \
+                           half_font.render(text[i:-j], True, self.text_color)
+                    i = -j
+                    one_line.append(text)
+                    font_texts.append(one_line)
+                width = -diff
+        font_texts.append(one_line)
         return font_texts
 
     def isfull_size(self, char):
+        """引数に入力した1文字が全角文字かどうかを判定。全角文字のときはTreu, 半角文字だとFalseが返却される"""
         return unicodedata.east_asian_width(char) in ('F', 'W', 'A')
