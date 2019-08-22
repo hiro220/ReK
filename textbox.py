@@ -4,7 +4,7 @@ import unicodedata
 
 class TextBox:
     def __init__(self, screen, x, y, width, height, text='', bg=(255,255,255), text_color=(0,0,0), font_size=20, \
-                 outline_color=(150,150,150), full_font=None, half_font='freesansbold.ttd'):
+                 outline_color=(150,150,150), full_font="", half_font='freesansbold.ttf'):
         self.screen = screen
         self.rect = Rect(x, y, width, height)
         self.bg = bg
@@ -50,9 +50,6 @@ class TextBox:
     def create_text(self, texts, full_font, half_font):
         """枠内に収まるサイズになるよう、全角、半角それぞれのテキストを画像化してリスト(二次元)に格納し、返却する。
         リストは各要素が一行に表示する文字列の画像で、要素の一つ一つが全角、半角ごとでリストにされている。"""
-        # 全角、半角対応のフォント
-        full_font = pygame.font.Font(full_font, self.font_size)
-        half_font = pygame.font.Font(half_font, self.font_size)
         # 枠内判定に用いるテキストの幅と枠の幅
         width = 0
         frame_width = self.rect.right - self.rect.left - 10
@@ -62,10 +59,10 @@ class TextBox:
         for char_type, text in texts:
             # このtext幅を加算
             width += len(text) * self.font_size * (1+char_type)
+            font = pygame.font.Font(full_font*char_type or half_font, self.font_size)
             if frame_width <= width:
                 # 枠内に収まるとき
-                text = char_type * full_font.render(text, True, self.text_color) or \
-                       half_font.render(text, True, self.text_color)
+                text = font.render(text, True, self.text_color)
                 one_line.append(text)
             else:
                 # 枠内に収まらないとき
@@ -75,8 +72,7 @@ class TextBox:
                     # 枠内に収まる範囲のテキストを抽出
                     diff -= frame_width
                     j = diff // (self.font_size * (1+char_type))
-                    text = char_type * full_font.render(text[i:-j], True, self.text_color) or \
-                           half_font.render(text[i:-j], True, self.text_color)
+                    text = font.render(text[i:-j], True, self.text_color)
                     i = -j
                     # テキストを一行のリストに追加
                     one_line.append(text)
