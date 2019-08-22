@@ -14,6 +14,21 @@ class TextBox:
         texts = self.separate_text(text)
         self.texts = self.create_text(texts, full_font, half_font)
 
+    def draw(self):
+        # 描画領域の塗りつぶし
+        pygame.draw.rect(self.screen, self.bg, self.rect)
+        # 枠線の描画
+        pygame.draw.rect(self.screen, self.outline_color, self.rect, 3)
+        for i, oneline in enumerate(self.texts):
+            # テキストの表示位置
+            x, y = self.rect.left+5, self.rect.top + 5 + self.font_size * i
+            # 一行表示
+            for text in oneline:
+                # 全角と半角で分離されているので、すべて描画
+                rect = text.get_rect()
+                self.screen.blit(text, [x, y])
+                x += rect.right - rect.left
+
     def separate_text(self, text):
         """入力したテキストを、全角部分と半角部分で分割し、順番はそのままにリストにする。"""
         texts = []
