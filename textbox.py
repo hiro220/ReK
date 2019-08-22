@@ -62,8 +62,8 @@ class TextBox:
             font = pygame.font.Font(full_font*char_type or half_font, self.font_size)
             if frame_width >= width:
                 # 枠内に収まるとき
-                text = font.render(text, True, self.text_color)
-                one_line.append(text)
+                draw_text = font.render(text, True, self.text_color)
+                one_line.append(draw_text)
             else:
                 # 枠内に収まらないとき
                 diff = width
@@ -72,10 +72,10 @@ class TextBox:
                     # 枠内に収まる範囲のテキストを抽出
                     diff -= frame_width
                     j = diff // (self.font_size * (1+char_type))
-                    text = font.render(text[i:-j], True, self.text_color)
+                    draw_text = font.render(text[i:-j], True, self.text_color)
                     i = -j
                     # テキストを一行のリストに追加
-                    one_line.append(text)
+                    one_line.append(draw_text)
                     # 一行分のリストを全体のリストに追加
                     font_texts.append(one_line)
                     # 次の行へ
