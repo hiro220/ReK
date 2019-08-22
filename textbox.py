@@ -36,7 +36,7 @@ class TextBox:
         char_type = self.isfull_size(text[0])
         for char in text:
             isfull = self.isfull_size(char)
-            if char_type * isfull:
+            if char_type == isfull:
                 # 文字が一文字前と同じサイズのとき
                 one_text += char
             else:
