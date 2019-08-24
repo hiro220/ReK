@@ -7,16 +7,20 @@ class PopupWindow:
 
     def __init__(self, screen, text="", buttons=[], target=0, title=""):
         self.screen = screen
+        # 枠線の色
         self.outline_color = (50, 50, 50)
         center_x, center_y = WIDTH // 2, HEIGHT // 2
         self.rect = Rect(center_x-250, center_y-150, 500, 300)
+        # タイトルの作成
         self.title = None
-        if title != "":
+        if title != None:
             self.title = TextBox(screen, self.rect.left, self.rect.top, 500, 32, title, \
                                  font_size=25, outline_color=self.outline_color, outline_size=5)
+        # メッセージの描画領域を作成
         x, y = WIDTH // 2 - 230, HEIGHT // 2 - 100
         self.textbox = TextBox(screen, x, y, 460, 155, text, outline_color=(255,)*3, \
                                font_size=25, align=('center', 'center'))
+        # ボタンの作成
         self.buttons = []
         self.button_id = target
         self.button_size = len(buttons) or 1
@@ -27,6 +31,7 @@ class PopupWindow:
             button = TextBox(screen, x, y, 100, 50, button, outline_color=(255,255,255), align=('center', 'center'))
             x += frame
             self.buttons.append(button)
+        # 時間管理
         self.clock = pygame.time.Clock()
 
     def loop(self):
@@ -34,12 +39,14 @@ class PopupWindow:
             self.clock.tick(30)
             request = self.process()
             self.draw()
+            # Enterキーが押されたボタンのidを返却する
             if request != None:
                 return self.button_id
 
     def draw(self):
         # ウィンドウを塗りつぶす
         pygame.draw.rect(self.screen, (255,255,255), self.rect)
+        # タイトルがあるなら描画する
         if self.title != None:
             self.title.draw()
         # ウィンドウの枠を描画
