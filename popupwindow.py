@@ -11,7 +11,8 @@ class PopupWindow:
         center_x, center_y = WIDTH // 2, HEIGHT // 2
         self.rect = Rect(center_x-250, center_y-150, 500, 300)
         x, y = WIDTH // 2 - 230, HEIGHT // 2 - 140
-        self.textbox = TextBox(screen, x, y, 460, 200, text, outline_color=(255,255,255), font_size=25)
+        self.textbox = TextBox(screen, x, y, 460, 200, text, outline_color=(255,255,255), \
+                               font_size=25, align=('center', 'center'))
         self.buttons = []
         self.button_id = 0
         self.button_size = len(buttons) or 1
@@ -19,7 +20,7 @@ class PopupWindow:
         x = self.rect.left + frame/2 - 50
         y = self.rect.bottom - 80
         for button in buttons:
-            button = TextBox(screen, x, y, 100, 50, button, outline_color=(255,255,255))
+            button = TextBox(screen, x, y, 100, 50, button, outline_color=(255,255,255), align=('center', 'center'))
             x += frame
             self.buttons.append(button)
         self.clock = pygame.time.Clock()
