@@ -29,6 +29,11 @@ class PopupWindow:
         pygame.draw.rect(self.screen, (255,255,255), box)
         pygame.draw.rect(self.screen, (150,150,150), box, 5)
         self.textbox.draw()
+        frame = 500 / self.button_size
+        x = box.left + frame/2 - 50
+        for button_text in self.buttons:
+            pygame.draw.rect(self.screen, (0,0,0), Rect(x, box.bottom-80, 100, 50), 3)
+            x += frame
         pygame.display.update()
 
     def process(self):
