@@ -20,8 +20,8 @@ class PlayerMachine(Machine):
         self.gun_data = data["gun_data"]
         self.gun_base()
         self.gun = self.gun_file[0]
-        self.gun = fire_Gun(self.machines, self, 100)
-
+        self.gun = Laser_Gun(self.machines, self, 100)
+        
     def move(self):
         if self.wait_flag == 0:
             self.firstmove()

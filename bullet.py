@@ -3,9 +3,10 @@
 
 import pygame
 import math
-from pygame.locals import RLEACCEL, K_x
+from pygame.locals import *
 from define import R_time, INFO_WIDTH, WIDTH, HEIGHT
 from timer import Timer
+from cpumove import circle
 
 class Bullet(pygame.sprite.Sprite):
 
@@ -372,6 +373,98 @@ class fire_Bullet(Bullet):
 
         self.rect.move_ip(self.dx, self.dy)
         self.burning_count += 1
+
+class Laser_Bullet(Bullet):
+
+    def __init__(self, x, y, dx, dy, machines, principal, bitA, bitB, flag):
+        """引数は初期位置(x, y)、移動量(dx, dy)、弾の当たり判定を行う対象の機体グループ"""
+        pygame.sprite.Sprite.__init__(self, self.containers)
+        self.img_path = "img/bullet/beam/"
+        self.image = pygame.image.load(self.img_path+"beam3.png").convert_alpha()   # 相対パスで画像を読み込む
+        self.image = pygame.transform.smoothscale(self.image, (50,10))
+        self.rect = self.image.get_rect()   # 画像からrectを読み取る
+        self.dx, self.dy = 10, 0       # 移動量
+        self.machines = machines
+        self.flag = flag
+
+        if self.flag == 0:
+            self.rect.move_ip(principal.rect.right, principal.rect.centery)
+        elif self.flag == 1:
+            self.rect.move_ip(bitA.rect.right, bitA.rect.centery)
+        elif self.flag == 2:
+            self.rect.move_ip(bitB.rect.right, bitB.rect.centery)
+        
+        self.update = self.move         # updateで呼ばれるメソッドをmoveに設定する。
+
+    def move(self):
+
+        self.rect.move_ip(self.dx, self.dy)
+        collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+        if collide_list:                        # リストがあるか
+            self.kill()                         # このスプライトを所属するすべてのグループから削除
+            for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                machine.hit(1)
+
+class Laser_bit(Bullet):
+
+    def __init__(self, machines, principal):
+        pygame.sprite.Sprite.__init__(self, self.containers)
+        self.image = pygame.transform.smoothscale(self.image, (35,35))
+        self.rect = self.image.get_rect()
+        self.dx, self.dy = 0, 0       # 移動量
+        self.count = 0
+        self.machines = machines
+        self.principal = principal 
+        self.principal_bposx = principal.rect.centerx
+        self.principal_bposy = principal.rect.centery
+
+        self.update = self.move         # updateで呼ばれるメソッドをmoveに設定する。
+
+    def move(self, velx, vely):
+        pri_movementx = self.principal.rect.centerx - self.principal_bposx
+        pri_movementy = self.principal.rect.centery - self.principal_bposy
+
+        self.dx,self.dy,self.count = circle(velx,vely,25,self.count)        
+        self.dx,self.dy = self.dx + pri_movementx, self.dy + pri_movementy
+
+        self.rect.move_ip(self.dx, self.dy)
+        self.principal_bposx = self.principal.rect.centerx
+        self.principal_bposy = self.principal.rect.centery
+   
+        pressed_key = pygame.key.get_pressed()
+        if pressed_key[K_a]:
+            self.kill()
+        elif pressed_key[K_s]:
+            self.kill()
+        if pressed_key[K_d]:
+            self.kill()
+        
+
+        collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+        if collide_list:                        # リストがあるか
+            self.kill()                         # このスプライトを所属するすべてのグループから削除
+            for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                machine.hit(1)
+
+class bitA(Laser_bit):
+
+    def __init__(self, x, y, machines, principal):
+        self.image = pygame.image.load("img/bit.png").convert_alpha()   # 相対パスで画像を読み込む
+        super().__init__(machines, principal)
+        self.rect.move_ip(principal.rect.right+10, principal.rect.centery+2)
+
+    def move(self):
+        super().move(-9, 9)
+
+class bitB(Laser_bit):
+
+    def __init__(self, x, y, machines, principal):
+        self.image = pygame.image.load("img/bit.png").convert_alpha()  # 相対パスで画像を読み込む
+        super().__init__(machines, principal)
+        self.rect.move_ip(principal.rect.left-35, principal.rect.centery+2)
+
+    def move(self):
+        super().move(9, -9)
 
 class Meteorite(Bullet):
 

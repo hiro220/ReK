@@ -190,3 +190,15 @@ class fire_Gun(Gun):
         fire_Bullet(x, y, self.dx*-2, self.dy, self.machines)
         self.num -= 1
 
+class Laser_Gun(Gun):
+
+    def __init__(self, machines, principal, max):
+        super().__init__(machines, principal, max)
+        self.bitA = bitA(0, 0,machines, principal)
+        self.bitB = bitB(0, 0, machines, principal)
+
+    def shoot(self, x, y):
+        for i in range(3):
+            Laser_Bullet(x, y, self.dx*-2, self.dy, self.machines, self.principal, self.bitA, self.bitB, i)
+        self.num -= 1
+
