@@ -4,12 +4,14 @@ import unicodedata
 
 class TextBox:
     def __init__(self, screen, x, y, width, height, text='', bg=(255,255,255), text_color=(0,0,0), font_size=20, \
-                 outline_color=(150,150,150), full_font="", half_font='freesansbold.ttf', align=('left', 'top')):
+                 outline_color=(150,150,150), outline_size=3, full_font="", half_font='freesansbold.ttf', \
+                 align=('left', 'top')):
         self.screen = screen
         self.rect = Rect(x, y, width, height)
         self.bg = bg
         self.text_color = text_color
         self.font_size = font_size
+        self.outline_size = outline_size
         self.outline_color = outline_color
         texts = self.separate_text(text)
         self.texts = self.create_text(texts, full_font, half_font)
@@ -21,7 +23,7 @@ class TextBox:
         # 描画領域の塗りつぶし
         pygame.draw.rect(self.screen, self.bg, self.rect)
         # 枠線の描画
-        pygame.draw.rect(self.screen, self.outline_color, self.rect, 3)
+        pygame.draw.rect(self.screen, self.outline_color, self.rect, self.outline_size)
         height = len(self.texts) * self.font_size
         for i, oneline in enumerate(self.texts):
             width = oneline[-1]
