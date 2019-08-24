@@ -5,16 +5,19 @@ from textbox import TextBox
 
 class PopupWindow:
 
-    def __init__(self, screen, text="", buttons=[]):
+    def __init__(self, screen, text="", buttons=[], target=0, title=""):
         self.screen = screen
-        self.text = text
         center_x, center_y = WIDTH // 2, HEIGHT // 2
         self.rect = Rect(center_x-250, center_y-150, 500, 300)
-        x, y = WIDTH // 2 - 230, HEIGHT // 2 - 140
-        self.textbox = TextBox(screen, x, y, 460, 200, text, outline_color=(255,255,255), \
+        self.title = None
+        if title != "":
+            self.title = TextBox(screen, self.rect.left, self.rect.top, 500, 30, title, \
+                                 font_size=25, outline_color=(50,)*3, outline_size=5)
+        x, y = WIDTH // 2 - 230, HEIGHT // 2 - 100
+        self.textbox = TextBox(screen, x, y, 460, 155, text, outline_color=(255,)*3, \
                                font_size=25, align=('center', 'center'))
         self.buttons = []
-        self.button_id = 0
+        self.button_id = target
         self.button_size = len(buttons) or 1
         frame = 500 / self.button_size
         x = self.rect.left + frame/2 - 50
@@ -36,8 +39,10 @@ class PopupWindow:
     def draw(self):
         # ウィンドウを塗りつぶす
         pygame.draw.rect(self.screen, (255,255,255), self.rect)
+        if self.title != None:
+            self.title.draw()
         # ウィンドウの枠を描画
-        pygame.draw.rect(self.screen, (150,150,150), self.rect, 5)
+        pygame.draw.rect(self.screen, (50,)*3, self.rect, 5)
         # テキストを描画
         self.textbox.draw()
         # ボタン情報を描画
