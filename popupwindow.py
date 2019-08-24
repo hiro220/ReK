@@ -7,12 +7,13 @@ class PopupWindow:
 
     def __init__(self, screen, text="", buttons=[], target=0, title=""):
         self.screen = screen
+        self.outline_color = (50, 50, 50)
         center_x, center_y = WIDTH // 2, HEIGHT // 2
         self.rect = Rect(center_x-250, center_y-150, 500, 300)
         self.title = None
         if title != "":
-            self.title = TextBox(screen, self.rect.left, self.rect.top, 500, 30, title, \
-                                 font_size=25, outline_color=(50,)*3, outline_size=5)
+            self.title = TextBox(screen, self.rect.left, self.rect.top, 500, 32, title, \
+                                 font_size=25, outline_color=self.outline_color, outline_size=5)
         x, y = WIDTH // 2 - 230, HEIGHT // 2 - 100
         self.textbox = TextBox(screen, x, y, 460, 155, text, outline_color=(255,)*3, \
                                font_size=25, align=('center', 'center'))
@@ -42,7 +43,7 @@ class PopupWindow:
         if self.title != None:
             self.title.draw()
         # ウィンドウの枠を描画
-        pygame.draw.rect(self.screen, (50,)*3, self.rect, 5)
+        pygame.draw.rect(self.screen, self.outline_color, self.rect, 5)
         # テキストを描画
         self.textbox.draw()
         # ボタン情報を描画
