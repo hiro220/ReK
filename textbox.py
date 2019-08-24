@@ -57,31 +57,22 @@ class TextBox:
         one_line = []       # 一行に表示するテキスト
         # 全角半角ごとに分割したテキスト全てを描画形式に変換
         for char_type, text in texts:
-            # このtext幅を加算
-            width += len(text) * self.font_size * (1+char_type)
+            # フォント設定
             font = pygame.font.Font(full_font*char_type or half_font, self.font_size)
-            if frame_width >= width:
-                # 枠内に収まるとき
-                draw_text = font.render(text, True, self.text_color)
-                one_line.append(draw_text)
-            else:
-                # 枠内に収まらないとき
-                diff = width
-                i = 0
-                while diff >= 0:
-                    # 枠内に収まる範囲のテキストを抽出
-                    diff -= frame_width
-                    j = diff // (self.font_size * (1+char_type))
-                    draw_text = font.render(text[i:-j], True, self.text_color)
-                    i = -j
-                    # テキストを一行のリストに追加
-                    one_line.append(draw_text)
-                    # 一行分のリストを全体のリストに追加
+            # 一文字ごとに描画テキストを作成
+            for char in text:
+                char = font.render(char, True, self.text_color)
+                size = char.get_rect().right
+                width += size
+                # 描画枠を出るようなら改行
+                if width <= frame_width:
+                    one_line.append(char)
+                else:
+                    # 一行分をリストに格納し、次の行を作成
+                    width = size
                     font_texts.append(one_line)
-                    # 次の行へ
                     one_line = []
-                # 次の行で使っている幅
-                width = -diff
+                    one_line.append(char)
         font_texts.append(one_line)
         return font_texts
 
