@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from define import WIDTH, HEIGHT
+from textbox import TextBox
 
 class PopupWindow:
 
@@ -10,6 +11,8 @@ class PopupWindow:
         self.buttons = buttons
         self.button_id = 0
         self.button_size = len(buttons) or 1
+        x, y = WIDTH // 2 - 230, HEIGHT // 2 - 140
+        self.textbox = TextBox(screen, x, y, 460, 200, text, outline_color=(255,255,255), font_size=25)
         self.clock = pygame.time.Clock()
 
     def loop(self):
@@ -25,6 +28,7 @@ class PopupWindow:
         box = Rect(center_x-250, center_y-150, 500, 300)
         pygame.draw.rect(self.screen, (255,255,255), box)
         pygame.draw.rect(self.screen, (150,150,150), box, 5)
+        self.textbox.draw()
         pygame.display.update()
 
     def process(self):
