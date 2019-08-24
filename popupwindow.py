@@ -34,12 +34,20 @@ class PopupWindow:
                 return self.button_id
 
     def draw(self):
+        # ウィンドウを塗りつぶす
         pygame.draw.rect(self.screen, (255,255,255), self.rect)
+        # ウィンドウの枠を描画
         pygame.draw.rect(self.screen, (150,150,150), self.rect, 5)
+        # テキストを描画
         self.textbox.draw()
-        for button in self.buttons:
+        # ボタン情報を描画
+        for i, button in enumerate(self.buttons):
+            # ボタンのテキストを描画
             button.draw()
-            pygame.draw.rect(self.screen, (0,0,0), button.rect, 3)
+            # ボタンの枠を描画
+            color = (255, 0, 0) * (i==self.button_id) or (0,)*3
+            outline = 2 + (i==self.button_id)
+            pygame.draw.rect(self.screen, color, button.rect, outline)
         pygame.display.update()
 
     def process(self):
@@ -50,6 +58,6 @@ class PopupWindow:
                 elif event.key == K_LEFT:
                     self.button_id -= 1
                 elif event.key == K_RETURN:
-                    return 1
+                    return self.button_id
                 self.button_id = (self.button_id + self.button_size) % self.button_size
         return None
