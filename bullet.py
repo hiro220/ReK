@@ -3,7 +3,7 @@
 
 import pygame
 import math
-from pygame.locals import *
+from pygame.locals import K_x, K_a, K_s, K_d
 from define import R_time, INFO_WIDTH, WIDTH, HEIGHT
 from timer import Timer
 from cpumove import circle
@@ -407,12 +407,13 @@ class Laser_Bullet(Bullet):
 
 class Laser_bit(Bullet):
 
-    def __init__(self, machines, principal):
+    def __init__(self, machines, principal, bullets):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.image = pygame.transform.smoothscale(self.image, (35,35))
         self.rect = self.image.get_rect()
         self.dx, self.dy = 0, 0       # 移動量
         self.count = 0
+        self.bullets = bullets
         self.machines = machines
         self.principal = principal 
         self.principal_bposx = principal.rect.centerx
@@ -439,29 +440,31 @@ class Laser_bit(Bullet):
         if pressed_key[K_d]:
             self.kill()
         
-
-        collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
-        if collide_list:                        # リストがあるか
-            self.kill()                         # このスプライトを所属するすべてのグループから削除
+        
+        collide_list = pygame.sprite.spritecollide(self, self.bullets, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+        collide_list.remove(self)
+        # type(collide_list[i]) == Laser_Bullet:
+        if collide_list:                        # リストがあるか    
             for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
-                machine.hit(1)
+                if not type(machine) == Laser_Bullet:
+                    self.kill()
 
 class bitA(Laser_bit):
 
-    def __init__(self, x, y, machines, principal):
+    def __init__(self, x, y, machines, principal, bullets):
         self.image = pygame.image.load("img/bit.png").convert_alpha()   # 相対パスで画像を読み込む
-        super().__init__(machines, principal)
-        self.rect.move_ip(principal.rect.right+10, principal.rect.centery+2)
+        super().__init__(machines, principal, bullets)
+        self.rect.move_ip(principal.rect.right+10, principal.rect.centery)
 
     def move(self):
         super().move(-9, 9)
 
 class bitB(Laser_bit):
 
-    def __init__(self, x, y, machines, principal):
+    def __init__(self, x, y, machines, principal, bullets):
         self.image = pygame.image.load("img/bit.png").convert_alpha()  # 相対パスで画像を読み込む
-        super().__init__(machines, principal)
-        self.rect.move_ip(principal.rect.left-35, principal.rect.centery+2)
+        super().__init__(machines, principal, bullets)
+        self.rect.move_ip(principal.rect.left-35, principal.rect.centery)
 
     def move(self):
         super().move(9, -9)

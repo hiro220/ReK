@@ -8,7 +8,7 @@ from define import INFO_WIDTH, WIDTH, HEIGHT
 
 class PlayerMachine(Machine):
     killed_count = 0
-    def __init__(self, x, y, cpus, score, money, data):
+    def __init__(self, x, y, cpus, score, money, data, bullets):
         """引数は、初期位置(x, y)、弾の当たり判定対象となる敵機グループ"""
         image = pygame.image.load("img/player.png").convert_alpha()
         super().__init__(2, x, y, image, cpus, score, money)
@@ -20,7 +20,7 @@ class PlayerMachine(Machine):
         self.gun_data = data["gun_data"]
         self.gun_base()
         self.gun = self.gun_file[0]
-        self.gun = Laser_Gun(self.machines, self, 100)
+        self.gun = Laser_Gun(self.machines, self, 100, bullets)
         
     def move(self):
         if self.wait_flag == 0:
