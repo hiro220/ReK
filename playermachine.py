@@ -17,6 +17,7 @@ class PlayerMachine(Machine):
         self.count = 0
         self.cop_flag = True
         self.equip = data["equip"]
+        self.bullets = bullets
         self.gun_data = data["gun_data"]
         self.gun_base()
         self.gun = self.gun_file[0]
@@ -59,7 +60,10 @@ class PlayerMachine(Machine):
             else:
                 class_name = self.gun_data[gun_num]['name']
                 bullet_count = self.gun_data[gun_num]['bullet_size']
-                exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + "))") 
+                if class_name == 'Laser_Gun':
+                    exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + "self.bullets))")
+                else:    
+                    exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + "))") 
             
     
     def isGameOver(self):

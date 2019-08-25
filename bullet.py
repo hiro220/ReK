@@ -403,7 +403,7 @@ class Laser_Bullet(Bullet):
         if collide_list:                        # リストがあるか
             self.kill()                         # このスプライトを所属するすべてのグループから削除
             for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
-                machine.hit(1)
+                machine.hit(0.5)
 
 class Laser_bit(Bullet):
 
