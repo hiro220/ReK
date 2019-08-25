@@ -413,6 +413,8 @@ class Laser_bit(Bullet):
         self.rect = self.image.get_rect()
         self.dx, self.dy = 0, 0       # 移動量
         self.count = 0
+        self.HP = 3
+        self.bit_flag = 0
         self.bullets = bullets
         self.machines = machines
         self.principal = principal 
@@ -431,7 +433,14 @@ class Laser_bit(Bullet):
         self.rect.move_ip(self.dx, self.dy)
         self.principal_bposx = self.principal.rect.centerx
         self.principal_bposy = self.principal.rect.centery
-   
+
+        collide_list = pygame.sprite.spritecollide(self, self.bullets, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+        collide_list.remove(self)
+        if collide_list:                        # リストがあるか    
+            for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                if not type(machine) == Laser_Bullet:
+                    self.damage()
+
         pressed_key = pygame.key.get_pressed()
         if pressed_key[K_a]:
             self.kill()
@@ -439,15 +448,28 @@ class Laser_bit(Bullet):
             self.kill()
         if pressed_key[K_d]:
             self.kill()
-        
-        
-        collide_list = pygame.sprite.spritecollide(self, self.bullets, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
-        collide_list.remove(self)
-        # type(collide_list[i]) == Laser_Bullet:
-        if collide_list:                        # リストがあるか    
-            for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
-                if not type(machine) == Laser_Bullet:
-                    self.kill()
+
+    def damage(self):
+        if self.bit_flag == 0:
+            self.HP -= 1
+            if self.HP == 0:
+                self.bit_flag = 1
+                self.Break_bit()
+            else:    
+                self.bit_flag = 1
+                self.image = pygame.image.load("img/bit_clear.png").convert_alpha()
+                Timer(2000, self.Return_image)
+
+    def Return_image(self):
+        self.image = pygame.image.load("img/bit.png").convert_alpha()
+        if self.HP == 0:
+            self.HP = 3
+        self.bit_flag = 0
+
+    def Break_bit(self):
+        self.image = pygame.image.load("img/break_bit.png").convert_alpha()
+        Timer(10000, self.Return_image)
+
 
 class bitA(Laser_bit):
 

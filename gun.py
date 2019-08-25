@@ -198,7 +198,12 @@ class Laser_Gun(Gun):
         self.bitB = bitB(0, 0, machines, principal, bullets)
 
     def shoot(self, x, y):
-        for i in range(3):
+        bit_list = [0]
+        if self.bitA.HP != 0:
+            bit_list.append(1)
+        if self.bitB.HP != 0:
+            bit_list.append(2)
+        for i in bit_list:
             Laser_Bullet(x, y, self.dx*-2, self.dy, self.machines, self.principal, self.bitA, self.bitB, i)
         self.num -= 1
 
