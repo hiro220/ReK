@@ -3,8 +3,9 @@
 
 import pygame
 import math
-from define import R_time, INFO_WIDTH, WIDTH, HEIGHT
+from define import R_time, INFO_WIDTH, WIDTH, HEIGHT, mg2
 from timer import Timer
+import random
 
 class Bullet(pygame.sprite.Sprite):
 
@@ -56,6 +57,47 @@ class Reflection_Bullet(Bullet):
         if collide_list:                        # リストがあるか
             self.kill()                         # このスプライトを所属するすべてのグループから削除
             for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                machine.hit(1)
+    
+class Division_Bullet(Bullet):
+    def __init__(self, x ,y, dx, dy, machines, option=False):
+        super().__init__(x, y, dx, dy, machines)
+        self.image = pygame.image.load(self.img_path+"bullet2.png").convert_alpha()
+        self.angle_set = [random.randint(10+i*32,42+i*32) for i in range(5)]           #飛ばす角度を決定する
+        self.speed_set = [random.randint(5,10) for j in range(5)]      #弾のスピードを決定する
+        self.option = option
+        self.bullet_dic = {True:Disappear_Bullet, False:Bullet}
+
+    def move(self):
+        if self.rect.bottom >= mg2.centery:
+            x, y = self.rect.midbottom
+            for angle, speed in zip(self.angle_set, self.speed_set):
+                self.bullet_dic[self.option](x, y, int(speed*math.cos(math.radians(angle))), int(speed*math.sin(math.radians(angle))), self.machines)
+            self.kill()
+        self.rect.move_ip(self.dx,self.dy)
+        collide_list = pygame.sprite.spritecollide(self, self.machines, False)
+        if collide_list:
+            self.kill()
+            for machine in collide_list:
+                machine.hit(1)
+
+class Disappear_Bullet(Bullet):
+    def __init__(self, x, y, dx, dy, machines, time=1000):
+        super().__init__(x, y, dx, dy, machines)
+        self.image = pygame.image.load(self.img_path+"bullet1.png").convert_alpha()
+        self.image_list = []
+        self.time = time
+        self.gun_start = R_time.get_ticks()
+    
+    def move(self):
+        if R_time.get_ticks() - self.gun_start >= self.time:
+            self.kill()
+
+        self.rect.move_ip(self.dx, self.dy)
+        collide_list = pygame.sprite.spritecollide(self, self.machines, False)
+        if collide_list:
+            self.kill()
+            for machine in collide_list:
                 machine.hit(1)
 
 class Missile_Bullet(Bullet):

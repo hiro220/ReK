@@ -51,19 +51,20 @@ class Stage2_sub(Boss):
         self.shoot_flag = False
         self.shoot_times = 0
         self.move_count = {0:0, 1:0, 2:0, 3:0}
-        self.move_dic = {0:Move_pack0(self), 3:Move_pack3(self), 8:Move_pack4(self),10:Move_pack10(self), 100:Move_flesh(self)}
+        self.move_dic = {0:Move_pack0(self), 3:Move_pack3(self), 8:Move_pack8(self),10:Move_pack10(self), 11:Move_pack11(self), 12:Move_pack12(self),100:Move_flesh(self)}
         if sub_number == 0:
-            self.gun = Obot_Gun(self.machines, self,-1, 270, 500)
+            self.gun = Division_Gun(self.machines, self,-1, 500)
         else:
-            self.gun = Obot_Gun(self.machines, self,-1, 90, 500)
+            self.gun = Division_Gun(self.machines, self,-1, 500)
 
     def update(self):
         
         if self.natural:
-            self.move_rutin(1)
+            self.move_rutin(2)
             self.natural = False
         
         if self.shoot_flag and self.shoot_times != 0:
+            print("test2")
             super().shoot(self.rect.left, self.rect.top)
             self.shoot_times -= 1
         #print(self.shoot_flag)
@@ -98,8 +99,11 @@ class Stage2_sub(Boss):
             self.move_timer.append(Timer(16000, self.change_number, 100))
         elif number == 1:
             self.move_timer.append(Timer(2000, self.change_number, 10))
-            self.move_timer.append(Timer(3000, self.change_number, 3))
+            self.move_timer.append(Timer(3000, self.change_number, 3, True ,-1))
             #self.move_timer.append(Timer(4000, self.change_number, 100, True, -1))
+        elif number == 2:
+            self.move_timer.append(Timer(2000, self.change_number, 12))
+            self.move_timer.append(Timer(3000, self.change_number, 11, True ,-1))
     
 class Move_Pack:
     def __init__(self, principal):
@@ -147,10 +151,10 @@ class Move_pack3(Move_Pack):
         self.sub.dx,self.sub.dy = -10,0
         if self.sub.rect.right <= mg2.left:
             self.sub.rect.left = mg2.right
-            if self.option[0]:
-                self.count += 1
+            #if self.option[0]:
+                #self.count += 1
     
-    def random_rset(self):
+    def random_reset(self):
         print("んなあああああ")
 
 class Move_pack4(Move_Pack):    
@@ -197,7 +201,7 @@ class Move_pack8(Move_Pack):
         #self.move_flesh()
         if self.sub.number == 0:
             self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx, 50
-        if self.number == 1:
+        if self.sub.number == 1:
             self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx, mg2.bottom -50
 
 class Move_pack9(Move_Pack):
@@ -213,6 +217,21 @@ class Move_pack10(Move_Pack):
             self.sub.rect.center = mg2.right - 50,50
         if self.sub.number == 1:
             self.sub.rect.center = mg2.right - 50,mg2.bottom - 50
-    
 
-                
+class Move_pack11(Move_Pack): #画面上部で往復運動
+    def move(self):
+        if self.sub.number == 0:
+            self.sub.dx,self.sub.dy = -10,0
+            if self.sub.rect.right <= mg2.left:
+                self.sub.rect.left = mg2.right
+        if self.sub.number == 1:
+            self.sub.dx,self.sub.dy = 10,0
+            if self.sub.rect.left >= mg2.right:
+                self.sub.rect.right = mg2.left
+
+class Move_pack12(Move_Pack):
+    def move(self):
+        if self.sub.number == 0:
+            self.sub.rect.center = mg2.right-50, mg2.top+50
+        if self.sub.number == 1:
+            self.sub.rect.center = mg2.left+50, mg2.top+50

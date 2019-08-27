@@ -2,7 +2,7 @@
 # coding:utf-8
 from bullet import *
 from beam import *
-from define import R_time
+from define import R_time, mg2
 import pygame
 import math
 import random
@@ -81,9 +81,22 @@ class Obot_Gun(Gun):
         if R_time.get_ticks() - self.gun_start >= self.time:
             Bullet(x+self.point_x[self.angle], y+self.point_y[self.angle], self.dx, self.dy, self.machines)
             self.gun_start = R_time.get_ticks()
-            print(self.dx,self.dy)
             self.num -= 1
-        
+
+class Division_Gun(Gun):
+    def __init__(self, machine, principal, max, time=0, option=False):
+        super().__init__(machine,principal, max)
+        self.dx,self.dy = 0,10
+        self.option = option
+        self.time = time
+    
+    def shoot(self, x, y):
+        if R_time.get_ticks() - self.gun_start >= self.time:
+           Division_Bullet(x, y, self.dx, self.dy,self.machines, self.option)
+           self.gun_start = R_time.get_ticks()
+           print("test")
+           self.num -= 1 
+
 class Reflection_Gun(Gun): #左から右に弾を飛ばす
     def __init__(self, machines,principal, max):
         super().__init__(machines,principal, max)
