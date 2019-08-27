@@ -1,0 +1,4 @@
+{
+    "0": {"name": "HP_UP", "equip_size": 1, "own_max": 6, "equip_max": 4},
+    "1": {"name": "CONTINUE", "equip_size": 2, "own_max": 2, "equip_max": 2}
+}
