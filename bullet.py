@@ -3,7 +3,7 @@
 
 import pygame
 import math
-from pygame.locals import K_x, K_a, K_s, K_d
+from pygame.locals import K_x, K_a, K_s, K_d, RLEACCEL
 from define import R_time, INFO_WIDTH, WIDTH, HEIGHT
 from timer import Timer
 from cpumove import circle
@@ -317,7 +317,8 @@ class fire_Bullet(Bullet):
     def __init__(self, x, y, dx, dy, machines):
         """引数は初期位置(x, y)、移動量(dx, dy)、弾の当たり判定を行う対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
-        self.image = pygame.image.load("img/fireball1.png").convert()
+        self.img_path = "img/bullet/fire/"
+        self.image = pygame.image.load(self.img_path + "fireball1.png").convert()
         self.image = pygame.transform.smoothscale(self.image, (25,25))
         self.image.set_alpha(120)
         colorkey = self.image.get_at((0,0))
@@ -350,7 +351,7 @@ class fire_Bullet(Bullet):
                 self.shot_pos = self.rect
         elif self.shot_flag == 1:
             if self.burning_count <= 40:
-                text = "img/fireball{}.png"
+                text = self.img_path + "fireball{}.png"
                 self.image = pygame.image.load(text.format(self.image_num)).convert()
                 self.image = pygame.transform.smoothscale(self.image, (25,25))
                 self.image.set_alpha(255)
@@ -361,14 +362,14 @@ class fire_Bullet(Bullet):
                     self.image_num = 1
             elif self.burning_count == 41:
                 self.image_num = 1
-                text = "img/fire{}.png"
+                text = self.img_path + "fire{}.png"
                 self.image = pygame.image.load(text.format(self.image_num)).convert_alpha()
                 self.image = pygame.transform.smoothscale(self.image, (25, 25))
                 self.rect = self.image.get_rect()
                 self.rect.move_ip(self.shot_pos.left - 5, self.shot_pos.top -5)
                 self.image_num += 1
             elif self.burning_count <= 100:
-                text = "img/fire{}.png"
+                text = self.img_path + "fire{}.png"
                 self.image = pygame.image.load(text.format(self.image_num)).convert_alpha()
                 self.image = pygame.transform.smoothscale(self.image, (30,30))
                 self.image_num += 1
@@ -466,24 +467,25 @@ class Laser_bit(Bullet):
                 self.Break_bit()
             else:    
                 self.bit_flag = 1
-                self.image = pygame.image.load("img/bit_clear.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path + "bit_clear.png").convert_alpha()
                 Timer(2000, self.Return_image)
 
     def Return_image(self):
-        self.image = pygame.image.load("img/bit.png").convert_alpha()
+        self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()
         if self.HP == 0:
             self.HP = 3
         self.bit_flag = 0
 
     def Break_bit(self):
-        self.image = pygame.image.load("img/break_bit.png").convert_alpha()
+        self.image = pygame.image.load(self.img_path + "break_bit.png").convert_alpha()
         Timer(10000, self.Return_image)
 
 
 class bitA(Laser_bit):
 
     def __init__(self, x, y, machines, principal, bullets):
-        self.image = pygame.image.load("img/bit.png").convert_alpha()   # 相対パスで画像を読み込む
+        self.img_path = "img/bullet/laser/"
+        self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()   # 相対パスで画像を読み込む
         super().__init__(machines, principal, bullets)
         self.rect.move_ip(principal.rect.right+10, principal.rect.centery)
 
@@ -493,7 +495,8 @@ class bitA(Laser_bit):
 class bitB(Laser_bit):
 
     def __init__(self, x, y, machines, principal, bullets):
-        self.image = pygame.image.load("img/bit.png").convert_alpha()  # 相対パスで画像を読み込む
+        self.img_path = "img/bullet/laser/"
+        self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()  # 相対パスで画像を読み込む
         super().__init__(machines, principal, bullets)
         self.rect.move_ip(principal.rect.left-35, principal.rect.centery)
 
