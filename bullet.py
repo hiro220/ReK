@@ -391,7 +391,7 @@ class Laser_Bullet(Bullet):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.img_path = "img/bullet/beam/"
         self.image = pygame.image.load(self.img_path+"beam3.png").convert_alpha()   # 相対パスで画像を読み込む
-        self.image = pygame.transform.smoothscale(self.image, (50,10))
+        self.image = pygame.transform.smoothscale(self.image, (50,5))
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
         self.dx, self.dy = 10, 0       # 移動量
         self.machines = machines
@@ -411,9 +411,9 @@ class Laser_Bullet(Bullet):
         self.rect.move_ip(self.dx, self.dy)
         collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
         if collide_list:                        # リストがあるか
-            self.kill()                         # このスプライトを所属するすべてのグループから削除
             for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
-                machine.hit(0.5)
+                machine.hit(0.08, lasting=True)
+                
 
 class Laser_bit(Bullet):
 
@@ -425,6 +425,7 @@ class Laser_bit(Bullet):
         self.count = 0
         self.HP = 3
         self.bit_flag = 0
+        self.first_flag = 0
         self.bullets = bullets
         self.machines = machines
         self.principal = principal 
@@ -434,6 +435,15 @@ class Laser_bit(Bullet):
         self.update = self.move         # updateで呼ばれるメソッドをmoveに設定する。
 
     def move(self, velx, vely):
+        if self.first_flag == 0:
+            if self.principal.gun_search("Laser_Gun") == 0:
+                self.select_gun_flag = 1
+            else:
+                self.select_gun_flag = 0
+            self.first_flag = 1
+        
+        print(self.select_gun_flag)
+
         pri_movementx = self.principal.rect.centerx - self.principal_bposx
         pri_movementy = self.principal.rect.centery - self.principal_bposy
 
@@ -444,21 +454,30 @@ class Laser_bit(Bullet):
         self.principal_bposx = self.principal.rect.centerx
         self.principal_bposy = self.principal.rect.centery
 
-        collide_list = pygame.sprite.spritecollide(self, self.bullets, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
-        collide_list.remove(self)
-        if collide_list:                        # リストがあるか    
-            for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
-                if not type(machine) == Laser_Bullet:
-                    self.damage()
+        if self.select_gun_flag == 1:
+            self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()
+            collide_list = pygame.sprite.spritecollide(self, self.bullets, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+            collide_list.remove(self)
+            if collide_list:                        # リストがあるか    
+                for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                    if not type(machine) == Laser_Bullet:
+                        self.damage()
+        elif self.select_gun_flag == 0:
+            self.image = pygame.image.load(self.img_path + "bit_empty.png").convert_alpha()
 
+        not_laser_list = []
+        botton_list = {0:K_a, 1:K_s, 2:K_d}
+        for i in range(3):
+            laser_index = self.principal.gun_search('Laser_Gun')
+            if i != laser_index:
+                not_laser_list.append(i)
         pressed_key = pygame.key.get_pressed()
-        if pressed_key[K_a]:
-            self.kill()
-        elif pressed_key[K_s]:
-            self.kill()
-        if pressed_key[K_d]:
-            self.kill()
-
+        for i in not_laser_list:
+            if pressed_key[botton_list[i]]:
+                self.select_gun_flag = 0
+        if pressed_key[botton_list[laser_index]]:
+            self.select_gun_flag = 1
+            
     def damage(self):
         if self.bit_flag == 0:
             self.HP -= 1

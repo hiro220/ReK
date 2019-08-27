@@ -21,7 +21,6 @@ class PlayerMachine(Machine):
         self.gun_data = data["gun_data"]
         self.gun_base()
         self.gun = self.gun_file[0]
-        self.gun = Laser_Gun(self.machines, self, 100, bullets)
         
     def move(self):
         if self.wait_flag == 0:
@@ -61,10 +60,16 @@ class PlayerMachine(Machine):
                 class_name = self.gun_data[gun_num]['name']
                 bullet_count = self.gun_data[gun_num]['bullet_size']
                 if class_name == 'Laser_Gun':
-                    exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + "self.bullets))")
+                    exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + ",self.bullets))")
                 else:    
                     exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + "))") 
-            
+    
+    def gun_search(self, class_name):
+        gun_index = -1
+        for i in range(3):
+            if self.gun_file[i].__class__.__name__ == class_name:
+                gun_index = i
+        return gun_index
     
     def isGameOver(self):
         return not self.alive()

@@ -197,6 +197,7 @@ class Laser_Gun(Gun):
 
     def __init__(self, machines, principal, max, bullets):
         super().__init__(machines, principal, max)
+        self.not_laser_list = 1
         self.bitA = bitA(0, 0,machines, principal, bullets)
         self.bitB = bitB(0, 0, machines, principal, bullets)
 
@@ -209,4 +210,3 @@ class Laser_Gun(Gun):
         for i in bit_list:
             Laser_Bullet(x, y, self.dx*-2, self.dy, self.machines, self.principal, self.bitA, self.bitB, i)
         self.num -= 1
-
