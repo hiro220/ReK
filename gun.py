@@ -153,14 +153,17 @@ class Missile_Gun(Gun):
 
     def __init__(self, machines, principal, max):
         super().__init__(machines, principal, max)
+        self.gun_flag = 0
 
     def shoot(self, x, y):
-        if self.principal.cop_flag == 1 and R_time.get_ticks() - self.gun_start >= 1000:
+        if self.principal.cop_flag == 1 and R_time.get_ticks() - self.gun_start >= 1000 or self.gun_flag == 0:
             Missile_Bullet(x, y, self.dx*-1, self.dy, self.machines, 1)
             self.gun_start = R_time.get_ticks()
+            self.gun_flag = 1
+            self.num -= 1
         elif self.principal.cop_flag == 0:
             Missile_Bullet(x, y, self.dx, self.dy, self.machines, 0)
-        self.num -= 1
+            self.num -= 1
         
         
 class Fluffy_Gun(Gun):
