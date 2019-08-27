@@ -17,6 +17,7 @@ class Stage2_boss(Boss):
         self.score = score
         self.money = money
         self.lord_flag = False
+        self.move_point = random.randint(0,2)
         #self.load_count = True
 
         Stage2_sub(self.rect.centerx,self.rect.centery-100, players, self.score, 0, self, self.money)
@@ -51,16 +52,20 @@ class Stage2_sub(Boss):
         self.shoot_flag = False
         self.shoot_times = 0
         self.move_count = {0:0, 1:0, 2:0, 3:0}
-        self.move_dic = {0:Move_pack0(self), 3:Move_pack3(self), 8:Move_pack8(self),10:Move_pack10(self), 11:Move_pack11(self), 12:Move_pack12(self),100:Move_flesh(self)}
+        self.move_dic = {0:Move_pack0(self), 3:Move_pack3(self), 8:Move_pack8(self),10:Move_pack10(self), 11:Move_pack11(self), 12:Move_pack12(self),\
+                        13:Move_pack13(self,self.boss.move_point), 15:Move_pack15(self),\
+                        16:Move_pack16(self), 17:Move_pack17(self,self.boss.move_point),100:Move_flesh(self)}
+        self.gun_dic = {0:Beam_Gun(self.machines,self, -1 ,90),1:Beam_Gun(self.machines,self, -1 ,270),2:Beam_Gun(self.machines,self, -1 ,0),3:Beam_Gun(self.machines,self, -1 ,180),\
+                        }
         if sub_number == 0:
-            self.gun = Division_Gun(self.machines, self,-1, 1500, True)
+            self.gun = Beam_Gun(self.machines, self,-1, 90)
         else:
-            self.gun = Division_Gun(self.machines, self,-1, 1200, True)
+            self.gun = Beam_Gun(self.machines, self,-1, 270)
 
     def update(self):
         
         if self.natural:
-            self.move_rutin(2)
+            self.move_rutin(0)
             self.natural = False
         
         if self.shoot_flag and self.shoot_times != 0:
@@ -68,21 +73,31 @@ class Stage2_sub(Boss):
             self.shoot_times -= 1
         #print(self.shoot_flag)
         self.move_select(self.sel_number)
+        self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))
         self.move(self.dx,self.dy)
+        
         
     def move_select(self, select_number):
         self.move_dic[select_number].move()
-    
+
     def move_reset(self, select_number):
         self.move_dic[select_number].__init__(self)
                                                         #カウントする回数 次にするパックナンバー
-    def change_number(self, number,boolean=False, times=0, option=[False,None]):
+    def change_number(self, number,boolean=False, times=0, gun_number=[None,None],option=[False,None]):
         self.sel_number = number
         self.shoot_flag = boolean
         self.shoot_times = times
+        if any(gun_number):
+            self.change_gun(gun_number)
         if option[0]:
             self.move_dic[self.sel_number].change_option(option)
     
+    def change_gun(self, number): #最終的にfor文で回す
+        if self.number == 0 and number[0] != None:
+            self.gun = self.gun_dic[number[0]]
+        if self.number == 1 and number[1] != None:
+            self.gun = self.gun_dic[number[1]]
+
     def del_timer(self, number="all"):
         if number == "all":
             for t_list in self.move_timer:
@@ -93,12 +108,14 @@ class Stage2_sub(Boss):
 
     def move_rutin(self, number):
         if number == 0:
-            self.move_timer.append(Timer(3000, self.change_number, 8))
-            self.move_timer.append(Timer(4000, self.change_number, 100, True, 1))
-            self.move_timer.append(Timer(9000, self.change_number, 8))
-            self.move_timer.append(Timer(10000, self.change_number, 100, True, 1))
-            self.move_timer.append(Timer(15000, self.change_number, 8))
-            self.move_timer.append(Timer(16000, self.change_number, 100))
+            self.move_timer.append(Timer(3000, self.change_number, 8, True, 1))
+            self.move_timer.append(Timer(4500, self.change_number, 100))
+            self.move_timer.append(Timer(5500, self.change_number,13))
+            self.move_timer.append(Timer(7000, self.change_number, 100))
+            self.move_timer.append(Timer(9000, self.change_number, 16, True, 1,[2,3]))
+            self.move_timer.append(Timer(10500, self.change_number, 100))
+            self.move_timer.append(Timer(11500, self.change_number,17))
+            self.move_timer.append(Timer(13000, self.change_number, 100))
         elif number == 1:
             self.move_timer.append(Timer(2000, self.change_number, 10))
             self.move_timer.append(Timer(3000, self.change_number, 3, True ,-1))
@@ -200,7 +217,7 @@ class Move_pack7(Move_Pack):
 
 class Move_pack8(Move_Pack): 
     def move(self):
-        #self.move_flesh()
+        self.sub.dx, self.sub.dy = 0,0
         if self.sub.number == 0:
             self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx - 100, 50
         if self.sub.number == 1:
@@ -238,29 +255,16 @@ class Move_pack12(Move_Pack):
         if self.sub.number == 1:
             self.sub.rect.center = mg2.left+50, mg2.top+50
 
-class Move_pack13(Move_Pack):
-    def __init__(self, principal):
-        super.__init__(principal)
-        self.random_move = random.randint(0,2)
-    
-    def move(self):
-        if self.random_move:
-            self.sub.dx,self.sub.dy = -10,0
-        else:
-            self.sub.dx,self.sub.dy = 10,0
+class Move_pack13(Move_Pack): #ランダム横移動
+    def __init__(self, principal, point):
+        super().__init__(principal)
+        self.point = point
 
-class Move_pack14(Move_Pack): #十字配置から移動
     def move(self):
-        if self.sub.number == 0:
-            if self.sub.machines.sprites()[0].rect.centerx - self.sub.rect.centerx >= 0:
-                self.sub.dx,self.sub.dy = 10,0
-            else:
-                self.sub.dx,self.sub.dy = -10,0
-        if self.sub.number == 1:
-            if self.sub.machines.sprites()[0].rect.centery - self.sub.rect.centery >= 0:
-                self.sub.dx, self.sub.dy = 0,-10
-            else:
-                self.sub.dx, self.sub.sy = 0,-10
+        if self.point:
+            self.sub.dx,self.sub.dy = -5,0
+        else:
+            self.sub.dx,self.sub.dy = 5,0
 
 class Move_pack15(Move_Pack): #十字配置
     def move(self):
@@ -269,9 +273,20 @@ class Move_pack15(Move_Pack): #十字配置
         if self.sub.number == 1:
             self.sub.rect.center = mg2.centerx + 300, self.sub.machines.sprites()[0].rect.centery
 
-class Move_pack16(Move_Pack):
+class Move_pack16(Move_Pack): #横配置
     def move(self):
         if self.sub.number == 0:
-            self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx - 100, 50
+            self.sub.rect.center = mg2.centerx + 200, self.sub.machines.sprites()[0].rect.centery - 100
         if self.sub.number == 1:
-            self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx + 100, mg2.bottom -50
+            self.sub.rect.center = mg2.left + 50,self.sub.machines.sprites()[0].rect.centery + 100
+
+class Move_pack17(Move_Pack): #ランダム縦移動
+    def __init__(self, principal, point):
+        super().__init__(principal)
+        self.point = point
+
+    def move(self):
+        if self.point:
+            self.sub.dx,self.sub.dy = 0,-5
+        else:
+            self.sub.dx,self.sub.dy = 0,5
