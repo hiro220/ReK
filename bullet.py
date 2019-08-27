@@ -130,13 +130,14 @@ class Fluffy_Bullet(Bullet):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.img_path = "img/bullet/fluffy/"
         self.image = pygame.image.load(self.img_path+"Fluffy.png").convert_alpha()
+        self.image = pygame.transform.smoothscale(self.image, (30,30))
         self.rect = self.image.get_rect()
         self.rect.move_ip(x, y)
         self.dx, self.dy = dx, dy 
         self.machines = machines
-        self.maxscale = 130
-        self.current_width = 47
-        self.current_height = 47
+        self.maxscale = 80
+        self.current_width = 30
+        self.current_height = 30
         self.PI = 3.141592
         self.count = 0 
         self.swap_count = 0
@@ -190,8 +191,8 @@ class Fluffy_Bullet(Bullet):
             
 
             if self.scale_flag == 0:
-                self.current_width += 20
-                self.current_height += 20
+                self.current_width += 10
+                self.current_height += 10
                 if self.current_width >= self.maxscale:
                     self.scale_flag = 1
                     self.max_time = R_time.get_ticks()
@@ -221,6 +222,7 @@ class Thunder_Bullet(Bullet):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.img_path = "img/bullet/thunder/"
         self.image = pygame.image.load(self.img_path+"Thunder11.png").convert_alpha()
+        self.image = pygame.transform.smoothscale(self.image, (50,22))
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
         self.rect2 = self.rect
         self.rect.move_ip(x, y)             # 引数で指定された位置に移動させる
@@ -236,9 +238,11 @@ class Thunder_Bullet(Bullet):
         if self.flag == 0:
             if self.image_flag == 0:
                 self.image = pygame.image.load(self.img_path+"Thunder11.png").convert_alpha()
+                self.image = pygame.transform.smoothscale(self.image, (50,22))
                 self.image_flag = 1
             elif self.image_flag == 1:
                 self.image = pygame.image.load(self.img_path+"Thunder12.png").convert_alpha()
+                self.image = pygame.transform.smoothscale(self.image, (50,22))
                 self.image_flag = 0
 
             self.rect.move_ip(self.dx, self.dy)
@@ -254,9 +258,11 @@ class Thunder_Bullet(Bullet):
         elif self.flag == 1:
             if self.image_flag == 0:
                 self.image = pygame.image.load(self.img_path+"Thunder21.png").convert_alpha()
+                self.image = pygame.transform.smoothscale(self.image, (22,50))
                 self.image_flag = 1
             elif self.image_flag == 1:
                 self.image = pygame.image.load(self.img_path+"Thunder22.png").convert_alpha()
+                self.image = pygame.transform.smoothscale(self.image, (22,50))
                 self.image_flag = 0
 
             self.dx, self.dy = 0, -20
@@ -268,7 +274,7 @@ class Thunder_Bullet(Bullet):
             collide_list = pygame.sprite.spritecollide(self, self.machines, False)
             if collide_list:
                 for machine in collide_list:
-                    machine.hit(0.2)
+                    machine.hit(0.35)
             
 
 class subThunder_Bullet(Bullet):
@@ -276,6 +282,7 @@ class subThunder_Bullet(Bullet):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.img_path = "img/bullet/thunder/"
         self.image = pygame.image.load(self.img_path+"Thunder31.png").convert_alpha()
+        self.image = pygame.transform.smoothscale(self.image, (22,50))
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
         self.rect.move_ip(x, y)             # 引数で指定された位置に移動させる
         self.dx, self.dy = dx, dy       # 移動量
@@ -289,9 +296,11 @@ class subThunder_Bullet(Bullet):
     def move(self):
         if self.image_flag == 0:
             self.image = pygame.image.load(self.img_path+"Thunder31.png").convert_alpha()
+            self.image = pygame.transform.smoothscale(self.image, (22,50))
             self.image_flag = 1
         elif self.image_flag == 1:
             self.image = pygame.image.load(self.img_path+"Thunder32.png").convert_alpha()
+            self.image = pygame.transform.smoothscale(self.image, (22,50))
             self.image_flag = 0
 
         self.rect.move_ip(self.dx, self.dy)
