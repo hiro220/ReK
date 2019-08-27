@@ -106,6 +106,13 @@ def _save_equip(cur, data):
     else:
         cur.execute("UPDATE equipment SET gun1=?, gun2=?, gun3=?", data)
 
+def _save_chip(cur, data):
+    cur.execute("SELECT COUNT(*) FROM chips WHERE id=?", [1])
+    if cur.fetchone()[0] == 0:
+        cur.execute("INSERT INTO chips(chip1, chip2, chip3, chip4, chip5, chip6) values(?,?,?,?,?,?)", data)
+    else:
+        cur.execute("UPDATE chips SET chip1=?, chip2=?, chip3=?, chip4=?, chip5=?, chip6=?", data)
+
 def save(data_dic, cheat):
     # データベース
     if cheat:
@@ -120,6 +127,9 @@ def save(data_dic, cheat):
             value = 'gun table'
         elif key == 'equip':
             _save_equip(cur, value)
+            value = 1       # id
+        elif key == 'chip':
+            _save_chip(cur, value)
             value = 1       # id
         # keyがテーブル内に存在するなら更新、存在しないなら追加する。
         cur.execute("SELECT COUNT(*) FROM data WHERE key=?", [key])
@@ -145,6 +155,10 @@ def _load_equip(cur):
     equipment = list(cur.execute("SELECT gun1, gun2, gun3 FROM equipment"))[0]
     return equipment
 
+def _load_chip(cur):
+    chip = list(cur.execute("SELECT chip1, chip2, chip3, chip4, chip5, chip6 FROM chips"))[0]
+    return chip
+
 def load(flag=False):
     # データベース
     if flag:
@@ -162,6 +176,8 @@ def load(flag=False):
             data_dic[key] = _load_gun(cur)
         elif key == 'equip':
             data_dic[key] = _load_equip(cur)
+        elif key == 'chip':
+            data_dic[key] = _load_chip(cur)
         else:
             data_dic[key] = value
 
