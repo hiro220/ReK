@@ -222,3 +222,5 @@ else:
     create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_size INTEGER', 'reload_size INTEGER', 'own INTEGER', 'set_flag INTEGER'])
     # equipmentテーブル
     create_table('equipment', ['id INTEGER PRIMARY KEY', 'gun1 INTEGER', 'gun2 INTEGER', 'gun3 INTEGER'])
+    # chipsテーブル
+    create_table('chips', ['id INTEGER PRIMARY KEY', 'chip1 INTEGER', 'chip2 INTEGER', 'chip3 INTEGER', 'chip4 INTEGER', 'chip5 INTEGER', 'chip6 INTEGER'])
