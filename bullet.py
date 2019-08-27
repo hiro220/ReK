@@ -64,12 +64,12 @@ class Division_Bullet(Bullet):
         super().__init__(x, y, dx, dy, machines)
         self.image = pygame.image.load(self.img_path+"bullet2.png").convert_alpha()
         self.angle_set = [random.randint(10+i*32,42+i*32) for i in range(5)]           #飛ばす角度を決定する
-        self.speed_set = [random.randint(5,10) for j in range(5)]      #弾のスピードを決定する
+        self.speed_set = [random.randint(5,10)*-1 for j in range(5)]                   #弾のスピードを決定する
         self.option = option
         self.bullet_dic = {True:Disappear_Bullet, False:Bullet}
 
     def move(self):
-        if self.rect.bottom >= mg2.centery:
+        if self.rect.bottom >= mg2.bottom:
             x, y = self.rect.midbottom
             for angle, speed in zip(self.angle_set, self.speed_set):
                 self.bullet_dic[self.option](x, y, int(speed*math.cos(math.radians(angle))), int(speed*math.sin(math.radians(angle))), self.machines)
@@ -82,7 +82,7 @@ class Division_Bullet(Bullet):
                 machine.hit(1)
 
 class Disappear_Bullet(Bullet):
-    def __init__(self, x, y, dx, dy, machines, time=1000):
+    def __init__(self, x, y, dx, dy, machines, time=1800):
         super().__init__(x, y, dx, dy, machines)
         self.image = pygame.image.load(self.img_path+"bullet1.png").convert_alpha()
         self.image_list = []
@@ -92,6 +92,8 @@ class Disappear_Bullet(Bullet):
     def move(self):
         if R_time.get_ticks() - self.gun_start >= self.time:
             self.kill()
+        if R_time.get_ticks() - self.gun_start >= (self.time/5)*4:
+            self.image.fill((255, 255, 255, 200), None, pygame.BLEND_RGBA_MULT)
 
         self.rect.move_ip(self.dx, self.dy)
         collide_list = pygame.sprite.spritecollide(self, self.machines, False)

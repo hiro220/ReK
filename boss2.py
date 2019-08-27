@@ -53,9 +53,9 @@ class Stage2_sub(Boss):
         self.move_count = {0:0, 1:0, 2:0, 3:0}
         self.move_dic = {0:Move_pack0(self), 3:Move_pack3(self), 8:Move_pack8(self),10:Move_pack10(self), 11:Move_pack11(self), 12:Move_pack12(self),100:Move_flesh(self)}
         if sub_number == 0:
-            self.gun = Division_Gun(self.machines, self,-1, 500)
+            self.gun = Division_Gun(self.machines, self,-1, 1500, True)
         else:
-            self.gun = Division_Gun(self.machines, self,-1, 500)
+            self.gun = Division_Gun(self.machines, self,-1, 1200, True)
 
     def update(self):
         
@@ -64,7 +64,6 @@ class Stage2_sub(Boss):
             self.natural = False
         
         if self.shoot_flag and self.shoot_times != 0:
-            print("test2")
             super().shoot(self.rect.left, self.rect.top)
             self.shoot_times -= 1
         #print(self.shoot_flag)

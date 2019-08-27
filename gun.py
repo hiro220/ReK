@@ -94,7 +94,6 @@ class Division_Gun(Gun):
         if R_time.get_ticks() - self.gun_start >= self.time:
            Division_Bullet(x, y, self.dx, self.dy,self.machines, self.option)
            self.gun_start = R_time.get_ticks()
-           print("test")
            self.num -= 1 
 
 class Reflection_Gun(Gun): #左から右に弾を飛ばす
