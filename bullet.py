@@ -441,8 +441,6 @@ class Laser_bit(Bullet):
             else:
                 self.select_gun_flag = 0
             self.first_flag = 1
-        
-        print(self.select_gun_flag)
 
         pri_movementx = self.principal.rect.centerx - self.principal_bposx
         pri_movementy = self.principal.rect.centery - self.principal_bposy
