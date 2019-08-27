@@ -55,7 +55,7 @@ class Stage2_sub(Boss):
         if sub_number == 0:
             self.gun = Division_Gun(self.machines, self,-1, 1500, True)
         else:
-            self.gun = Division_Gun(self.machines, self,-1, 1200, True)
+            self.gun = Division_Gun(self.machines, self,-1, 1200, Trues)
 
     def update(self):
         
@@ -72,6 +72,9 @@ class Stage2_sub(Boss):
         
     def move_select(self, select_number):
         self.move_dic[select_number].move()
+    
+    def move_reset(self, select_number):
+        self.move_dic[select_number].__init__(self)
                                                         #カウントする回数 次にするパックナンバー
     def change_number(self, number,boolean=False, times=0, option=[False,None]):
         self.sel_number = number
@@ -195,13 +198,13 @@ class Move_pack7(Move_Pack):
             if self.rect.top >= mg2.bottom:
                 self.rect.bottom = mg2.top
 
-class Move_pack8(Move_Pack):
+class Move_pack8(Move_Pack): 
     def move(self):
         #self.move_flesh()
         if self.sub.number == 0:
-            self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx, 50
+            self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx - 100, 50
         if self.sub.number == 1:
-            self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx, mg2.bottom -50
+            self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx + 100, mg2.bottom -50
 
 class Move_pack9(Move_Pack):
     def move(self):
@@ -234,3 +237,41 @@ class Move_pack12(Move_Pack):
             self.sub.rect.center = mg2.right-50, mg2.top+50
         if self.sub.number == 1:
             self.sub.rect.center = mg2.left+50, mg2.top+50
+
+class Move_pack13(Move_Pack):
+    def __init__(self, principal):
+        super.__init__(principal)
+        self.random_move = random.randint(0,2)
+    
+    def move(self):
+        if self.random_move:
+            self.sub.dx,self.sub.dy = -10,0
+        else:
+            self.sub.dx,self.sub.dy = 10,0
+
+class Move_pack14(Move_Pack): #十字配置から移動
+    def move(self):
+        if self.sub.number == 0:
+            if self.sub.machines.sprites()[0].rect.centerx - self.sub.rect.centerx >= 0:
+                self.sub.dx,self.sub.dy = 10,0
+            else:
+                self.sub.dx,self.sub.dy = -10,0
+        if self.sub.number == 1:
+            if self.sub.machines.sprites()[0].rect.centery - self.sub.rect.centery >= 0:
+                self.sub.dx, self.sub.dy = 0,-10
+            else:
+                self.sub.dx, self.sub.sy = 0,-10
+
+class Move_pack15(Move_Pack): #十字配置
+    def move(self):
+        if self.sub.number == 0:
+            self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx, mg2.top + 50
+        if self.sub.number == 1:
+            self.sub.rect.center = mg2.centerx + 300, self.sub.machines.sprites()[0].rect.centery
+
+class Move_pack16(Move_Pack):
+    def move(self):
+        if self.sub.number == 0:
+            self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx - 100, 50
+        if self.sub.number == 1:
+            self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx + 100, mg2.bottom -50
