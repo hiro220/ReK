@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from define import *
 from listbox import ListBox
+import json
 
 class Equipment:
 
@@ -13,9 +14,16 @@ class Equipment:
         self.back = False               # 一つ前の画面にもどるか
         self.screen_info = pygame.font.Font("freesansbold.ttf" ,70).render("Equip", True, (255,255,255))
         self.back_info = pygame.font.Font("freesansbold.ttf" ,50).render("'Q' : Back", True, (255,255,255))
+        self.listbox_id = 0
         texts = [data["name"] for data in self.gun_data.values()]
-        self.listbox = ListBox(self.screen, 80, 150, 300, 250, texts, font_size=40, target=True)
-        self.listbox.set_selectable([data["own"]==1 for data in self.gun_data.values()])
+        equip_listbox = ListBox(self.screen, 80, 200, 300, 250, texts, font_size=40, target=True,\
+                                     title="Gun", title_size=60)
+        equip_listbox.set_selectable([data["own"]==1 for data in self.gun_data.values()])
+        texts = [data['name'] for data in json.load(open("data/chip.json", "r")).values()]
+        chip_listbox = ListBox(self.screen, 80, 200, 300, 250, texts, font_size=40, target=True,\
+                                     title="Chip", title_size=60)
+        self.listboxes = [equip_listbox, chip_listbox]
+        self.listbox = self.listboxes[self.listbox_id]
     
     def do(self):
         while True:
@@ -40,6 +48,9 @@ class Equipment:
                     self.change_gun -= 1
                 elif event.key == K_q:
                     return BACK
+                elif event.key == K_c:
+                    self.listbox_id ^= 1
+                    self.listbox = self.listboxes[self.listbox_id]
                 self.change_gun = (self.change_gun + 3) % 3
                 
         return CONTINUE
@@ -52,7 +63,8 @@ class Equipment:
         pygame.draw.rect(self.screen, (255,255,255), Rect(700, HEIGHT-150, 350, 100))
         
         self.listbox.color_reset()
-        self.listbox.set_color(self.equipment, (105,105,255))
+        if self.listbox_id == 0:
+            self.listbox.set_color(self.equipment, (105,105,255))
         self.listbox.draw()
 
         # 装備中の銃情報の表示
