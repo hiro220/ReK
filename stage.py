@@ -45,13 +45,13 @@ class Stage:
 
         self.score = Score(10, 10)
         self.money = Money(10, 30)
-        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20), self.data)    # プレイヤーのマシンを生成する
-
         self.clock = pygame.time.Clock()        # 時間管理用
         R_time.restart()
 
         self.process = self.stage_process
         self.draw = self.stage_draw
+
+        self.player_init()
 
 
     def initGroup(self):
@@ -344,3 +344,12 @@ class Stage:
 
     def otherwise(self):
         return self.normalRule() or self.playerBreak()
+
+    def player_init(self):
+        chips = self.data['chip']
+        # プレイヤーのマシンを生成する
+        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20), self.data)
+        for chip in chips:
+            if chip == 'HP_UP':
+                self.player.hp.maxhp += 0.5
+                self.player.recover(0.5)
