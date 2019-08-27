@@ -55,7 +55,7 @@ class Stage2_sub(Boss):
         if sub_number == 0:
             self.gun = Division_Gun(self.machines, self,-1, 1500, True)
         else:
-            self.gun = Division_Gun(self.machines, self,-1, 1200, Trues)
+            self.gun = Division_Gun(self.machines, self,-1, 1200, True)
 
     def update(self):
         
