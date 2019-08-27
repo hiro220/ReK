@@ -353,3 +353,6 @@ class Stage:
             if chip == 'HP_UP':
                 self.player.hp.maxhp += 0.5
                 self.player.recover(0.5)
+            elif chip == 'CONTINUE':
+                # コンティニューは二つ枠を取っているから、二度実行される
+                self.continue_num += 0.5
