@@ -455,6 +455,7 @@ class Laser_bit(Bullet):
         print(self.select_gun_flag)
 
         if self.select_gun_flag == 1:
+            self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()
             collide_list = pygame.sprite.spritecollide(self, self.bullets, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
             collide_list.remove(self)
             if collide_list:                        # リストがあるか    
