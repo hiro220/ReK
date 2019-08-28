@@ -13,7 +13,7 @@ class PopupWindow:
         self.rect = Rect(center_x-250, center_y-150, 500, 300)
         # タイトルの作成
         self.title = None
-        if title != None:
+        if title != "":
             self.title = TextBox(screen, self.rect.left, self.rect.top, 500, 32, title, \
                                  font_size=25, outline_color=self.outline_color, outline_size=5)
         # メッセージの描画領域を作成
