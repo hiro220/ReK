@@ -2,13 +2,14 @@ import pygame
 from pygame.locals import *
 from define import *
 from listbox import ListBox
-import json
 
 class Equipment:
 
     def __init__(self, screen, data):
         self.gun_data = data["gun_data"]
         self.equipment = data["equip"]
+        self.chip_data = data["chip_data"]
+        self.chip = data["chip"]
         self.screen = screen
         self.change_gun = 0             # 現在選択している装備場所
         self.back = False               # 一つ前の画面にもどるか
@@ -19,9 +20,10 @@ class Equipment:
         equip_listbox = ListBox(self.screen, 80, 200, 300, 250, texts, font_size=40, target=True,\
                                      title="Gun", title_size=60)
         equip_listbox.set_selectable([data["own"]==1 for data in self.gun_data.values()])
-        texts = [data['name'] for data in json.load(open("data/chip.json", "r")).values()]
+        texts = [data['name'] for data in self.chip_data.values()]
         chip_listbox = ListBox(self.screen, 80, 200, 300, 250, texts, font_size=40, target=True,\
                                      title="Chip", title_size=60)
+        chip_listbox.set_selectable([data["num"] > 0 for data in self.chip_data.values()])
         self.listboxes = [equip_listbox, chip_listbox]
         self.listbox = self.listboxes[self.listbox_id]
     
@@ -65,6 +67,8 @@ class Equipment:
         self.listbox.color_reset()
         if self.listbox_id == 0:
             self.listbox.set_color(self.equipment, (105,105,255))
+        elif self.listbox_id == 1:
+            self.listbox.set_color(self.chip, (105, 105, 255))
         self.listbox.draw()
 
         # 装備中の銃情報の表示
