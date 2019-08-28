@@ -113,6 +113,15 @@ def _save_chip(cur, data):
     else:
         cur.execute("UPDATE chips SET chip1=?, chip2=?, chip3=?, chip4=?, chip5=?, chip6=?", data)
 
+def _save_chip_data(cur, dic):
+    for i, value in dic.items():
+        # keyがテーブル内に存在するなら更新、存在しないなら追加する。
+        cur.execute("SELECT COUNT(*) FROM own_chip WHERE id=?", [i])
+        if cur.fetchone()[0] == 0:
+            cur.execute("INSERT INTO own_chip(id, num) values(?, ?)", [i, value['num']])
+        else:
+            cur.execute("UPDATE own_chip SET num=? WHERE id=?", [value['num'], i])
+
 def save(data_dic, cheat):
     # データベース
     if cheat:
@@ -131,6 +140,9 @@ def save(data_dic, cheat):
         elif key == 'chip':
             _save_chip(cur, value)
             value = 1       # id
+        elif key == 'chip_data':
+            _save_chip_data(cur, value)
+            value = 'own_chipTABLE'
         # keyがテーブル内に存在するなら更新、存在しないなら追加する。
         cur.execute("SELECT COUNT(*) FROM data WHERE key=?", [key])
         if cur.fetchone()[0] == 0:
@@ -159,6 +171,12 @@ def _load_chip(cur):
     chip = list(cur.execute("SELECT chip1, chip2, chip3, chip4, chip5, chip6 FROM chips"))[0]
     return chip
 
+def _load_chip_data(cur):
+    data = {}
+    for i, num in cur.execute("SELECT id, num FROM own_chip"):
+        data[i] = {'num':num}
+    return data
+
 def load(flag=False):
     # データベース
     if flag:
@@ -178,6 +196,8 @@ def load(flag=False):
             data_dic[key] = _load_equip(cur)
         elif key == 'chip':
             data_dic[key] = _load_chip(cur)
+        elif key == 'chip_data':
+            data_dic[key] = _load_chip_data(cur)
         else:
             data_dic[key] = value
 
@@ -235,8 +255,11 @@ else:
     # dataテーブル
     create_table('data', ['key TEXT', 'value TEXT'])
     # gunテーブル
-    create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_size INTEGER', 'reload_size INTEGER', 'own INTEGER', 'set_flag INTEGER'])
+    create_table('gun', ['id INTEGER', 'name TEXT', 'bullet_size INTEGER', 'reload_size INTEGER', 'own INTEGER'])
     # equipmentテーブル
     create_table('equipment', ['id INTEGER PRIMARY KEY', 'gun1 INTEGER', 'gun2 INTEGER', 'gun3 INTEGER'])
     # chipsテーブル
-    create_table('chips', ['id INTEGER PRIMARY KEY', 'chip1 INTEGER', 'chip2 INTEGER', 'chip3 INTEGER', 'chip4 INTEGER', 'chip5 INTEGER', 'chip6 INTEGER'])
+    create_table('chips', ['id INTEGER PRIMARY KEY', 'chip1 INTEGER', 'chip2 INTEGER', 'chip3 INTEGER', \
+                 'chip4 INTEGER', 'chip5 INTEGER', 'chip6 INTEGER'])
+    # own_chipテーブル
+    create_table('own_chip', ['id INTEGER', 'num INTEGER'])

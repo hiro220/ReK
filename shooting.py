@@ -160,6 +160,17 @@ class Main(pygame.sprite.Sprite):
     def _check_chip(self):
         if self.data['chip'] == []:
             self.data['chip'] = [-1 for _ in range(6)]
+
+        dic = json.load(open('data/chip.json', 'r'))
+        chip_data = self.data['chip_data']
+        print(chip_data)
+        for str_id, value in dic.items():
+            i = int(str_id)
+            chip_data[i].update(value)
+            if i in chip_data:
+                continue
+            chip_data[i]['num'] = self.cheat * value['own_max']
+        print(chip_data)
         
     def data_check(self):
         for key, cast in data_key.items():
