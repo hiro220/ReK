@@ -36,10 +36,12 @@ class Menu:
         self.file_listbox.set_selectable([True])
         self.file_listbox()
         self.file_id = None
+        self.clock = pygame.time.Clock()
 
     def draw(self):
 
         while True:
+            self.clock.tick(30)
             # リストボックスの描画
             self.option_listbox.draw(False)
             self.file_listbox.draw()
