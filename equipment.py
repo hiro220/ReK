@@ -26,9 +26,11 @@ class Equipment:
         chip_listbox.set_selectable([data["num"] > 0 for data in self.chip_data.values()])
         self.listboxes = [equip_listbox, chip_listbox]
         self.listbox = self.listboxes[self.listbox_id]
+        self.clock = pygame.time.Clock()
     
     def do(self):
         while True:
+            self.clock.tick(30)
             request = self.process()
             self.draw()
             if request != CONTINUE:
