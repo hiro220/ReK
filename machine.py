@@ -55,8 +55,9 @@ class Machine(pygame.sprite.Sprite):
             self.gun.shoot(x, y)
 
     def reload(self, count):
-        reload_count = self.reload_file[count + 1]
-        print(reload_count)
+        print(count)
+        reload_count = self.reload_file[count]
+        #print(reload_count)
         if reload_count != 0:
             if self.reload_flag:
                 self.reload_flag = False
@@ -65,12 +66,14 @@ class Machine(pygame.sprite.Sprite):
                 self.gun.num = 0
                 Timer(1000+bullet_num*500, self.gun.reload)
                 Timer(1500+bullet_num*500, self.change_flag)
-                self.reload_file[count + 1] = reload_count - 1
+                self.reload_file[count] = reload_count - 1
 
     def reload_data(self):
         self.reload_file = []
         for i in range(3):
              equip = self.data['equip'][i]
+             if equip == -1:
+                 continue
              self.reload_file.append(self.data['gun_data'][equip]['reload_size'])
         print(self.reload_file)
     

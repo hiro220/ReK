@@ -20,7 +20,7 @@ class PlayerMachine(Machine):
         self.gun_data = data["gun_data"]
         self.gun_base()
         self.gun = self.gun_file[0]
-        self.reload_number = 0
+        self.reload_number = 1
 
     def move(self):
         if self.wait_flag == 0:
@@ -42,11 +42,11 @@ class PlayerMachine(Machine):
             x, y = self.rect.midright
             super().shoot(x, y)
         elif key == K_v:
-            super().reload(self.reload_number)
+            super().reload(self.reload_number-1)
 
     def change(self, key):
         self.gun_number = 1 * (key==K_a) or 2 * (key==K_s) or 3 * (key==K_d)
-        self.reload_number = self.gun_number - 1
+        self.reload_number = self.gun_number or self.reload_number
         if self.gun_number == 0 or self.gun_file[self.gun_number - 1] == None:
             return
         self.gun = self.gun_file[self.gun_number - 1]
