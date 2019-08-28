@@ -288,7 +288,7 @@ class Stage:
             cpu_item(x, y, self.cpus)
         if name in cpu_dic:                             # 辞書にキーnameがあるか
             create_cpu = cpu_dic[name]                      # 変数createにクラス名を代入。
-            create_cpu(x, y, self.players, self.score, self.money)              # 変数createに代入されているクラスを呼び出す。
+            create_cpu(x, y, self.players, self.score, self.money, self.data)              # 変数createに代入されているクラスを呼び出す。
         if name in item_dic:
             create_item = item_dic[name]
             create_item(x, y, self.players)
