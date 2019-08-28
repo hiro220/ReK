@@ -67,7 +67,6 @@ class Stage2_sub(Boss):
             self.gun = Beam_Gun(self.machines, self,-1, 270)
 
     def update(self):
-        
         if self.boss.natural[self.number] and len(self.move_timer) == 0:
             self.move_rutin(self.boss.sub_rutin)
             self.boss.natural[self.number] = False
@@ -83,6 +82,8 @@ class Stage2_sub(Boss):
         
         
     def move_select(self, select_number):
+        if select_number == None:
+            return
         self.move_dic[select_number].move()
 
     def move_reset(self, select_number):
@@ -105,10 +106,9 @@ class Stage2_sub(Boss):
 
     def del_timer(self, number=0):
         if number == 0:
-            self.move_timer.clear()
             for t_list in self.move_timer:
                 t_list.kill()
-                print(t_list)
+            self.move_timer.clear()
         """for index,t_list in enumerate(self.move_timer):
             if t_list.arg[0] == number:
                 self.move_timer[index].kill()"""
@@ -158,10 +158,10 @@ class Move_pack1(Move_Pack):
         elif self.sub.number == 1:
             self.sub.rect.center = self.sub.boss.rect.centerx, self.sub.boss.rect.centery + 100
         self.sub.dx,self.sub.dy = self.sub.boss.dx,self.sub.boss.dy
-        print(self.sub.move_timer)
+        #print(self.sub.move_timer)
         self.sub.del_timer()
         self.sub.boss.natural[self.sub.number] = True
-
+        self.sub.sel_number = None
 
 class Move_pack2(Move_Pack):            
     def move(self): #画面後方に配置
