@@ -1,7 +1,7 @@
 from machine import Machine
 import pygame
 from define import *
-from item import Shield
+from item import Shield, Recovery
 from gun import *
 from timer import Timer
 import random
@@ -42,6 +42,8 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.shoot_timer = None
         self.shoot_timing = R_time.get_ticks()
         self.gun = Circle_Gun(self.machines, self, -1)
+        self.random_item = random.sample(range(10), k=3)
+        self.sub_list = []
 
     def update(self):
         self.move(self.dx, self.dy)
@@ -50,7 +52,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         self.Move_set()                                             #HPが５以下になるとボスの位置を戻す
         
         if R_time.get_ticks() - self.gun_start >= 140 and self.summon_flag:
-            Stage1_sub(mg.centerx-60, 600, self.machines, self.score, self.load_count, self, self.money)
+            self.sub_list.append(Stage1_sub(mg.centerx-60, 600, self.machines, self.score, self.load_count, self, self.money))
             self.load_count += 1
             self.gun_start = R_time.get_ticks()
         if self.load_count == 18:
@@ -76,6 +78,7 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         
         self.Cpu_shot_rule()
         self.Shield_loop()                                      #シールドを再配置する
+        self.item_set()
 
         if self.shot_flag:
             if R_time.get_ticks() - self.shoot_timing >= 500 and self.shoot_number == 0:
@@ -97,19 +100,6 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
         #print(self.hp.hp)
         
     def move_rule(self):
-        """
-        rule0 = [[mg.centerx,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery]]                                            #[600, 40]
-        rule1 = [[mg.left,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.left,mg.bottom]]     #[600,280]
-        rule2 = [[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.centerx,mg.bottom]]                                         #[600,520]
-        rule3 = [[mg.left,mg.top],[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.top]]       #[840, 40]
-        rule4 = [[mg.left,mg.top],[mg.left,mg.centery],[mg.left,mg.bottom],[mg.centerx,mg.bottom],[mg.right,mg.bottom],[mg.right,mg.centery],[mg.right,mg.top],[mg.centerx,mg.top]] #[840,280]
-        rule5 = [[mg.left,mg.bottom],[mg.left,mg.centery],[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.bottom]] #[840,520]
-        rule6 = [[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                           #[1080, 40]
-        rule7 = [[mg.right,mg.top],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.right,mg.bottom]]   #[1080,280]
-        rule8 = [[mg.centerx,mg.bottom],[mg.centerx,mg.centery],[mg.right,mg.centery]]                                        #[1080,520]
-        point_list = [[mg.left,mg.top],[mg.left,mg.centery],[mg.left,mg.bottom],[mg.centerx,mg.top],[mg.centerx,mg.centery],[mg.centerx,mg.bottom],[mg.right,mg.top],[mg.right,mg.centery],[mg.right,mg.bottom]]
-        move_list = [rule0,rule1,rule2,rule3,rule4,rule5,rule6,rule7,rule8]"""
-
         rule3 = [[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.top]]                                             #[840, 40]
         rule4 = [[mg.centerx,mg.bottom],[mg.right,mg.bottom],[mg.right,mg.centery],[mg.right,mg.top],[mg.centerx,mg.top]]     #[840,280]
         rule5 = [[mg.centerx,mg.centery],[mg.right,mg.centery],[mg.right,mg.bottom]]                                          #[840,520]
@@ -212,6 +202,12 @@ class Stage1_boss(Boss):                                 #ボス本体の機体
             self.move_flag = None
         elif flag_number == 1 and self.move_flag == None:
             self.move_flag = 0
+    
+    def item_set(self):
+        for s_list in self.sub_list:
+            if s_list.item_flag and s_list.hp.hp <= 0:
+                Recovery(s_list.rect.centerx, s_list.rect.centery, self.machines)
+                s_list.item_flag = False
 
  
 
@@ -227,6 +223,9 @@ class Stage1_sub(Boss):                                  #ボス付属品の機�
         self.rad = 0
         self.move_flag = 0
         self.dx,self.dy = 0,-4
+        self.item_flag = False
+        if self.sub_number in self.boss.random_item:
+            self.item_flag = True
         #self.gun = Opposite_Gun(self.machines, self, 100)
 
     def update(self):

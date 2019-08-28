@@ -3,4 +3,4 @@ rule    NORMAL
 bg      STAR
 
 0
-BOSS2 300
+BOSS1 300
