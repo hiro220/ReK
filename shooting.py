@@ -166,9 +166,10 @@ class Main(pygame.sprite.Sprite):
         print(chip_data)
         for str_id, value in dic.items():
             i = int(str_id)
-            chip_data[i].update(value)
             if i in chip_data:
+                chip_data[i].update(value)
                 continue
+            chip_data[i] = value
             chip_data[i]['num'] = self.cheat * value['own_max']
         print(chip_data)
         
