@@ -455,8 +455,6 @@ class Laser_bit(Bullet):
         self.principal_bposx = self.principal.rect.centerx
         self.principal_bposy = self.principal.rect.centery
 
-        print(self.select_gun_flag)
-
         if self.select_gun_flag == 1:
             if self.select_gun_flagb == 0:
                 self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()
