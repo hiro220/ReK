@@ -10,8 +10,8 @@ class Help_print():
         self.player_image = pygame.image.load("img/player.png").convert_alpha()
         
         pygame.font.init()
-        player_font = pygame.font.Font("freesansbold.ttf", 25)
-        back_font = pygame.font.Font("freesansbold.ttf", 55)
+        player_font = pygame.font.Font("font/freesansbold.ttf", 25)
+        back_font = pygame.font.Font("font/freesansbold.ttf", 55)
         self.player_text = player_font.render("player", True, (255,255,255))
         self.back_text = back_font.render("Back", True, (255,255,255))
 

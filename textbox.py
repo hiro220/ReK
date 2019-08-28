@@ -4,8 +4,8 @@ import unicodedata
 
 class TextBox:
     def __init__(self, screen, x, y, width, height, text='', bg=(255,255,255), text_color=(0,0,0), font_size=20, \
-                 outline_color=(150,150,150), outline_size=3, full_font="", half_font='freesansbold.ttf', \
-                 align=('left', 'top')):
+                 outline_color=(150,150,150), outline_size=3, full_font="font/ShipporiMincho-TTF-Regular.ttf", \
+                 half_font='font/freesansbold.ttf', align=('left', 'top')):
         self.screen = screen
         self.rect = Rect(x, y, width, height)
         self.bg = bg

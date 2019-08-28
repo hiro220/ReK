@@ -23,7 +23,7 @@ class MessageBox:
         self.message_list = message_list
         # フォントの設定
         self.font_size = font_size
-        self.font = pygame.font.Font("freesansbold.ttf", font_size)
+        self.font = pygame.font.Font("font/freesansbold.ttf", font_size)
         # メッセージの取得方法の設定
         self.select = select
         # 最初に表示するメッセージの設定

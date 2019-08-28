@@ -14,12 +14,12 @@ class Shop:
         self.gun_num = 1
         self.back_num = 0
 
-        Circle_gun_font = pygame.font.Font("freesansbold.ttf", 45)
-        Circle_gun_place_font = pygame.font.Font("freesansbold.ttf", 45)
-        Reflection_Gun_font = pygame.font.Font("freesansbold.ttf", 45)
-        Reflection_Gun_place_font = pygame.font.Font("freesansbold.ttf", 45)
+        Circle_gun_font = pygame.font.Font("font/freesansbold.ttf", 45)
+        Circle_gun_place_font = pygame.font.Font("font/freesansbold.ttf", 45)
+        Reflection_Gun_font = pygame.font.Font("font/freesansbold.ttf", 45)
+        Reflection_Gun_place_font = pygame.font.Font("font/freesansbold.ttf", 45)
 
-        back_font = pygame.font.Font("freesansbold.ttf", 55)
+        back_font = pygame.font.Font("font/freesansbold.ttf", 55)
 
         self.Circle_gun_text = Circle_gun_font.render("Circle_Gun", True, (255, 255, 255))
         self.Circle_gun_place_text = Circle_gun_place_font.render("1000", True, (255, 255, 255))

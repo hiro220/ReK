@@ -37,8 +37,8 @@ class Stage:
         self.creatRange()                       #範囲を設定する
         self.creatRange2()                      #
         
-        font = pygame.font.Font("freesansbold.ttf", 60)
-        menu_font = pygame.font.Font("freesansbold.ttf", 25)
+        font = pygame.font.Font("font/freesansbold.ttf", 60)
+        menu_font = pygame.font.Font("font/freesansbold.ttf", 25)
         self.pause_text = font.render("PAUSE", True, (255,255,255))
         self.retire_text = menu_font.render("- Retire : Q", True, (255,255,255))
         self.restart_text = menu_font.render("- Restart : Space", True, (255,255,255))
@@ -174,10 +174,10 @@ class Stage:
         if self.continue_num:
             # 表示する文字の設定
             text = "Continue? : " + str(self.continue_num) + " Times"
-            text = pygame.font.Font("freesansbold.ttf", 60).render(text, True, (255,255,255))
+            text = pygame.font.Font("font/freesansbold.ttf", 60).render(text, True, (255,255,255))
             text_width = text.get_rect().centerx
-            yes_text = pygame.font.Font("freesansbold.ttf", 40).render("Yes", True, (255,255,255))
-            no_text = pygame.font.Font("freesansbold.ttf", 40).render("No", True, (255,255,255))
+            yes_text = pygame.font.Font("font/freesansbold.ttf", 40).render("Yes", True, (255,255,255))
+            no_text = pygame.font.Font("font/freesansbold.ttf", 40).render("No", True, (255,255,255))
             select = 0
             # Enterが押されるまで無限ループ
             while True:

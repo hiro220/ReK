@@ -84,7 +84,7 @@ class Main(pygame.sprite.Sprite):
         """ステージ結果画面を描画する"""
         self.screen.fill((0,0,0))
 
-        Enter_font = pygame.font.Font("freesansbold.ttf", 20)
+        Enter_font = pygame.font.Font("font/freesansbold.ttf", 20)
 
         #Score_text = Score_font.render("SCORE: " + str(result[1]), True, (255,255,255))
         Enter_text = Enter_font.render("ENTER:RETURN", True, (255,255,255))
@@ -133,7 +133,7 @@ class Main(pygame.sprite.Sprite):
             if this_score[0] == data[0]:
                 color = (255,0,0)
             if i < 5 or this_score[0]==data[0]:
-                score = pygame.font.Font("freesansbold.ttf", 50).render(str(rank) + " : " + str(data[1]), True, color)
+                score = pygame.font.Font("font/freesansbold.ttf", 50).render(str(rank) + " : " + str(data[1]), True, color)
                 self.screen.blit(score, [550, 180+50*(pos+1)])
                 pos += 1
             

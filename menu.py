@@ -3,6 +3,7 @@ from pygame.locals import *
 from define import *
 from equipment import Equipment
 from listbox import ListBox
+from popupwindow import PopupWindow
 
 class Menu:
     
@@ -14,9 +15,9 @@ class Menu:
         self.select_num = 0
         self.option_num = 0
         
-        StageSelect_font = pygame.font.Font("freesansbold.ttf", 55)
-        Arrow_font = pygame.font.Font("freesansbold.ttf", 100)
-        Stage_font = pygame.font.Font("freesansbold.ttf", 45)
+        StageSelect_font = pygame.font.Font("font/freesansbold.ttf", 55)
+        Arrow_font = pygame.font.Font("font/freesansbold.ttf", 100)
+        Stage_font = pygame.font.Font("font/freesansbold.ttf", 45)
 
         self.StageSelect_text = StageSelect_font.render("Stage Select", True, (255,255,255)) 
         self.RightArrow_text = Arrow_font.render(">", True, (255,255,255))
@@ -38,14 +39,19 @@ class Menu:
         self.file_id = None
         self.clock = pygame.time.Clock()
 
-    def draw(self):
+        self.a = PopupWindow(screen, text="テスト", buttons=["All right", "Pardon?"], target=1, title="PopupWindow's test")
 
+    def draw(self):
+        flag = 1
         while True:
             self.clock.tick(30)
             # リストボックスの描画
             self.option_listbox.draw(False)
             self.file_listbox.draw()
             self.Select_Stage(self.file_id)     #ステージ選択処理
+            if flag:
+                a = self.a.loop()
+                flag = a != 0
             pygame.display.update()
             for event in pygame.event.get():
                 # リストボックスに入力

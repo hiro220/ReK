@@ -13,8 +13,8 @@ class Equipment:
         self.screen = screen
         self.change_gun = 0             # 現在選択している装備場所
         self.back = False               # 一つ前の画面にもどるか
-        self.screen_info = pygame.font.Font("freesansbold.ttf" ,70).render("Equip", True, (255,255,255))
-        self.back_info = pygame.font.Font("freesansbold.ttf" ,50).render("'Q' : Back", True, (255,255,255))
+        self.screen_info = pygame.font.Font("font/freesansbold.ttf" ,70).render("Equip", True, (255,255,255))
+        self.back_info = pygame.font.Font("font/freesansbold.ttf" ,50).render("'Q' : Back", True, (255,255,255))
         self.listbox_id = 0
         texts = [data["name"] for data in self.gun_data.values()]
         equip_listbox = ListBox(self.screen, 80, 200, 300, 250, texts, font_size=40, target=True,\
@@ -79,7 +79,7 @@ class Equipment:
             pygame.draw.rect(self.screen, color, [730+95*i, HEIGHT-145, 90, 90], 2+(i==self.change_gun))
             if data == -1:
                 continue
-            text = pygame.font.Font("freesansbold.ttf", 80).render(str(data), True, (0,0,0))
+            text = pygame.font.Font("font/freesansbold.ttf", 80).render(str(data), True, (0,0,0))
             self.screen.blit(text, [755+95*i, HEIGHT-135])
         pygame.display.update()
 

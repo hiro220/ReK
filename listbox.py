@@ -25,9 +25,9 @@ class ListBox:
         self.left = 0
         # テキストのフォント
         self.font_size = font_size
-        self.font = pygame.font.Font("freesansbold.ttf", font_size)
+        self.font = pygame.font.Font("font/freesansbold.ttf", font_size)
         self.title_size = title_size
-        self.title = pygame.font.Font("freesansbold.ttf", title_size).render(title, True, (255,255,255))
+        self.title = pygame.font.Font("font/freesansbold.ttf", title_size).render(title, True, (255,255,255))
         # 一度に描画する要素数
         self.draw_num = height // (font_size+10)
         # 要素の保持
