@@ -350,6 +350,7 @@ class Stage:
         # プレイヤーのマシンを生成する
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20), self.data)
         for chip in chips:
+            chip = self.data['chip_data'][chip]['name']
             if chip == 'HP_UP':
                 self.player.hp.maxhp += 0.5
                 self.player.recover(0.5)
