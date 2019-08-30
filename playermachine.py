@@ -37,6 +37,8 @@ class PlayerMachine(Machine):
         self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))       # 画面外に出たとき、画面内に収まるよう移動
 
     def shoot(self, key):
+        if self.wait_flag == 0:
+            return
         if key == K_x:              # ｘキーが押されたとき弾を発射
             x, y = self.rect.midright
             super().shoot(x, y)
@@ -44,6 +46,8 @@ class PlayerMachine(Machine):
             super().reload()
 
     def change(self, key):
+        if self.wait_flag == 0:
+            return
         gun_number = 1 * (key==K_a) or 2 * (key==K_s) or 3 * (key==K_d)
         if gun_number == 0 or self.gun_file[gun_number - 1] == None:
             return
