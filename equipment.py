@@ -12,6 +12,7 @@ class Equipment:
         self.chip = data["chip"]
         self.screen = screen
         self.change_gun = 0             # 現在選択している装備場所
+        self.change_chip = 0
         self.back = False               # 一つ前の画面にもどるか
         self.screen_info = pygame.font.Font("font/freesansbold.ttf" ,70).render("Equip", True, (255,255,255))
         self.back_info = pygame.font.Font("font/freesansbold.ttf" ,50).render("'Q' : Back", True, (255,255,255))
@@ -46,18 +47,31 @@ class Equipment:
             if event.type == QUIT:
                 return EXIT
             if event.type == KEYDOWN:
-                if event.key == K_RIGHT:
-                    self.change_gun += 1
-                elif event.key == K_LEFT:
-                    self.change_gun -= 1
-                elif event.key == K_q:
+                if self.listbox_id == 0:
+                    self.equip_key(event.key)
+                elif self.listbox_id == 1:
+                    self.chip_key(event.key)
+                if event.key == K_q:
                     return BACK
                 elif event.key == K_c:
                     self.listbox_id ^= 1
                     self.listbox = self.listboxes[self.listbox_id]
-                self.change_gun = (self.change_gun + 3) % 3
                 
         return CONTINUE
+
+    def equip_key(self, key):
+        if key == K_RIGHT:
+            self.change_gun += 1
+        elif key == K_LEFT:
+            self.change_gun -= 1
+        self.change_gun = (self.change_gun + 3) % 3
+
+    def chip_key(self, key):
+        if key == K_RIGHT:
+            self.change_chip += 1
+        elif key == K_LEFT:
+            self.change_chip -= 1
+        self.change_chip = (self.change_chip + 6) % 6
 
     def draw(self):
         # 画面描画
