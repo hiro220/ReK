@@ -174,7 +174,7 @@ class Stage:
         # コンティニューできるか
         if self.continue_num > 0:
             # 表示する文字の設定
-            text = "コンティニューしますか?あと" + str(int(self.continue_num)) + "回"
+            text = "コンティニューしますか?\nあと" + str(int(self.continue_num)) + "回"
             if PopupWindow(self.screen, text, ['はい', 'いいえ'], target=1).loop() == 0:
                 return True
             else:
