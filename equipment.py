@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from define import *
 from listbox import ListBox
+from popupwindow import PopupWindow
 
 class Equipment:
 
@@ -78,7 +79,6 @@ class Equipment:
         self.screen.fill((0,0,0))
         self.screen.blit(self.screen_info, [150, 20])
         self.screen.blit(self.back_info, [WIDTH-self.back_info.get_rect().right-20, 20])
-        pygame.draw.rect(self.screen, (255,255,255), Rect(700, HEIGHT-150, 350, 100))
         
         self.listbox.color_reset()
         if self.listbox_id == 0:
@@ -87,7 +87,16 @@ class Equipment:
             self.listbox.set_color(self.chip, (105, 105, 255))
         self.listbox.draw()
 
+        if self.listbox_id == 0:
+            self.draw_equip()
+        elif self.listbox_id == 1:
+            self.draw_chip()
+
+        pygame.display.update()
+
+    def draw_equip(self):
         # 装備中の銃情報の表示
+        pygame.draw.rect(self.screen, (255,255,255), Rect(700, HEIGHT-150, 340, 100))
         for i, data in enumerate(self.equipment):
             color = (255,0,0) * (i == self.change_gun) or (0,)*3
             pygame.draw.rect(self.screen, color, [730+95*i, HEIGHT-145, 90, 90], 2+(i==self.change_gun))
@@ -95,7 +104,17 @@ class Equipment:
                 continue
             text = pygame.font.Font("font/freesansbold.ttf", 80).render(str(data), True, (0,0,0))
             self.screen.blit(text, [755+95*i, HEIGHT-135])
-        pygame.display.update()
+
+    def draw_chip(self):
+        pygame.draw.rect(self.screen, (255,255,255), Rect(500, HEIGHT-150, 625, 100))
+        for i, data, in enumerate(self.chip):
+            color = (255,0,0) * (i == self.change_chip) or (0,)*3
+            pygame.draw.rect(self.screen, color, [530+95*i, HEIGHT-145, 90, 90], 2+(i==self.change_chip))
+            if data == -1:
+                continue
+            text = pygame.font.Font("font/freesansbold.ttf", 80).render(str(data), True, (0,0,0))
+            self.screen.blit(text, [755+95*i, HEIGHT-135])
+
 
     def check(self, select):
         # 装備変更確認
@@ -103,7 +122,26 @@ class Equipment:
             if gun == select:
                 if i == 0:
                     return False
+                while True:
+                    if PopupWindow(self.screen, "すでに装備している枠から変更しますか？", \
+                                   ["変更する", "変更しない"]).loop() == 0:
+                        break
+                    else:
+                        return False
                 self.equipment[i] = -1
+        return True
+
+    def chip_chack(self, select):
+        chip_data = self.chip_data[select]
+        # 空いている枠の数を取得
+        empty_num = self.chip.count(-1)
+        # 装備する枠が残っているか
+        if chip_data['equip_size'] > empty_num:
+            return False
+        # 装備可能上限まで装備しているか
+        equip_num = self.chip.count(select)
+        if chip_data['equip_max'] == equip_num:
+            return False
         return True
 
     def equip(self, select):
@@ -111,3 +149,7 @@ class Equipment:
         if self.check(select):
             equipment = self.equipment
             equipment[self.change_gun] = select
+
+    def set_chip(self, select):
+        if self.chip_chack(select):
+            self.chip[self.change_chip] = select
