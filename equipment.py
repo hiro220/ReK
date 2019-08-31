@@ -25,7 +25,7 @@ class Equipment:
         texts = [data['name'] for data in self.chip_data.values()]
         chip_listbox = ListBox(self.screen, 80, 200, 300, 250, texts, font_size=40, target=True,\
                                      title="Chip", title_size=60)
-        chip_listbox.set_selectable([data["num"] > 0 for data in self.chip_data.values()])
+        chip_listbox += ['remove', 'remove ALL']
         self.listboxes = [equip_listbox, chip_listbox]
         self.listbox = self.listboxes[self.listbox_id]
         self.clock = pygame.time.Clock()
@@ -41,6 +41,8 @@ class Equipment:
     def process(self):
         # 内部処理
         self.listbox()
+        select = [data["num"] > 0 for data in self.chip_data.values()] + [self.chip[self.change_chip]!=-1, self.chip!=[-1]*6]
+        self.listboxes[1].set_selectable(select)
         for event in pygame.event.get():
             select = self.listbox.process(event)
             if select != None:
@@ -86,8 +88,6 @@ class Equipment:
         self.listbox.color_reset()
         if self.listbox_id == 0:
             self.listbox.set_color(self.equipment, (105,105,255))
-        else:
-            self.listbox.set_color(self.chip, (105, 105, 255))
         self.listbox.draw()
 
         if self.listbox_id == 0:
@@ -139,6 +139,19 @@ class Equipment:
         self.chip_data[select]['num'] -= 1
         for j in range(size):
             self.chip[i+j] = select
+        
+    def _remove_chip(self, i, size, chip_id_list):
+        # 装備済みのチップを外す
+        for j in range(i,i+size):
+            chip = self.chip[j]
+            if chip == -1:
+                continue
+            data = self.chip_data[chip]
+            chip_size = data['equip_size']
+            data['num'] += 1
+            j -= chip_id_list[j]
+            for k in range(j, j+chip_size):
+                self.chip[k] = -1
 
     def equip(self, select):
         # 選択した銃を装備する。
@@ -147,7 +160,6 @@ class Equipment:
             equipment[self.change_gun] = select
 
     def set_chip(self, select):
-        chip_data = self.chip_data[select]
         # チップの枠がサイズ何番目が保存されているのかを保持
         chip_id_list = []
         i = 0
@@ -159,6 +171,19 @@ class Equipment:
                 size = self.chip_data[chip]['equip_size']
             chip_id_list += [j for j in range(size)]
             i += size
+        # removeを選択したとき
+        if select == len(self.listbox)-2:
+            PopupWindow(self.screen, "選択したチップを外します。", ['OK']).loop()
+            self._remove_chip(self.change_chip, 1, chip_id_list)
+            return
+        # remove ALLを選択したとき
+        if select == len(self.listbox)-1:
+            PopupWindow(self.screen, "すべてのチップを外します。", ['OK']).loop()
+            for i in range(6):
+                self._remove_chip(i, 1, chip_id_list)
+            return
+            
+        chip_data = self.chip_data[select]
         # チップのサイズ
         size = chip_data['equip_size']
         i = self.change_chip
@@ -179,16 +204,6 @@ class Equipment:
         if count != size:
             if PopupWindow(self.screen, "必要な枠に装備されているチップをすべて外し、装備します。", ['OK', 'NO']).loop() == 1:
                 return
-        # 装備済みのチップを外す
-        for j in range(i,i+size):
-            chip = self.chip[j]
-            if chip == -1:
-                continue
-            data = self.chip_data[chip]
-            chip_size = data['equip_size']
-            data['num'] += 1
-            j -= chip_id_list[j]
-            for k in range(j, j+chip_size):
-                self.chip[k] = -1
+        self._remove_chip(i, size, chip_id_list)
         # チップを装備する
         self._set_chip(select, size)
