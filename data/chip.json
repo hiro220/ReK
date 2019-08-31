@@ -1,4 +1,8 @@
 {
-    "0": {"name": "HP_UP", "equip_size": 1, "own_max": 6, "equip_max": 4},
-    "1": {"name": "CONTINUE", "equip_size": 2, "own_max": 2, "equip_max": 2}
+    "0": {"name": "HP_UP", "equip_size": 1, "own_max": 10, "equip_max": 4},
+    "1": {"name": "CONTINUE", "equip_size": 3, "own_max": 2, "equip_max": 2},
+    "2": {"name": "SPEEDUP", "equip_size":1, "own_max": 8, "equip_max": 3},
+    "3": {"name": "SHORT_RELOAD", "equip_size": 2, "own_max": 8, "equip_max":3},
+    "4": {"name": "SHIELD", "equip_size":2, "own_max":4, "equip_max":1},
+    "5": {"name": "LONG_INVISIBLE", "equip_size": 2, "own_max": 4, "equip_max": 3}
 }

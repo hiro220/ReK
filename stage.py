@@ -345,3 +345,12 @@ class Stage:
             elif chip == 'CONTINUE':
                 # コンティニューは二つ枠を取っているから、二度実行される
                 self.continue_num += 0.5
+            elif chip == 'SPEEDUP':
+                self.player.dx += 1
+                self.player.dy += 1
+            elif chip == "SHORT_RELOAD":
+                self.player.reload_time -= 150
+            elif chip == "SHIELD":
+                Shield(3, self.player)
+            elif chip == "LONG_INVISIBLE":
+                self.player.invincible_time += 100
