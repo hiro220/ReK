@@ -1,5 +1,6 @@
 import pygame
 import random
+import unicodedata
 
 class MessageBox:
 
@@ -23,7 +24,8 @@ class MessageBox:
         self.message_list = message_list
         # フォントの設定
         self.font_size = font_size
-        self.font = pygame.font.Font("font/freesansbold.ttf", font_size)
+        self.half = pygame.font.Font("font/freesansbold.ttf", font_size)
+        self.full = pygame.font.Font("font/ShipporiMincho-TTF-Regular.ttf", font_size)
         # メッセージの取得方法の設定
         self.select = select
         # 最初に表示するメッセージの設定
@@ -41,6 +43,10 @@ class MessageBox:
         # 枠ないにメッセージが収まるサイズ
         mask = (self.x * self.scroll, 0, self.rect.right-self.rect.left-10, self.font_size)
         color = (0,0,0)
+        if unicodedata.east_asian_width(self.message[0]) in ('F', 'W', 'A'):
+            self.font = self.full
+        else:
+            self.font = self.half
         draw_message = self.font.render(self.message, True, color)
         x, y = self.rect.left+5, self.rect.top + 10
         # メッセージの表示
