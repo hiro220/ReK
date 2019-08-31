@@ -39,8 +39,6 @@ class Menu:
         self.file_id = None
         self.clock = pygame.time.Clock()
 
-        self.a = PopupWindow(screen, text="テスト", buttons=["All right", "Pardon?"], target=1, title="PopupWindow's test")
-
     def draw(self):
         flag = 1
         while True:
@@ -49,9 +47,6 @@ class Menu:
             self.option_listbox.draw(False)
             self.file_listbox.draw()
             self.Select_Stage(self.file_id)     #ステージ選択処理
-            if flag:
-                a = self.a.loop()
-                flag = a != 0
             pygame.display.update()
             for event in pygame.event.get():
                 # リストボックスに入力
