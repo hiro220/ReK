@@ -15,6 +15,7 @@ from score import Score
 from boss import Stage1_boss
 from boss2 import *
 from money import Money
+from popupwindow import PopupWindow
 import pygame.mixer
 
 class Stage:
@@ -108,7 +109,7 @@ class Stage:
             if self.select_continued():
                 R_time.restart()
                 pygame.mixer.music.unpause()
-                self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20))  # 初期値にプレイヤー機を生成
+                self.player_init()
                 self.continue_num -= 1
                 self.player.invincible(2000)
             else:
@@ -171,28 +172,13 @@ class Stage:
         self.draw()
         pygame.display.update()
         # コンティニューできるか
-        if self.continue_num:
+        if self.continue_num > 0:
             # 表示する文字の設定
-            text = "Continue? : " + str(self.continue_num) + " Times"
-            text = pygame.font.Font("font/freesansbold.ttf", 60).render(text, True, (255,255,255))
-            text_width = text.get_rect().centerx
-            yes_text = pygame.font.Font("font/freesansbold.ttf", 40).render("Yes", True, (255,255,255))
-            no_text = pygame.font.Font("font/freesansbold.ttf", 40).render("No", True, (255,255,255))
-            select = 0
-            # Enterが押されるまで無限ループ
-            while True:
-                self.draw()
-                self.screen.blit(text,[WIDTH/2-text_width, HEIGHT/4-50])
-                self.screen.blit(yes_text,[WIDTH/2-150, HEIGHT/4+80])
-                self.screen.blit(no_text,[WIDTH/2+100, HEIGHT/4+80])
-                pygame.draw.rect(self.screen, (0,255,255), Rect(WIDTH/2+80-240*select, HEIGHT/4+75, 100, 50), 3)
-                pygame.display.update()
-                for event in pygame.event.get():
-                    if event.type == KEYDOWN:       # キー入力があった時
-                        if event.key == K_RETURN:
-                            return select
-                        if event.key in [K_RIGHT, K_LEFT]:
-                            select ^= 1         # xor演算(1, 0の反転)
+            text = "コンティニューしますか?あと" + str(int(self.continue_num)) + "回"
+            if PopupWindow(self.screen, text, ['はい', 'いいえ'], target=1).loop() == 0:
+                return True
+            else:
+                return False
         else:
             # コンティニューできない
             return False
@@ -350,6 +336,8 @@ class Stage:
         # プレイヤーのマシンを生成する
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20), self.data)
         for chip in chips:
+            if chip < 0:
+                continue
             chip = self.data['chip_data'][chip]['name']
             if chip == 'HP_UP':
                 self.player.hp.maxhp += 0.5
