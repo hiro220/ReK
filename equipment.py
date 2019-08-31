@@ -44,13 +44,16 @@ class Equipment:
         for event in pygame.event.get():
             select = self.listbox.process(event)
             if select != None:
-                self.equip(select)
+                if self.listbox_id == 0:
+                    self.equip(select)
+                else:
+                    self.set_chip(select)
             if event.type == QUIT:
                 return EXIT
             if event.type == KEYDOWN:
                 if self.listbox_id == 0:
                     self.equip_key(event.key)
-                elif self.listbox_id == 1:
+                else:
                     self.chip_key(event.key)
                 if event.key == K_q:
                     return BACK
@@ -83,13 +86,13 @@ class Equipment:
         self.listbox.color_reset()
         if self.listbox_id == 0:
             self.listbox.set_color(self.equipment, (105,105,255))
-        elif self.listbox_id == 1:
+        else:
             self.listbox.set_color(self.chip, (105, 105, 255))
         self.listbox.draw()
 
         if self.listbox_id == 0:
             self.draw_equip()
-        elif self.listbox_id == 1:
+        else:
             self.draw_chip()
 
         pygame.display.update()
@@ -113,7 +116,7 @@ class Equipment:
             if data == -1:
                 continue
             text = pygame.font.Font("font/freesansbold.ttf", 80).render(str(data), True, (0,0,0))
-            self.screen.blit(text, [755+95*i, HEIGHT-135])
+            self.screen.blit(text, [555+95*i, HEIGHT-135])
 
 
     def check(self, select):
