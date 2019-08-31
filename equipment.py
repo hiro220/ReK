@@ -134,18 +134,11 @@ class Equipment:
                 self.equipment[i] = -1
         return True
 
-    def chip_chack(self, select):
-        chip_data = self.chip_data[select]
-        # 空いている枠の数を取得
-        empty_num = self.chip.count(-1)
-        # 装備する枠が残っているか
-        if chip_data['equip_size'] > empty_num:
-            return False
-        # 装備可能上限まで装備しているか
-        equip_num = self.chip.count(select)
-        if chip_data['equip_max'] == equip_num:
-            return False
-        return True
+    def _set_chip(self, select, size):
+        i = self.change_chip
+        self.chip_data[select]['num'] -= 1
+        for j in range(size):
+            self.chip[i+j] = select
 
     def equip(self, select):
         # 選択した銃を装備する。
@@ -154,5 +147,48 @@ class Equipment:
             equipment[self.change_gun] = select
 
     def set_chip(self, select):
-        if self.chip_chack(select):
-            self.chip[self.change_chip] = select
+        chip_data = self.chip_data[select]
+        # チップの枠がサイズ何番目が保存されているのかを保持
+        chip_id_list = []
+        i = 0
+        while i < 6:
+            chip = self.chip[i]
+            if chip == -1:
+                size = 1
+            else:
+                size = self.chip_data[chip]['equip_size']
+            chip_id_list += [j for j in range(size)]
+            i += size
+        # チップのサイズ
+        size = chip_data['equip_size']
+        i = self.change_chip
+        # 装備可能上限まで装備しているか
+        equip_num = self.chip.count(select)
+        if i + size > 6:
+            PopupWindow(self.screen, "装備可能な枠に収まりません。", ['OK']).loop()
+            return
+        if chip_data['equip_max'] == equip_num / size:
+            PopupWindow(self.screen, "装備できる上限に達しています。", ['OK']).loop()
+            return
+        # 選択中の枠にそのチップを装備しているか
+        if self.chip[i] == select and chip_id_list[i] == 0:
+            PopupWindow(self.screen, 'すでにそのチップをこの枠に装備しています。', ['OK']).loop()
+            return
+        # 選択中の枠にチップが装備されているか
+        count = self.chip[i:i+size].count(-1)    # -1が空枠
+        if count != size:
+            if PopupWindow(self.screen, "必要な枠に装備されているチップをすべて外し、装備します。", ['OK', 'NO']).loop() == 1:
+                return
+        # 装備済みのチップを外す
+        for j in range(i,i+size):
+            chip = self.chip[j]
+            if chip == -1:
+                continue
+            data = self.chip_data[chip]
+            chip_size = data['equip_size']
+            data['num'] += 1
+            j -= chip_id_list[j]
+            for k in range(j, j+chip_size):
+                self.chip[k] = -1
+        # チップを装備する
+        self._set_chip(select, size)
