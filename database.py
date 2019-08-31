@@ -211,11 +211,17 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser(description='ReKにおけるデータベースを管理するファイル')
     parser.add_argument('--delete', action='store_true', help="すべてのデータベースを初期化する")
     parser.add_argument('-s', '--show', action='store_true', help="すべてのデータベースの中身を表示する")
+    parser.add_argument('-c', '--cheat', action='store_true', help='操作するデータベースをチートデータに変更')
     args = parser.parse_args()
+    
+    if args.cheat:
+        db = cdb
+    
     # データベース
     conn = sqlite3.connect(db)
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
+
 
     if args.show:
         tables = cur.execute("SELECT * FROM sqlite_master WHERE type='table'")
