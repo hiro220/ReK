@@ -109,7 +109,7 @@ class Stage:
             if self.select_continued():
                 R_time.restart()
                 pygame.mixer.music.unpause()
-                self.player_init()
+                self.player_init(continued=True)
                 self.continue_num -= 1
                 self.player.invincible(2000)
             else:
@@ -331,20 +331,26 @@ class Stage:
     def otherwise(self):
         return self.normalRule() or self.playerBreak()
 
-    def player_init(self):
+    def player_init(self, continued=False):
         chips = self.data['chip']
         # プレイヤーのマシンを生成する
         self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20), self.data)
+        i = 0
         for chip in chips:
             if chip < 0:
                 continue
+            size = self.data['chip_data'][chip]['equip_size']
             chip = self.data['chip_data'][chip]['name']
+            i += 1
+            if i < size:
+                continue
+            i = 0
             if chip == 'HP_UP':
                 self.player.hp.maxhp += 0.5
                 self.player.recover(0.5)
-            elif chip == 'CONTINUE':
-                # コンティニューは二つ枠を取っているから、二度実行される
-                self.continue_num += 0.5
+            elif chip == 'CONTINUE' and continued==False:
+                # コンティニューは三つ枠を取っているから、三度実行される
+                self.continue_num += 1
             elif chip == 'SPEEDUP':
                 self.player.dx += 1
                 self.player.dy += 1
