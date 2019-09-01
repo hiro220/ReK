@@ -16,7 +16,8 @@ class Equipment:
         self.change_chip = 0
         self.back = False               # 一つ前の画面にもどるか
         self.screen_info = pygame.font.Font("font/freesansbold.ttf" ,70).render("Equip", True, (255,255,255))
-        self.back_info = pygame.font.Font("font/freesansbold.ttf" ,50).render("'Q' : Back", True, (255,255,255))
+        self.back_info = pygame.font.Font("font/ShipporiMincho-TTF-Regular.ttf" ,50).render("'Q' : 戻る", True, (255,255,255))
+        self.change_info = pygame.font.Font("font/ShipporiMincho-TTF-Regular.ttf" ,50).render("'C' : 切り替え", True, (255,255,255))
         self.listbox_id = 0
         texts = [data["name"] for data in self.gun_data.values()]
         equip_listbox = ListBox(self.screen, 80, 200, 300, 250, texts, font_size=40, target=True,\
@@ -41,7 +42,8 @@ class Equipment:
     def process(self):
         # 内部処理
         self.listbox()
-        select = [data["num"] > 0 for data in self.chip_data.values()] + [self.chip[self.change_chip]!=-1, self.chip!=[-1]*6]
+        select = [data["num"] > 0 for data in self.chip_data.values()] \
+                    + [self.chip[self.change_chip]!=-1, self.chip!=[-1]*6]
         self.listboxes[1].set_selectable(select)
         for event in pygame.event.get():
             select = self.listbox.process(event)
@@ -83,7 +85,8 @@ class Equipment:
         # 画面描画
         self.screen.fill((0,0,0))
         self.screen.blit(self.screen_info, [150, 20])
-        self.screen.blit(self.back_info, [WIDTH-self.back_info.get_rect().right-20, 20])
+        self.screen.blit(self.back_info, [850, 20])
+        self.screen.blit(self.change_info, [850, 90])
         
         self.listbox.color_reset()
         if self.listbox_id == 0:
