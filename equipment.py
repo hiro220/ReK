@@ -127,6 +127,9 @@ class Equipment:
         for i, gun in enumerate(self.equipment):
             if gun == select:
                 if i == 0:
+                    PopupWindow(self.screen, "1番目に装備されています。\n場所の変更ができません。", ["OK"]).loop()
+                    return False
+                if i == self.change_gun:
                     return False
                 while True:
                     if PopupWindow(self.screen, "すでに装備しています。\n場所を変更しますか？", \
