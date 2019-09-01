@@ -35,13 +35,13 @@ class Equipment:
         while True:
             self.clock.tick(30)
             request = self.process()
+            self.listbox()
             self.draw()
             if request != CONTINUE:
                 return request
 
     def process(self):
         # 内部処理
-        self.listbox()
         select = [data["num"] > 0 for data in self.chip_data.values()] \
                     + [self.chip[self.change_chip]!=-1, self.chip!=[-1]*6]
         self.listboxes[1].set_selectable(select)
@@ -129,7 +129,7 @@ class Equipment:
                 if i == 0:
                     return False
                 while True:
-                    if PopupWindow(self.screen, "すでに装備している枠から変更しますか？", \
+                    if PopupWindow(self.screen, "すでに装備しています。\n場所を変更しますか？", \
                                    ["変更する", "変更しない"]).loop() == 0:
                         break
                     else:
