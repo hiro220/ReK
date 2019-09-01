@@ -73,7 +73,8 @@ class Menu:
                     elif option_num == 1:
                         return None, '1'
                     elif option_num == 2:
-                        Equipment(self.screen, self.data).do()
+                        if Equipment(self.screen, self.data).do() == EXIT:
+                            return EXIT, None
                         break
                 
             self.screen.fill((0,0,0))
