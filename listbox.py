@@ -22,7 +22,7 @@ class ListBox:
         # 選択要素、描画要素の初期化
         self.selected = 0
         self.top_id = 0
-        self.left = 0
+        self.left = -30
         # テキストのフォント
         self.font_size = font_size
         self.font = pygame.font.Font("font/freesansbold.ttf", font_size)
@@ -67,18 +67,23 @@ class ListBox:
         # 描画位置、サイズなどの設定
         x, y = self.rect.left, self.rect.top
         i = 0
+        box_width = self.rect.right - self.rect.left
         for text, color in zip(text_list, colors):
             # テキストを描画範囲に収まるように描画
-            size = (0,0,self.rect.right-self.rect.left-10-self.outline-scroll, self.font_size)
+            size = (0,0,box_width-10-self.outline-scroll, self.font_size)
             draw_text = self.font.render(text, True, color)
             rect = draw_text.get_rect()
             # 選択中の要素に枠線を描画する
             if self.selected == self.top_id+i and self.target:
                 # 描画範囲を超える大きさなら、収まるように調整
-                self.left = self.left * (rect.right-self.left+10 > self.rect.right-self.rect.left-5-self.outline-scroll)
-                if rect.right > self.rect.right-self.rect.left-5-self.outline-scroll:
-                    size = (self.left,0,self.rect.right-self.rect.left-15-self.outline-scroll, self.font_size)
-                    rect = Rect(0,0,self.rect.right-self.rect.left-5-self.outline-scroll, rect.bottom)
+                self.left = self.left * (rect.right-self.left+30 > box_width-51-self.outline-scroll) \
+                            or -30 * (self.left!=0) or self.left
+                left = (rect.right-box_width+15+self.outline+scroll) \
+                        * (rect.right-self.left < box_width-15-self.outline-scroll) \
+                        or self.left * (self.left > 0)
+                if rect.right > box_width-15-self.outline-scroll:
+                    size = (left,0,box_width-15-self.outline-scroll, self.font_size)
+                    rect = Rect(0,0,box_width-5-self.outline-scroll, rect.bottom)
                 rect.move_ip(x+5, y+5+(self.font_size+10)*i)
                 # 描画
                 pygame.draw.rect(self.screen, (255,0,0), rect, 2)
@@ -91,7 +96,7 @@ class ListBox:
         if not self.target or self.list_size == 0:
             return None
         if event.type == KEYDOWN:
-            self.left = 0
+            self.left = -30
             if event.key == K_UP:
                 self.selected -= 1
             elif event.key == K_DOWN:
