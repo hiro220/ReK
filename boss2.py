@@ -296,3 +296,34 @@ class Move_pack17(Move_Pack): #ランダム縦移動
             self.sub.dx,self.sub.dy = 0,-5
         else:
             self.sub.dx,self.sub.dy = 0,5
+
+class Move_pack18(Move_Pack):
+    def __init__(self, principal):
+        super().__init__(principal)
+        self.point_set = [None,None]
+        self.change_flag = True
+    def move(self):
+        if self.change_flag:
+            self.p_point()
+            self.change_flag = False
+        if self.sub.rect.bottom >= mg2.bottom:
+
+    
+
+    def p_set(self):
+        self.p_point[0],self.p_point[1] = self.sub.machines.rect.centerx, self.sub.machines.rect.centery
+
+    def move_set(self):
+        if self.sub.rect.centerx > self.p_point[0]:
+            self.sub.dx = -10
+        elif self.sub.rect.centerx < self.point[0]:
+            self.sub.dx = 10
+        elif self.sub.rect.centerx == self.point[0]:
+            self.sub.dx = 0
+        
+        if self.sbu.rect.centery > self.p_point[1]:
+            self.sub.dy = -10
+        elif self.sbu.rect.centery < self.p_point[1]:
+            self.sub.dy = 10
+        elif self.sbu.rect.centery == self.p_point[1]:
+            self.sub.dy = 0
