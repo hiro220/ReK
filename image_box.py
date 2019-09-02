@@ -23,6 +23,7 @@ class ImageBox:
 
     def draw(self):
         # 描画領域の描画
+        self.count_time += 1 / self.change_speed
         pygame.draw.rect(self.screen, self.bg, self.rect)
         pygame.draw.rect(self.screen, self.outline_color, self.rect, self.outline_size)
         x = self.rect.left + self.outline_size + 30
@@ -43,14 +44,14 @@ class ImageBox:
                 text = pygame.font.Font("font/freesansbold.ttf", 80).render(str(data), True, (0,0,0))
                 rect = text.get_rect()
                 width, height = rect.right, rect.bottom
-                self.screen.blit(image, [x+self.image_width/2-width/2, y+self.image_height/2-height/2])
+                self.screen.blit(text, [x+self.image_width/2-width/2, y+self.image_height/2-height/2])
             # 枠の描画
-            color = (0,)*3 * (self.select == i) or (255,0,0)
+            color = (0,)*3 * (self.select != i) or (255,0,0)
             size = 2 + (self.select==i) * 2
             pygame.draw.rect(self.screen, color, Rect(x, y, self.image_width, self.image_height), size)
+            x += self.image_width + 5
 
     def process(self, event_key):
-        self.count_time += 1 / change_speed
         if event_key == K_LEFT:
             self.select -= 1
             self.count_time = 0
@@ -73,7 +74,7 @@ class ImageBox:
         if init_list == []:
             init_list = [0 for _ in range(self.frame_num)]
         for i, path in zip(init_list, image_path_list):
-            if path[-1] == '/':
+            if type(path) == str and path[-1] == '/':
                 # フォルダが指定された。
                 path = glob(path+'*.png')
                 path.sort()
