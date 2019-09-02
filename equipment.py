@@ -30,6 +30,7 @@ class Equipment:
         self.listboxes = [equip_listbox, chip_listbox]
         self.listbox = self.listboxes[self.listbox_id]
         self.clock = pygame.time.Clock()
+        self.count = 0
     
     def do(self):
         while True:
@@ -64,7 +65,7 @@ class Equipment:
                 elif event.key == K_c:
                     self.listbox_id ^= 1
                     self.listbox = self.listboxes[self.listbox_id]
-                
+        self.count = (self.count + 3) * (self.count+3 < 69)
         return CONTINUE
 
     def equip_key(self, key):
@@ -105,11 +106,16 @@ class Equipment:
         pygame.draw.rect(self.screen, (255,255,255), Rect(700, HEIGHT-150, 340, 100))
         for i, data in enumerate(self.equipment):
             color = (255,0,0) * (i == self.change_gun) or (0,)*3
-            pygame.draw.rect(self.screen, color, [730+95*i, HEIGHT-145, 90, 90], 2+(i==self.change_gun))
             if data == -1:
-                continue
-            text = pygame.font.Font("font/freesansbold.ttf", 80).render(str(data), True, (0,0,0))
-            self.screen.blit(text, [755+95*i, HEIGHT-135])
+                pass
+            if data == 0:
+                img = "img/bullet_test/参考画像2-" + str(self.count//10+1) + '.png'
+                image = pygame.image.load(img).convert_alpha()
+                self.screen.blit(image, [730+95*i, HEIGHT-145])
+            else:
+                text = pygame.font.Font("font/freesansbold.ttf", 80).render(str(data), True, (0,0,0))
+                self.screen.blit(text, [755+95*i, HEIGHT-135])
+            pygame.draw.rect(self.screen, color, [730+95*i, HEIGHT-145, 90, 90], 2+(i==self.change_gun))
 
     def draw_chip(self):
         pygame.draw.rect(self.screen, (255,255,255), Rect(500, HEIGHT-150, 625, 100))
