@@ -3,6 +3,7 @@ from pygame.locals import *
 from define import *
 from listbox import ListBox
 from popupwindow import PopupWindow
+from image_box import ImageBox
 
 class Equipment:
 
@@ -18,7 +19,7 @@ class Equipment:
         self.screen_info = pygame.font.Font("font/freesansbold.ttf" ,70).render("Equip", True, (255,255,255))
         self.back_info = pygame.font.Font("font/ShipporiMincho-TTF-Regular.ttf" ,50).render("'Q' : 戻る", True, (255,255,255))
         self.change_info = pygame.font.Font("font/ShipporiMincho-TTF-Regular.ttf" ,50).render("'C' : 切り替え", True, (255,255,255))
-        self.listbox_id = 0
+        self.change_id = 0
         texts = [data["name"] for data in self.gun_data.values()]
         equip_listbox = ListBox(self.screen, 80, 200, 300, 250, texts, font_size=40, target=True,\
                                      title="Gun", title_size=60)
@@ -28,7 +29,8 @@ class Equipment:
                                      title="Chip", title_size=60)
         chip_listbox += ['remove', 'remove ALL']
         self.listboxes = [equip_listbox, chip_listbox]
-        self.listbox = self.listboxes[self.listbox_id]
+        self.listbox = self.listboxes[self.change_id]
+        self.gun_image_box = ImageBox(screen, 700, 450, 90, 90, 3)
         self.clock = pygame.time.Clock()
         self.count = 0
     
@@ -46,34 +48,29 @@ class Equipment:
         select = [data["num"] > 0 for data in self.chip_data.values()] \
                     + [self.chip[self.change_chip]!=-1, self.chip!=[-1]*6]
         self.listboxes[1].set_selectable(select)
+        self.gun_image_box.target = self.change_id==0
         for event in pygame.event.get():
             select = self.listbox.process(event)
             if select != None:
-                if self.listbox_id == 0:
+                if self.change_id == 0:
                     self.equip(select)
                 else:
                     self.set_chip(select)
             if event.type == QUIT:
                 return EXIT
             if event.type == KEYDOWN:
-                if self.listbox_id == 0:
-                    self.equip_key(event.key)
+                if self.change_id == 0:
+                    self.gun_image_box.process(event.key)
+                    self.change_gun = self.gun_image_box.select
                 else:
                     self.chip_key(event.key)
                 if event.key == K_q:
                     return BACK
                 elif event.key == K_c:
-                    self.listbox_id ^= 1
-                    self.listbox = self.listboxes[self.listbox_id]
+                    self.change_id ^= 1
+                    self.listbox = self.listboxes[self.change_id]
         self.count = (self.count + 3) * (self.count+3 < 69)
         return CONTINUE
-
-    def equip_key(self, key):
-        if key == K_RIGHT:
-            self.change_gun += 1
-        elif key == K_LEFT:
-            self.change_gun -= 1
-        self.change_gun = (self.change_gun + 3) % 3
 
     def chip_key(self, key):
         if key == K_RIGHT:
@@ -90,11 +87,11 @@ class Equipment:
         self.screen.blit(self.change_info, [850, 90])
         
         self.listbox.color_reset()
-        if self.listbox_id == 0:
+        if self.change_id == 0:
             self.listbox.set_color(self.equipment, (105,105,255))
         self.listbox.draw()
 
-        if self.listbox_id == 0:
+        if self.change_id == 0:
             self.draw_equip()
         else:
             self.draw_chip()
@@ -103,19 +100,21 @@ class Equipment:
 
     def draw_equip(self):
         # 装備中の銃情報の表示
-        pygame.draw.rect(self.screen, (255,255,255), Rect(700, HEIGHT-150, 340, 100))
-        for i, data in enumerate(self.equipment):
-            color = (255,0,0) * (i == self.change_gun) or (0,)*3
+        data_list = []
+        id_list = []
+        for data in self.equipment:
             if data == -1:
-                pass
-            if data == 0:
-                img = "img/bullet_test/参考画像2-" + str(self.count//10+1) + '.png'
-                image = pygame.image.load(img).convert_alpha()
-                self.screen.blit(image, [730+95*i, HEIGHT-145])
+                data_list.append(None)
+                id_list.append(0)
+            elif data == 0:
+                data_list.append('img/gun_icon/'+str(data)+'/')
+                id_list.append(3)
             else:
-                text = pygame.font.Font("font/freesansbold.ttf", 80).render(str(data), True, (0,0,0))
-                self.screen.blit(text, [755+95*i, HEIGHT-135])
-            pygame.draw.rect(self.screen, color, [730+95*i, HEIGHT-145, 90, 90], 2+(i==self.change_gun))
+                data_list.append(data)
+                id_list.append(0)
+        self.gun_image_box.set_image(data_list, id_list)
+        self.gun_image_box.draw()
+                
 
     def draw_chip(self):
         pygame.draw.rect(self.screen, (255,255,255), Rect(500, HEIGHT-150, 625, 100))
