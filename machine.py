@@ -24,7 +24,7 @@ class Hp:
 
 class Machine(pygame.sprite.Sprite):
 
-    def __init__(self, hp, x, y, img, machines, score, money, data):
+    def __init__(self, hp, x, y, img, machines, score, money):
         """引数は、機体の体力を表すhp、機体の初期位置(x, y)、描画する画像、発射する弾の当たり判定対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.hp = Hp(hp)
@@ -42,8 +42,6 @@ class Machine(pygame.sprite.Sprite):
         self.dx = self.dy = 0
         self.score = score
         self.money = money
-        self.data = data
-        self.reload_data()
 
     def move(self, dx, dy):
         """機体を(dx, dy)だけ移動させる"""
@@ -55,9 +53,7 @@ class Machine(pygame.sprite.Sprite):
             self.gun.shoot(x, y)
 
     def reload(self, count):
-        print(count)
-        reload_count = self.reload_file[count]
-        #print(reload_count)
+        reload_count = self.reload_num[count]
         if reload_count != 0:
             if self.reload_flag:
                 self.reload_flag = False
@@ -66,16 +62,7 @@ class Machine(pygame.sprite.Sprite):
                 self.gun.num = 0
                 Timer(1000+bullet_num*500, self.gun.reload)
                 Timer(1500+bullet_num*500, self.change_flag)
-                self.reload_file[count] = reload_count - 1
-
-    def reload_data(self):
-        self.reload_file = []
-        for i in range(3):
-             equip = self.data['equip'][i]
-             if equip == -1:
-                 continue
-             self.reload_file.append(self.data['gun_data'][equip]['reload_size'])
-        print(self.reload_file)
+                self.reload_num[count] -= 1
     
     def BulletZero(self):
         self.gun.BulletZero()
@@ -153,3 +140,7 @@ class Machine(pygame.sprite.Sprite):
         if num-1 == 0:
             return
         Timer(millisecond, self.fall_meteorite, machines, num-1, millisecond)
+
+    def reload_base(self, data):
+        self.reload_num = data
+        print(self.reload_num)

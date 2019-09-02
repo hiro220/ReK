@@ -130,7 +130,8 @@ class Stage:
                     self.process, self.draw = self.pause_process, self.pause_draw
                 if event.key == K_x or event.key == K_v:
                     self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
-                self.player.change(event.key)
+                if event.key == K_a or event.key == K_s or event.key == K_d:
+                    self.player.change(event.key)
         return CONTINUE
 
     def moveStage(self):
@@ -288,7 +289,7 @@ class Stage:
             cpu_item(x, y, self.cpus)
         if name in cpu_dic:                             # 辞書にキーnameがあるか
             create_cpu = cpu_dic[name]                      # 変数createにクラス名を代入。
-            create_cpu(x, y, self.players, self.score, self.money, self.data)              # 変数createに代入されているクラスを呼び出す。
+            create_cpu(x, y, self.players, self.score, self.money)              # 変数createに代入されているクラスを呼び出す。
         if name in item_dic:
             create_item = item_dic[name]
             create_item(x, y, self.players)

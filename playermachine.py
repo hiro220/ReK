@@ -11,7 +11,7 @@ class PlayerMachine(Machine):
     def __init__(self, x, y, cpus, score, money, data):
         """引数は、初期位置(x, y)、弾の当たり判定対象となる敵機グループ"""
         image = pygame.image.load("img/player.png").convert_alpha()
-        super().__init__(2, x, y, image, cpus, score, money, data)
+        super().__init__(2, x, y, image, cpus, score, money)
         self.dx, self.dy = 7, 7                         # 移動量
         self.wait_flag = 0
         self.count = 0
@@ -19,9 +19,10 @@ class PlayerMachine(Machine):
         self.equip = data["equip"]
         self.gun_data = data["gun_data"]
         self.gun_base()
+        self.reload_data()
         self.gun = self.gun_file[0]
         self.reload_number = 1
-
+        
     def move(self):
         if self.wait_flag == 0:
             self.firstmove()
@@ -42,7 +43,7 @@ class PlayerMachine(Machine):
             x, y = self.rect.midright
             super().shoot(x, y)
         elif key == K_v:
-            super().reload(self.reload_number-1)
+            super().reload(self.reload_number - 1)
 
     def change(self, key):
         self.gun_number = 1 * (key==K_a) or 2 * (key==K_s) or 3 * (key==K_d)
@@ -77,3 +78,13 @@ class PlayerMachine(Machine):
 
     def death(self):
         PlayerMachine.killed_count += 1
+
+    def reload_data(self):
+        self.reload_file = []
+        for i in range(3):
+            equip = self.equip[i]
+            if equip == -1:
+                continue
+            self.reload_file.append(self.gun_data[equip]['reload_size'])        
+        super().reload_base(self.reload_file)
+        
