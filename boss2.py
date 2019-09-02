@@ -57,8 +57,8 @@ class Stage2_sub(Boss):
         self.shoot_times = 0
         self.move_count = {0:0, 1:0, 2:0, 3:0}
         self.move_dic = {0:Move_pack0(self),1:Move_pack1(self), 3:Move_pack3(self), 8:Move_pack8(self),10:Move_pack10(self), 11:Move_pack11(self), 12:Move_pack12(self),\
-                        13:Move_pack13(self,self.boss.move_point),\
-                        16:Move_pack16(self), 17:Move_pack17(self,self.boss.move_point),100:Move_flesh(self)}
+                        13:Move_pack13(self,self.boss.move_point),16:Move_pack16(self), 17:Move_pack17(self,self.boss.move_point),\
+                        18:Move_pack18(self), 100:Move_flesh(self)}
         self.gun_dic = {0:Beam_Gun(self.machines,self, -1 ,90),1:Beam_Gun(self.machines,self, -1 ,270),2:Beam_Gun(self.machines,self, -1 ,0),3:Beam_Gun(self.machines,self, -1 ,180),\
                         4:Obot_Gun(self.machines,self, -1,90,500),5:Obot_Gun(self.machines,self,-1,270,500),6:Division_Gun(self.machines,self, -1,1200,True),7:Division_Gun(self.machines,self, -1,1500, True)}
         if sub_number == 0:
@@ -68,7 +68,8 @@ class Stage2_sub(Boss):
 
     def update(self):
         if self.boss.natural[self.number] and len(self.move_timer) == 0:
-            self.move_rutin(self.boss.sub_rutin)
+            #self.move_rutin(self.boss.sub_rutin)
+            self.move_rutin(3)
             self.boss.natural[self.number] = False
         
         if self.shoot_flag and self.shoot_times != 0:
@@ -133,7 +134,9 @@ class Stage2_sub(Boss):
             self.move_timer.append(Timer(2000, self.change_number, 12))
             self.move_timer.append(Timer(3000, self.change_number, 11, True ,-1,[6,7]))
             self.move_timer.append(Timer(10000, self.change_number, 1))
-    
+        elif number == 3:
+            self.move_timer.append(Timer(2000, self.change_number, 10))
+            self.move_timer.append(Timer(3000, self.change_number, 18))
 class Move_Pack:
     def __init__(self, principal):
         self.sub = principal
@@ -300,30 +303,25 @@ class Move_pack17(Move_Pack): #ランダム縦移動
 class Move_pack18(Move_Pack):
     def __init__(self, principal):
         super().__init__(principal)
-        self.point_set = [None,None]
+        self.p_point = [None,None]
         self.change_flag = True
+        self.angle = None
     def move(self):
         if self.change_flag:
-            self.p_point()
+            self.p_set()
+            self.angle_set()
+            self.move_set()
             self.change_flag = False
-        if self.sub.rect.bottom >= mg2.bottom:
-
+        if self.sub.rect.bottom >= mg2.bottom or self.sub.rect.top <= mg2.top or self.sub.rect.left <= mg2.left or self.sub.rect.right >= mg2.right:
+            self.sub.dx, self.sub.dy = 0 ,0
     
-
     def p_set(self):
-        self.p_point[0],self.p_point[1] = self.sub.machines.rect.centerx, self.sub.machines.rect.centery
+        self.p_point[0],self.p_point[1] = self.sub.machines.sprites()[0].rect.centerx, self.sub.machines.sprites()[0].rect.centery
 
     def move_set(self):
-        if self.sub.rect.centerx > self.p_point[0]:
-            self.sub.dx = -10
-        elif self.sub.rect.centerx < self.point[0]:
-            self.sub.dx = 10
-        elif self.sub.rect.centerx == self.point[0]:
-            self.sub.dx = 0
-        
-        if self.sbu.rect.centery > self.p_point[1]:
-            self.sub.dy = -10
-        elif self.sbu.rect.centery < self.p_point[1]:
-            self.sub.dy = 10
-        elif self.sbu.rect.centery == self.p_point[1]:
-            self.sub.dy = 0
+        self.sub.dx,self.sub.dy = int(-30*math.cos(self.angle)), int(-30*math.sin(self.angle))
+    
+    def angle_set(self):
+        distance_x = (self.sub.rect.centerx - self.p_point[0])/10
+        distance_y = (self.sub.rect.centery - self.p_point[1])/10
+        self.angle = math.atan2(distance_y,distance_x)
