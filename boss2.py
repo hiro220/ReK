@@ -47,7 +47,7 @@ class Stage2_boss(Boss):
 class Stage2_sub(Boss):
     def __init__(self, x, y, players, score, sub_number, boss, money):              
         image = pygame.image.load(img_path+"bot.png").convert_alpha()
-        super().__init__(5, x, y, image, players, score, money)
+        super().__init__(100000, x, y, image, players, score, money)
         self.boss = boss
         self.number = sub_number
         self.sel_number = 0
@@ -57,7 +57,7 @@ class Stage2_sub(Boss):
         self.shoot_times = 0
         self.move_count = {0:0, 1:0, 2:0, 3:0}
         self.move_dic = {0:Move_pack0(self),1:Move_pack1(self), 3:Move_pack3(self), 8:Move_pack8(self),10:Move_pack10(self), 11:Move_pack11(self), 12:Move_pack12(self),\
-                        13:Move_pack13(self,self.boss.move_point), 15:Move_pack15(self),\
+                        13:Move_pack13(self,self.boss.move_point),\
                         16:Move_pack16(self), 17:Move_pack17(self,self.boss.move_point),100:Move_flesh(self)}
         self.gun_dic = {0:Beam_Gun(self.machines,self, -1 ,90),1:Beam_Gun(self.machines,self, -1 ,270),2:Beam_Gun(self.machines,self, -1 ,0),3:Beam_Gun(self.machines,self, -1 ,180),\
                         4:Obot_Gun(self.machines,self, -1,90,500),5:Obot_Gun(self.machines,self,-1,270,500),6:Division_Gun(self.machines,self, -1,1200,True),7:Division_Gun(self.machines,self, -1,1500, True)}
@@ -278,13 +278,6 @@ class Move_pack13(Move_Pack): #ランダム横移動
             self.sub.dx,self.sub.dy = -5,0
         else:
             self.sub.dx,self.sub.dy = 5,0
-
-class Move_pack15(Move_Pack): #十字配置
-    def move(self):
-        if self.sub.number == 0:
-            self.sub.rect.center = self.sub.machines.sprites()[0].rect.centerx, mg2.top + 50
-        if self.sub.number == 1:
-            self.sub.rect.center = mg2.centerx + 300, self.sub.machines.sprites()[0].rect.centery
 
 class Move_pack16(Move_Pack): #横配置
     def move(self):
