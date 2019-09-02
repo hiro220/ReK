@@ -186,6 +186,8 @@ class Main(pygame.sprite.Sprite):
 
     def exit(self):
         self.data["play_time"] += pygame.time.get_ticks()
+        print('-'*50)
+        print(self.data)
         db.save(self.data, self.cheat)
         pygame.quit()
         sys.exit()
