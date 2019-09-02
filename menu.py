@@ -41,7 +41,7 @@ class Menu:
 
         # メッセージボックスの設定
         self.messagebox = MessageBox(self.screen, 130, 540, 900,  outline_color=(180,180,180), select='random')
-        with open('data/message.txt', 'r') as fp:
+        with open('data/message.txt', 'r', encoding='utf-8') as fp:
             self.messagebox += fp.readlines()
 
         self.clock = pygame.time.Clock()
