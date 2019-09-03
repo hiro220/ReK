@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from define import *
 from equipment import Equipment
+from shop import Shop
 from listbox import ListBox
 
 class Menu:
@@ -68,7 +69,8 @@ class Menu:
                     if option_num == 0:
                         return None, '0'
                     elif option_num == 1:
-                        return None, '1'
+                        Shop(self.screen, self.data).do()
+                        break
                     elif option_num == 2:
                         Equipment(self.screen, self.data).do()
                         break

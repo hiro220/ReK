@@ -56,8 +56,6 @@ class Main(pygame.sprite.Sprite):
                         self.exit()
                     if stageTxt == "0":
                         break
-                    elif stageTxt == "1":
-                        self.shop_own = self.shop.draw()
                     else:
                         self.Stage_draw(stage_id, stageTxt)             
             elif init_num == Help:      #選択したモードがHelpならHelp画面に移動
