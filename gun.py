@@ -107,22 +107,27 @@ class Reflection_Gun(Gun): #左から右に弾を飛ばす
         self.num -= 1
 
 class Circle_Gun(Gun):
+    def __init__(self, machine, principal, max, time=0):
+        super().__init__(machine,principal, max)
+        self.time = time
     
     def shoot(self, x, y):
         Bullet_list1 = [[-4.0,0],[-3.5,-3.5],[0,-4.0],[3.5,-3.5],[4.0,0],[3.5,3.5],[0,4.0],[-3.5,3.5]]           #弾の飛ばす方向を格納
         Bullet_list2 = [[1.9,-4.6],[4.6,-1.9],[4.6,1.9],[1.9,4.6],[-1.9,4.6],[-4.6,1.9],[-4.6,-1.9],[-1.9,-4.6]] #弾の飛ばす方向を格納
-        if self.count == 0:                  #弾をそれぞれ交互にとばすためのself.count
+        if self.count == 0 and R_time.get_ticks() - self.gun_start >= self.time:                  #弾をそれぞれ交互にとばすためのself.count
             for bullet_list in Bullet_list1:
                 Bullet(x, y, bullet_list[0],bullet_list[1], self.machines)
             #self.gun_start = R_time.get_ticks()
             self.count = 1
             self.num -= 1
-        elif  self.count == 1:
+            self.gun_start = R_time.get_ticks()
+        elif  self.count == 1 and R_time.get_ticks() - self.gun_start >= self.time:
             for bullet_list in Bullet_list2:
                 Bullet(x, y, bullet_list[0], bullet_list[1], self.machines)
             #self.gun_start = R_time.get_ticks()
             self.count = 0
             self.num -= 1
+            self.gun_start = R_time.get_ticks()
 
 class Twist_Gun(Gun):
 

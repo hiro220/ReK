@@ -18,8 +18,10 @@ class Stage2_boss(Boss):
         self.money = money
         self.lord_flag = False
         self.move_point = random.randint(0,1)
-        self.sub_move = True
+        self.phase_flag = 1
+        #self.sub_move = True
         self.natural = [True,True,True,True,True,True]
+        self.move_dic = {1:self.phase1_move, 2:self.phase2_move, 3:self.phase3_move}
         #self.load_count = True
 
         Stage2_sub(self.rect.centerx,self.rect.centery-100, players, self.score, 0, self, self.money)
@@ -29,20 +31,42 @@ class Stage2_boss(Boss):
         if self.rect.centerx <= 1000:
             self.dx = 0
         self.move(self.dx,self.dy)
-        #print(self.natural)
         if False not in self.natural: 
-            self.sub_rutin = random.randint(1,2)
+            self.sub_rutin = random.randint(0,3)
         
-        if self.hp.hp <= 5 and self.lord_flag == False:
-            self.lord_flag = True
+        self.phase_check()
+        self.phase_move()
 
         if self.lord_flag:
             self.lord_sub()
             self.lord_flag = None
+        print(self.natural)
     
     def lord_sub(self):
         for number in range(3,7):
             Stage2_sub(mg2.centerx,100*(number-2), self.machines, self.score, number, self, self.money)
+    
+    def phase_check(self):
+        if self.hp.hp <= 5 and self.phase_flag == 1:
+            self.phase_flag = 2
+    
+    def phase_move(self):
+        if self.phase_flag == 1 or self.phase_flag == 2 or self.phase_flag == 3:
+            self.move_dic[self.phase_flag]()
+    
+    def phase_change(self, number):
+        self.phase_flag = number
+    
+    def phase1_move(self):
+        print("phase1")
+    
+    def phase2_move(self):
+        if self.phase_flag == 2:
+            self.natural = [False,False,False,False,False]
+            self.phase_flag += 0.1
+    
+    def phase3_move(self):
+        print("phase3")
 
 class Stage2_sub(Boss):
     def __init__(self, x, y, players, score, sub_number, boss, money):              
@@ -55,31 +79,33 @@ class Stage2_sub(Boss):
         self.move_timer = []
         self.shoot_flag = False
         self.shoot_times = 0
-        self.move_count = {0:0, 1:0, 2:0, 3:0}
         self.move_dic = {0:Move_pack0(self),1:Move_pack1(self), 3:Move_pack3(self), 8:Move_pack8(self),10:Move_pack10(self), 11:Move_pack11(self), 12:Move_pack12(self),\
                         13:Move_pack13(self,self.boss.move_point),16:Move_pack16(self), 17:Move_pack17(self,self.boss.move_point),\
-                        18:Move_pack18(self), 100:Move_flesh(self)}
+                        18:Move_pack18(self), 99:Move_phase2(self), 100:Move_flesh(self)}
         self.gun_dic = {0:Beam_Gun(self.machines,self, -1 ,90),1:Beam_Gun(self.machines,self, -1 ,270),2:Beam_Gun(self.machines,self, -1 ,0),3:Beam_Gun(self.machines,self, -1 ,180),\
-                        4:Obot_Gun(self.machines,self, -1,90,500),5:Obot_Gun(self.machines,self,-1,270,500),6:Division_Gun(self.machines,self, -1,1200,True),7:Division_Gun(self.machines,self, -1,1500, True)}
-        if sub_number == 0:
-            self.gun = Beam_Gun(self.machines, self,-1, 90)
-        else:
-            self.gun = Beam_Gun(self.machines, self,-1, 270)
+                        4:Obot_Gun(self.machines,self, -1,90,500),5:Obot_Gun(self.machines,self,-1,270,500),6:Division_Gun(self.machines,self, -1,1200,True),7:Division_Gun(self.machines,self, -1,1500, True),\
+                        8:Circle_Gun(self.machines, self, -1, 500)}
 
     def update(self):
         if self.boss.natural[self.number] and len(self.move_timer) == 0:
             #self.move_rutin(self.boss.sub_rutin)
             self.move_rutin(3)
             self.boss.natural[self.number] = False
+
+        if self.boss.hp.hp <= 5 and self.boss.phase_flag == 2:
+            self.del_timer()
+            self.sel_number = 99
+            self.move_timer.append(Timer(10, self.change_number, 99, True, -1,[8,8]))
         
         if self.shoot_flag and self.shoot_times != 0:
             super().shoot(self.rect.left, self.rect.top)
             self.shoot_times -= 1
-        #print(len(self.move_timer))
-        #print(self.boss.natural)
         self.move_select(self.sel_number)
         self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))
         self.move(self.dx,self.dy)
+
+        #print(self.shoot_flag)
+        #print(self.move_timer)
         
         
     def move_select(self, select_number):
@@ -137,6 +163,8 @@ class Stage2_sub(Boss):
         elif number == 3:
             self.move_timer.append(Timer(2000, self.change_number, 10))
             self.move_timer.append(Timer(3000, self.change_number, 18))
+        elif number == 4:
+            print("第二形態")
 class Move_Pack:
     def __init__(self, principal):
         self.sub = principal
@@ -150,6 +178,13 @@ class Move_flesh(Move_Pack):
     def move(self):
         self.sub.dx,self.sub.dy = 0, 0
 
+class Move_phase2(Move_Pack):
+    def move(self): 
+        if self.sub.number == 0:
+            self.sub.rect.center = self.sub.boss.rect.centerx, self.sub.boss.rect.centery - 100
+        elif self.sub.number == 1:
+            self.sub.rect.center = self.sub.boss.rect.centerx, self.sub.boss.rect.centery + 100
+
 class Move_pack0(Move_Pack):
     def move(self):
         self.sub.dx,self.sub.dy = self.sub.boss.dx,self.sub.boss.dy
@@ -160,7 +195,7 @@ class Move_pack1(Move_Pack):
             self.sub.rect.center = self.sub.boss.rect.centerx, self.sub.boss.rect.centery - 100
         elif self.sub.number == 1:
             self.sub.rect.center = self.sub.boss.rect.centerx, self.sub.boss.rect.centery + 100
-        self.sub.dx,self.sub.dy = self.sub.boss.dx,self.sub.boss.dy
+        #self.sub.dx,self.sub.dy = self.sub.boss.dx,self.sub.boss.dy
         #print(self.sub.move_timer)
         self.sub.del_timer()
         self.sub.boss.natural[self.sub.number] = True
@@ -314,6 +349,7 @@ class Move_pack18(Move_Pack):
             self.change_flag = False
         if self.sub.rect.bottom >= mg2.bottom or self.sub.rect.top <= mg2.top or self.sub.rect.left <= mg2.left or self.sub.rect.right >= mg2.right:
             self.sub.dx, self.sub.dy = 0 ,0
+            self.change_flag = True
     
     def p_set(self):
         self.p_point[0],self.p_point[1] = self.sub.machines.sprites()[0].rect.centerx, self.sub.machines.sprites()[0].rect.centery
