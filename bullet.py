@@ -429,19 +429,18 @@ class Bit_Manage(Bullet):
                     self.bitB.killed()
                     self.current_laser_flag = False
         else:
-            for list in self.laser_key:
-                if pressed_key[list]:
+            if pressed_key[self.laser_key]:
                     self.bitA = Bit(self.machines, self.principal, 0)
                     self.bitB = Bit(self.machines, self.principal, 1)
                     self.current_laser_flag = True
 
     def first_move(self):
         key_list = {0: K_a, 1: K_s, 2: K_d}
-        self.laser_key = []
+        self.laser_key = None
         self.not_laser_key = []
         for i in range(3):
             if self.principal.gun_search("Laser_Gun") == i:
-                self.laser_key.append(key_list[i])
+                self.laser_key = key_list[i]
             else:
                 self.not_laser_key.append(key_list[i])
         if self.principal.gun_search("Laser_Gun") == 0:
