@@ -24,8 +24,8 @@ class Stage2_boss(Boss):
         self.move_dic = {1:self.phase1_move, 2:self.phase2_move, 3:self.phase3_move}
         #self.load_count = True
 
-        Stage2_sub(self.rect.centerx,self.rect.centery-100, players, self.score, 0, self, self.money)
-        Stage2_sub(self.rect.centerx,self.rect.centery+100, players, self.score, 1, self, self.money)
+        self.sub1 = Stage2_sub(self.rect.centerx,self.rect.centery-100, players, self.score, 0, self, self.money)
+        self.sub2 = Stage2_sub(self.rect.centerx,self.rect.centery+100, players, self.score, 1, self, self.money)
     
     def update(self):
         if self.rect.centerx <= 1000:
@@ -40,7 +40,7 @@ class Stage2_boss(Boss):
         if self.lord_flag:
             self.lord_sub()
             self.lord_flag = None
-        print(self.natural)
+        print(self.phase_flag)
     
     def lord_sub(self):
         for number in range(3,7):
@@ -63,7 +63,16 @@ class Stage2_boss(Boss):
     def phase2_move(self):
         if self.phase_flag == 2:
             self.natural = [False,False,False,False,False]
+            if self.sub1.sel_number == 99 and self.sub2.sel_number == 99:
+                self.phase_flag += 0.1
+        elif self.phase_flag == 2.1:
+            Timer(6000,self.phase_change, 2.3)
+            #Timer(12000,self.phase_change, 2.4)
             self.phase_flag += 0.1
+        elif self.phase_flag == 2.3:
+            self.dy = -5
+            
+
     
     def phase3_move(self):
         print("phase3")
@@ -95,7 +104,7 @@ class Stage2_sub(Boss):
         if self.boss.hp.hp <= 5 and self.boss.phase_flag == 2:
             self.del_timer()
             self.sel_number = 99
-            self.move_timer.append(Timer(10, self.change_number, 99, True, -1,[8,8]))
+            self.move_timer.append(Timer(1200, self.change_number, 99, True, -1,[8,8]))
         
         if self.shoot_flag and self.shoot_times != 0:
             super().shoot(self.rect.left, self.rect.top)
