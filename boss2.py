@@ -21,7 +21,7 @@ class Stage2_boss(Boss):
         self.phase_flag = 1
         #self.sub_move = True
         self.natural = [True,True,True,True,True,True]
-        self.move_dic = {1:self.phase1_move, 2:self.phase2_move, 3:self.phase3_move}
+        self.move_dic = {1:self.phase1_move, 2:self.phase2_move, 2.1:self.phase2_1_move, 3:self.phase3_move}
         #self.load_count = True
 
         self.sub1 = Stage2_sub(self.rect.centerx,self.rect.centery-100, players, self.score, 0, self, self.money)
@@ -51,7 +51,7 @@ class Stage2_boss(Boss):
             self.phase_flag = 2
     
     def phase_move(self):
-        if self.phase_flag == 1 or self.phase_flag == 2 or self.phase_flag == 3:
+        if self.phase_flag == 1 or self.phase_flag == 2 or self.phase_flag == 2.1 or self.phase_flag == 3:
             self.move_dic[self.phase_flag]()
     
     def phase_change(self, number):
@@ -61,21 +61,24 @@ class Stage2_boss(Boss):
         print("phase1")
     
     def phase2_move(self):
-        if self.phase_flag == 2:
-            self.natural = [False,False,False,False,False]
-            if self.sub1.sel_number == 99 and self.sub2.sel_number == 99:
-                self.phase_flag += 0.1
-        elif self.phase_flag == 2.1:
-            Timer(6000,self.phase_change, 2.3)
-            #Timer(12000,self.phase_change, 2.4)
+        self.natural = [False,False,False,False,False]
+        if self.sub1.sel_number == 99 and self.sub2.sel_number == 99:
             self.phase_flag += 0.1
-        elif self.phase_flag == 2.3:
-            self.dy = -5
-            
-
-    
+            Timer(1200,self.phase_change, 2.1)
+            Timer(2400,self.phase_change, 3)
+            self.phase_flag = None
+    def phase2_1_move(self):
+        self.dy = -2
+        print("phase2")
+        
     def phase3_move(self):
-        print("phase3")
+        self.dy = 0
+        self.sub1.shoot_flag = False
+        self.sub2.shoot_flag = False
+        self.sub1.del_timer()
+        self.sub2.del_timer()
+        self.natural = [True,True,True,True,True,True]
+        self.phase_flag += 0.1
 
 class Stage2_sub(Boss):
     def __init__(self, x, y, players, score, sub_number, boss, money):              
@@ -114,7 +117,7 @@ class Stage2_sub(Boss):
         self.move(self.dx,self.dy)
 
         #print(self.shoot_flag)
-        #print(self.move_timer)
+        print(self.move_timer)
         
         
     def move_select(self, select_number):
