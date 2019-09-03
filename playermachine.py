@@ -8,7 +8,7 @@ from define import INFO_WIDTH, WIDTH, HEIGHT
 
 class PlayerMachine(Machine):
     killed_count = 0
-    def __init__(self, x, y, cpus, score, money, data, bullets):
+    def __init__(self, x, y, cpus, score, money, data):
         """引数は、初期位置(x, y)、弾の当たり判定対象となる敵機グループ"""
         image = pygame.image.load("img/player.png").convert_alpha()
         super().__init__(2, x, y, image, cpus, score, money)
@@ -17,7 +17,6 @@ class PlayerMachine(Machine):
         self.count = 0
         self.cop_flag = True
         self.equip = data["equip"]
-        self.bullets = bullets
         self.gun_data = data["gun_data"]
         self.gun_base()
         self.gun = self.gun_file[0]
@@ -59,13 +58,10 @@ class PlayerMachine(Machine):
             else:
                 class_name = self.gun_data[gun_num]['name']
                 bullet_count = self.gun_data[gun_num]['bullet_size']
-                if class_name == 'Laser_Gun':
-                    exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + ",self.bullets))")
-                else:    
-                    exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + "))") 
+                exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + "))") 
     
     def gun_search(self, class_name):
-        gun_index = -1
+        gun_index = None
         for i in range(3):
             if self.gun_file[i].__class__.__name__ == class_name:
                 gun_index = i

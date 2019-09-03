@@ -123,7 +123,7 @@ class Missile_Bullet(Bullet):
             self.kill()                         # このスプライトを所属するすべてのグループから削除
             for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
                 machine.hit(1)
-    
+
 class Fluffy_Bullet(Bullet):
     
     def __init__(self, x, y, dx, dy, machines):
@@ -386,24 +386,16 @@ class fire_Bullet(Bullet):
 
 class Laser_Bullet(Bullet):
 
-    def __init__(self, x, y, dx, dy, machines, principal, bitA, bitB, flag):
+    def __init__(self, x, y, dx, dy, machines, principal):
         """引数は初期位置(x, y)、移動量(dx, dy)、弾の当たり判定を行う対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.img_path = "img/bullet/beam/"
         self.image = pygame.image.load(self.img_path+"beam3.png").convert_alpha()   # 相対パスで画像を読み込む
         self.image = pygame.transform.smoothscale(self.image, (50,5))
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
-        self.dx, self.dy = 10, 0       # 移動量
+        self.rect.move_ip(x, y)
+        self.dx, self.dy = dx, dy
         self.machines = machines
-        self.flag = flag
-
-        if self.flag == 0:
-            self.rect.move_ip(principal.rect.right, principal.rect.centery)
-        elif self.flag == 1:
-            self.rect.move_ip(bitA.rect.right, bitA.rect.centery)
-        elif self.flag == 2:
-            self.rect.move_ip(bitB.rect.right, bitB.rect.centery)
-        
         self.update = self.move         # updateで呼ばれるメソッドをmoveに設定する。
 
     def move(self):
@@ -414,86 +406,113 @@ class Laser_Bullet(Bullet):
             for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
                 machine.hit(0.08, lasting=True)
                 
+class Bit_Manage(Bullet):
 
-class Laser_bit(Bullet):
-
-    def __init__(self, machines, principal, bullets):
+    def __init__(self, machines, principal):
         pygame.sprite.Sprite.__init__(self, self.containers)
+        self.image = pygame.image.load("img/player.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.first_flag = True
+        self.principal = principal
+        self.machines = machines
+        self.update = self.move
+
+    def move(self):
+        if self.first_flag == True:
+            self.first_move()
+
+        pressed_key = pygame.key.get_pressed()
+        if self.current_laser_flag:
+            for list in self.not_laser_key:
+                if pressed_key[list]:
+                    self.bitA.killed()
+                    self.bitB.killed()
+                    self.current_laser_flag = False
+        else:
+            for list in self.laser_key:
+                if pressed_key[list]:
+                    self.bitA = Bit(self.machines, self.principal, 0)
+                    self.bitB = Bit(self.machines, self.principal, 1)
+                    self.current_laser_flag = True
+
+    def first_move(self):
+        key_list = {0: K_a, 1: K_s, 2: K_d}
+        self.laser_key = []
+        self.not_laser_key = []
+        for i in range(3):
+            if self.principal.gun_search("Laser_Gun") == i:
+                self.laser_key.append(key_list[i])
+            else:
+                self.not_laser_key.append(key_list[i])
+        if self.principal.gun_search("Laser_Gun") == 0:
+            self.bitA = Bit(self.machines,self.principal, 0)
+            self.bitB = Bit(self.machines,self.principal, 1)
+            self.current_laser_flag = True
+        else:
+            self.current_laser_flag = False
+        self.first_flag = False
+
+class Bit(Bullet):
+
+    def __init__(self, machines, principal, bit_type):
+        pygame.sprite.Sprite.__init__(self, self.containers)
+        self.img_path = "img/bullet/laser/"
+        self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()
         self.image = pygame.transform.smoothscale(self.image, (35,35))
         self.rect = self.image.get_rect()
-        self.dx, self.dy = 0, 0       # 移動量
+        self.dx, self.dy = 0, 0
         self.count = 0
         self.HP = 3
-        self.bit_flag = 0
-        self.first_flag = 0
-        self.bullets = bullets
+        self.damage_flag = 0
+        self.break_flag = 0
+        self.kill_flag = 0
         self.machines = machines
         self.principal = principal 
         self.principal_bposx = principal.rect.centerx
         self.principal_bposy = principal.rect.centery
 
+        if bit_type == 0:
+            self.rect.move_ip(principal.rect.right + 10, principal.rect.centery)
+            self.velx, self.vely = -9, 9
+        elif bit_type == 1:
+            self.rect.move_ip(principal.rect.left - 35, principal.rect.centery)
+            self.velx, self.vely =9, -9
+
         self.update = self.move         # updateで呼ばれるメソッドをmoveに設定する。
 
-    def move(self, velx, vely):
-        if self.first_flag == 0:
-            if self.principal.gun_search("Laser_Gun") == 0:
-                self.select_gun_flag = 1
-                self.select_gun_flagb = 1
-            else:
-                self.image = pygame.image.load(self.img_path + "bit_empty.png").convert_alpha()
-                self.select_gun_flag = 0
-                self.select_gun_flagb = 0
-            self.first_flag = 1
+    def move(self):
 
         pri_movementx = self.principal.rect.centerx - self.principal_bposx
         pri_movementy = self.principal.rect.centery - self.principal_bposy
 
-        self.dx,self.dy,self.count = circle(velx,vely,25,self.count)        
+        self.dx,self.dy,self.count = circle(self.velx,self.vely,25,self.count)        
         self.dx,self.dy = self.dx + pri_movementx, self.dy + pri_movementy
 
-        self.rect.move_ip(self.dx, self.dy)
         self.principal_bposx = self.principal.rect.centerx
         self.principal_bposy = self.principal.rect.centery
 
-        if self.select_gun_flag == 1:
-            if self.select_gun_flagb == 0:
-                self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()
-                self.select_gun_flagb = 1
+        self.rect.move_ip(self.dx, self.dy)
 
-        if self.select_gun_flag == 0:
-            if self.select_gun_flagb == 1:
-                self.image = pygame.image.load(self.img_path + "bit_empty.png").convert_alpha()
-                self.select_gun_flagb = 0
+        bullets = self.groups()
+        collide_list = pygame.sprite.spritecollide(self, bullets[0], False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+        collide_list.remove(self)
+        if collide_list:                        # リストがあるか    
+            for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                if not type(machine) == Laser_Bullet:
+                    self.damage()
 
-        if self.select_gun_flag == 1:
-            collide_list = pygame.sprite.spritecollide(self, self.bullets, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
-            collide_list.remove(self)
-            if collide_list:                        # リストがあるか    
-                for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
-                    if not type(machine) == Laser_Bullet:
-                        self.damage()
-
-        not_laser_list = []
-        botton_list = {0:K_a, 1:K_s, 2:K_d}
-        for i in range(3):
-            laser_index = self.principal.gun_search('Laser_Gun')
-            if i != laser_index:
-                not_laser_list.append(i)
-        pressed_key = pygame.key.get_pressed()
-        for i in not_laser_list:
-            if pressed_key[botton_list[i]]:
-                self.select_gun_flag = 0
-        if pressed_key[botton_list[laser_index]]:
-            self.select_gun_flag = 1
+        if self.kill_flag == 1:
+            self.kill()
             
     def damage(self):
-        if self.bit_flag == 0:
+        if self.damage_flag == 0 and self.break_flag == 0:
             self.HP -= 1
             if self.HP == 0:
-                self.bit_flag = 1
-                self.Break_bit()
+                self.break_flag = 1
+                self.image = pygame.image.load(self.img_path + "break_bit.png").convert_alpha()
+                Timer(10000, self.Return_image)
             else:    
-                self.bit_flag = 1
+                self.damage_flag = 1
                 self.image = pygame.image.load(self.img_path + "bit_clear.png").convert_alpha()
                 Timer(2000, self.Return_image)
 
@@ -501,34 +520,130 @@ class Laser_bit(Bullet):
         self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()
         if self.HP == 0:
             self.HP = 3
-        self.bit_flag = 0
+        if self.damage_flag == 1:
+            self.damage_flag = 0
+        elif self.break_flag == 1:
+            self.break_flag = 0
 
-    def Break_bit(self):
-        self.image = pygame.image.load(self.img_path + "break_bit.png").convert_alpha()
-        Timer(10000, self.Return_image)
+    def killed(self):
+        self.kill_flag = 1
 
 
-class bitA(Laser_bit):
 
-    def __init__(self, x, y, machines, principal, bullets):
-        self.img_path = "img/bullet/laser/"
-        self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()   # 相対パスで画像を読み込む
-        super().__init__(machines, principal, bullets)
-        self.rect.move_ip(principal.rect.right+10, principal.rect.centery)
+# class Laser_bit(Bullet):
 
-    def move(self):
-        super().move(-9, 9)
+#     def __init__(self, machines, principal, bullets):
+#         pygame.sprite.Sprite.__init__(self, self.containers)
+#         self.image = pygame.transform.smoothscale(self.image, (35,35))
+#         self.rect = self.image.get_rect()
+#         self.dx, self.dy = 0, 0       # 移動量
+#         self.count = 0
+#         self.HP = 3
+#         self.bit_flag = 0
+#         self.first_flag = 0
+#         self.bullets = bullets
+#         self.machines = machines
+#         self.principal = principal 
+#         self.principal_bposx = principal.rect.centerx
+#         self.principal_bposy = principal.rect.centery
 
-class bitB(Laser_bit):
+#         self.update = self.move         # updateで呼ばれるメソッドをmoveに設定する。
 
-    def __init__(self, x, y, machines, principal, bullets):
-        self.img_path = "img/bullet/laser/"
-        self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()  # 相対パスで画像を読み込む
-        super().__init__(machines, principal, bullets)
-        self.rect.move_ip(principal.rect.left-35, principal.rect.centery)
+#     def move(self, velx, vely):
+#         if self.first_flag == 0:
+#             if self.principal.gun_search("Laser_Gun") == 0:
+#                 self.select_gun_flag = 1
+#                 self.select_gun_flagb = 1
+#             else:
+#                 self.image = pygame.image.load(self.img_path + "bit_empty.png").convert_alpha()
+#                 self.select_gun_flag = 0
+#                 self.select_gun_flagb = 0
+#             self.first_flag = 1
 
-    def move(self):
-        super().move(9, -9)
+#         pri_movementx = self.principal.rect.centerx - self.principal_bposx
+#         pri_movementy = self.principal.rect.centery - self.principal_bposy
+
+#         self.dx,self.dy,self.count = circle(velx,vely,25,self.count)        
+#         self.dx,self.dy = self.dx + pri_movementx, self.dy + pri_movementy
+
+#         self.rect.move_ip(self.dx, self.dy)
+#         self.principal_bposx = self.principal.rect.centerx
+#         self.principal_bposy = self.principal.rect.centery
+
+#         if self.select_gun_flag == 1:
+#             if self.select_gun_flagb == 0:
+#                 self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()
+#                 self.select_gun_flagb = 1
+
+#         if self.select_gun_flag == 0:
+#             if self.select_gun_flagb == 1:
+#                 self.image = pygame.image.load(self.img_path + "bit_empty.png").convert_alpha()
+#                 self.select_gun_flagb = 0
+
+#         if self.select_gun_flag == 1:
+#             collide_list = pygame.sprite.spritecollide(self, self.bullets, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+#             collide_list.remove(self)
+#             if collide_list:                        # リストがあるか    
+#                 for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+#                     if not type(machine) == Laser_Bullet:
+#                         self.damage()
+
+#         not_laser_list = []
+#         botton_list = {0:K_a, 1:K_s, 2:K_d}
+#         for i in range(3):
+#             laser_index = self.principal.gun_search('Laser_Gun')
+#             if i != laser_index:
+#                 not_laser_list.append(i)
+#         pressed_key = pygame.key.get_pressed()
+#         for i in not_laser_list:
+#             if pressed_key[botton_list[i]]:
+#                 self.select_gun_flag = 0
+#         if pressed_key[botton_list[laser_index]]:
+#             self.select_gun_flag = 1
+            
+#     def damage(self):
+#         if self.bit_flag == 0:
+#             self.HP -= 1
+#             if self.HP == 0:
+#                 self.bit_flag = 1
+#                 self.Break_bit()
+#             else:    
+#                 self.bit_flag = 1
+#                 self.image = pygame.image.load(self.img_path + "bit_clear.png").convert_alpha()
+#                 Timer(2000, self.Return_image)
+
+#     def Return_image(self):
+#         self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()
+#         if self.HP == 0:
+#             self.HP = 3
+#         self.bit_flag = 0
+
+#     def Break_bit(self):
+#         self.image = pygame.image.load(self.img_path + "break_bit.png").convert_alpha()
+#         Timer(10000, self.Return_image)
+
+
+# class bitA(Laser_bit):
+
+#     def __init__(self, x, y, machines, principal, bullets):
+#         self.img_path = "img/bullet/laser/"
+#         self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()   # 相対パスで画像を読み込む
+#         super().__init__(machines, principal, bullets)
+#         self.rect.move_ip(principal.rect.right+10, principal.rect.centery)
+
+#     def move(self):
+#         super().move(-9, 9)
+
+# class bitB(Laser_bit):
+
+#     def __init__(self, x, y, machines, principal, bullets):
+#         self.img_path = "img/bullet/laser/"
+#         self.image = pygame.image.load(self.img_path + "bit.png").convert_alpha()  # 相対パスで画像を読み込む
+#         super().__init__(machines, principal, bullets)
+#         self.rect.move_ip(principal.rect.left-35, principal.rect.centery)
+
+#     def move(self):
+#         super().move(9, -9)
 
 class Meteorite(Bullet):
 

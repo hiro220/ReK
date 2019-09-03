@@ -195,18 +195,14 @@ class fire_Gun(Gun):
 
 class Laser_Gun(Gun):
 
-    def __init__(self, machines, principal, max, bullets):
+    def __init__(self, machines, principal, max):
         super().__init__(machines, principal, max)
-        self.not_laser_list = 1
-        self.bitA = bitA(0, 0,machines, principal, bullets)
-        self.bitB = bitB(0, 0, machines, principal, bullets)
+        self.bit = Bit_Manage(machines, principal)
 
     def shoot(self, x, y):
-        bit_list = [0]
-        if self.bitA.HP != 0:
-            bit_list.append(1)
-        if self.bitB.HP != 0:
-            bit_list.append(2)
-        for i in bit_list:
-            Laser_Bullet(x, y, self.dx*-2, self.dy, self.machines, self.principal, self.bitA, self.bitB, i)
+        Laser_Bullet(self.principal.rect.right, self.principal.rect.centery, 10, 0, self.machines, self.principal)
+        if self.bit.bitA.break_flag == 0:
+            Laser_Bullet(self.bit.bitA.rect.right, self.bit.bitA.rect.centery, 10, 0, self.machines, self.principal)
+        if self.bit.bitB.break_flag == 0:    
+            Laser_Bullet(self.bit.bitB.rect.right, self.bit.bitB.rect.centery, 10, 0, self.machines, self.principal)
         self.num -= 1
