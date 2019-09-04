@@ -5,8 +5,8 @@ from define import *
 
 class Initial_Screen:
     def __init__(self):
-        title_font = pygame.font.Font("freesansbold.ttf", 55)
-        font = pygame.font.Font("freesansbold.ttf", 25)
+        title_font = pygame.font.Font("font/freesansbold.ttf", 55)
+        font = pygame.font.Font("font/freesansbold.ttf", 25)
         self.title_text = title_font.render("ReK", True, (255,255,255))        #タイトルテキストReK
         self.game_text = font.render("START GAME", True, (255,255,255))   #テキストSTART_GAME
         self.help_text = font.render("Help", True, (255,255,255))         #テキストHelp

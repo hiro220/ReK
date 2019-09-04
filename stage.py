@@ -15,6 +15,7 @@ from score import Score
 from boss import Stage1_boss
 from boss2 import *
 from money import Money
+from popupwindow import PopupWindow
 import pygame.mixer
 
 class Stage:
@@ -37,21 +38,21 @@ class Stage:
         self.creatRange()                       #範囲を設定する
         self.creatRange2()                      #
         
-        font = pygame.font.Font("freesansbold.ttf", 60)
-        menu_font = pygame.font.Font("freesansbold.ttf", 25)
+        font = pygame.font.Font("font/freesansbold.ttf", 60)
+        menu_font = pygame.font.Font("font/freesansbold.ttf", 25)
         self.pause_text = font.render("PAUSE", True, (255,255,255))
         self.retire_text = menu_font.render("- Retire : Q", True, (255,255,255))
         self.restart_text = menu_font.render("- Restart : Space", True, (255,255,255))
 
         self.score = Score(10, 10)
         self.money = Money(10, 30)
-        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20), self.data)    # プレイヤーのマシンを生成する
-
         self.clock = pygame.time.Clock()        # 時間管理用
         R_time.restart()
 
         self.process = self.stage_process
         self.draw = self.stage_draw
+
+        self.player_init()
 
 
     def initGroup(self):
@@ -108,7 +109,7 @@ class Stage:
             if self.select_continued():
                 R_time.restart()
                 pygame.mixer.music.unpause()
-                self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20))  # 初期値にプレイヤー機を生成
+                self.player_init(continued=True)
                 self.continue_num -= 1
                 self.player.invincible(2000)
             else:
@@ -172,28 +173,13 @@ class Stage:
         self.draw()
         pygame.display.update()
         # コンティニューできるか
-        if self.continue_num:
+        if self.continue_num > 0:
             # 表示する文字の設定
-            text = "Continue? : " + str(self.continue_num) + " Times"
-            text = pygame.font.Font("freesansbold.ttf", 60).render(text, True, (255,255,255))
-            text_width = text.get_rect().centerx
-            yes_text = pygame.font.Font("freesansbold.ttf", 40).render("Yes", True, (255,255,255))
-            no_text = pygame.font.Font("freesansbold.ttf", 40).render("No", True, (255,255,255))
-            select = 0
-            # Enterが押されるまで無限ループ
-            while True:
-                self.draw()
-                self.screen.blit(text,[WIDTH/2-text_width, HEIGHT/4-50])
-                self.screen.blit(yes_text,[WIDTH/2-150, HEIGHT/4+80])
-                self.screen.blit(no_text,[WIDTH/2+100, HEIGHT/4+80])
-                pygame.draw.rect(self.screen, (0,255,255), Rect(WIDTH/2+80-240*select, HEIGHT/4+75, 100, 50), 3)
-                pygame.display.update()
-                for event in pygame.event.get():
-                    if event.type == KEYDOWN:       # キー入力があった時
-                        if event.key == K_RETURN:
-                            return select
-                        if event.key in [K_RIGHT, K_LEFT]:
-                            select ^= 1         # xor演算(1, 0の反転)
+            text = "コンティニューしますか?\nあと" + str(int(self.continue_num)) + "回"
+            if PopupWindow(self.screen, text, ['はい', 'いいえ'], target=1).loop() == 0:
+                return True
+            else:
+                return False
         else:
             # コンティニューできない
             return False
@@ -345,3 +331,33 @@ class Stage:
 
     def otherwise(self):
         return self.normalRule() or self.playerBreak()
+
+    def player_init(self, continued=False):
+        chips = self.data['chip']
+        # プレイヤーのマシンを生成する
+        self.player = PlayerMachine(PLAYER_X, PLAYER_Y, self.cpus, Score(20, 20), Money(20, 20), self.data)
+        i = 0
+        for chip in chips:
+            if chip < 0:
+                continue
+            size = self.data['chip_data'][chip]['equip_size']
+            chip = self.data['chip_data'][chip]['name']
+            i += 1
+            if i < size:
+                continue
+            i = 0
+            if chip == 'HP_UP':
+                self.player.hp.maxhp += 0.5
+                self.player.recover(0.5)
+            elif chip == 'CONTINUE' and continued==False:
+                # コンティニューは三つ枠を取っているから、三度実行される
+                self.continue_num += 1
+            elif chip == 'SPEEDUP':
+                self.player.dx += 1
+                self.player.dy += 1
+            elif chip == "SHORT_RELOAD":
+                self.player.reload_time -= 150
+            elif chip == "SHIELD":
+                Shield(3, self.player)
+            elif chip == "LONG_INVISIBLE":
+                self.player.invincible_time += 100

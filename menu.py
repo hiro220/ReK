@@ -4,6 +4,8 @@ from define import *
 from equipment import Equipment
 from shop import Shop
 from listbox import ListBox
+from popupwindow import PopupWindow
+from messagebox import MessageBox
 
 class Menu:
     
@@ -15,9 +17,9 @@ class Menu:
         self.select_num = 0
         self.option_num = 0
         
-        StageSelect_font = pygame.font.Font("freesansbold.ttf", 55)
-        Arrow_font = pygame.font.Font("freesansbold.ttf", 100)
-        Stage_font = pygame.font.Font("freesansbold.ttf", 45)
+        StageSelect_font = pygame.font.Font("font/freesansbold.ttf", 55)
+        Arrow_font = pygame.font.Font("font/freesansbold.ttf", 100)
+        Stage_font = pygame.font.Font("font/freesansbold.ttf", 45)
 
         self.StageSelect_text = StageSelect_font.render("Stage Select", True, (255,255,255)) 
         self.RightArrow_text = Arrow_font.render(">", True, (255,255,255))
@@ -31,20 +33,28 @@ class Menu:
             self.stage_text.append(Stage_font.render(text, True, (255,255,255)))
 
         # リストボックスの設定
-        self.option_listbox = ListBox(self.screen, 50, 100, 250, 200, ['Back', 'Shop', 'Equip'], font_size=55, title="Menu")
+        self.option_listbox = ListBox(self.screen, 50, 80, 250, 200, ['Back', 'Shop', 'Equip'], font_size=55, title="Menu")
         self.option_listbox.set_selectable([True, True, True])
-        self.file_listbox = ListBox(self.screen, 950, 100, 100, 400, ["Stage1"], title="File")
+        self.file_listbox = ListBox(self.screen, 950, 80, 100, 400, ["Stage1"], title="File")
         self.file_listbox.set_selectable([True])
         self.file_listbox()
         self.file_id = None
 
-    def draw(self):
+        # メッセージボックスの設定
+        self.messagebox = MessageBox(self.screen, 130, 540, 900,  outline_color=(180,180,180), select='random')
+        with open('data/message.txt', 'r', encoding='utf-8') as fp:
+            self.messagebox += fp.readlines()
 
+        self.clock = pygame.time.Clock()
+
+    def draw(self):
         while True:
+            self.clock.tick(30)
             # リストボックスの描画
             self.option_listbox.draw(False)
             self.file_listbox.draw()
             self.Select_Stage(self.file_id)     #ステージ選択処理
+            self.messagebox.draw()
             pygame.display.update()
             for event in pygame.event.get():
                 # リストボックスに入力
@@ -72,7 +82,8 @@ class Menu:
                         Shop(self.screen, self.data).do()
                         break
                     elif option_num == 2:
-                        Equipment(self.screen, self.data).do()
+                        if Equipment(self.screen, self.data).do() == EXIT:
+                            return EXIT, None
                         break
                 
             self.screen.fill((0,0,0))
@@ -81,15 +92,15 @@ class Menu:
     def Select_Stage(self, file_id):
         #選択しているステージを描画
         color = (self.select_num==1)*(255,100,100) or (100,100,100)
-        pygame.draw.rect(self.screen,color,Rect(350,100,550,450))
-        self.screen.blit(self.StageSelect_text, [350, 40])     #テキストStageSelectを描画
+        pygame.draw.rect(self.screen,color,Rect(350,80,550,450))
+        self.screen.blit(self.StageSelect_text, [350, 20])     #テキストStageSelectを描画
         # ステージファイルが選択されていないとき、ステージを表示しない
         if file_id != None:
             color = [(0,0,255),(0,255,0), (255,0,0)]
-            self.screen.blit(self.stage_text[self.stage_num-1], [410, 210])
-            pygame.draw.rect(self.screen,color[self.stage_num-1],Rect(400,200,450,250),5)
-            self.screen.blit(self.RightArrow_text, [575, 140])  #テキスト ＞ を描画
-            self.screen.blit(self.LeftArrow_text, [575, 450])     #テキスト ＞ を描画
+            self.screen.blit(self.stage_text[self.stage_num-1], [410, 190])
+            pygame.draw.rect(self.screen,color[self.stage_num-1],Rect(400,180,450,250),5)
+            self.screen.blit(self.RightArrow_text, [575, 120])  #テキスト ＞ を描画
+            self.screen.blit(self.LeftArrow_text, [575, 430])     #テキスト ＞ を描画
     
     def Key_Event(self,event):
         # 左右キーで大枠の選択

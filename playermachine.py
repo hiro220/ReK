@@ -11,7 +11,7 @@ class PlayerMachine(Machine):
     def __init__(self, x, y, cpus, score, money, data):
         """引数は、初期位置(x, y)、弾の当たり判定対象となる敵機グループ"""
         image = pygame.image.load("img/player.png").convert_alpha()
-        super().__init__(2, x, y, image, cpus, score, money)
+        super().__init__(3, x, y, image, cpus, score, money)
         self.dx, self.dy = 7, 7                         # 移動量
         self.wait_flag = 0
         self.count = 0
@@ -39,6 +39,8 @@ class PlayerMachine(Machine):
         self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))       # 画面外に出たとき、画面内に収まるよう移動
 
     def shoot(self, key):
+        if self.wait_flag == 0:
+            return
         if key == K_x:              # ｘキーが押されたとき弾を発射
             x, y = self.rect.midright
             super().shoot(x, y)
@@ -46,6 +48,8 @@ class PlayerMachine(Machine):
             super().reload(self.gun_number - 1)
 
     def change(self, key):
+        if self.wait_flag == 0:
+            return
         gun_number = 1 * (key==K_a) or 2 * (key==K_s) or 3 * (key==K_d)
         if self.gun_file[gun_number - 1] == None:
             return
@@ -62,7 +66,13 @@ class PlayerMachine(Machine):
                 class_name = self.gun_data[self.gun_num]['name']
                 bullet_count = self.gun_data[self.gun_num]['bullet_size']
                 exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + "))") 
-            
+    
+    def gun_search(self, class_name):
+        gun_index = None
+        for i in range(3):
+            if self.gun_file[i].__class__.__name__ == class_name:
+                gun_index = i
+        return gun_index
     
     def isGameOver(self):
         return not self.alive()

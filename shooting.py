@@ -82,7 +82,7 @@ class Main(pygame.sprite.Sprite):
         """ステージ結果画面を描画する"""
         self.screen.fill((0,0,0))
 
-        Enter_font = pygame.font.Font("freesansbold.ttf", 20)
+        Enter_font = pygame.font.Font("font/freesansbold.ttf", 20)
 
         #Score_text = Score_font.render("SCORE: " + str(result[1]), True, (255,255,255))
         Enter_text = Enter_font.render("ENTER:RETURN", True, (255,255,255))
@@ -131,7 +131,7 @@ class Main(pygame.sprite.Sprite):
             if this_score[0] == data[0]:
                 color = (255,0,0)
             if i < 5 or this_score[0]==data[0]:
-                score = pygame.font.Font("freesansbold.ttf", 50).render(str(rank) + " : " + str(data[1]), True, color)
+                score = pygame.font.Font("font/freesansbold.ttf", 50).render(str(rank) + " : " + str(data[1]), True, color)
                 self.screen.blit(score, [550, 180+50*(pos+1)])
                 pos += 1
             
@@ -154,6 +154,20 @@ class Main(pygame.sprite.Sprite):
         # 何も装備されていないとき、Gunを装備する
         if self.data['equip'] == []:
             self.data['equip'] = [0, -1, -1]
+    
+    def _check_chip(self):
+        if self.data['chip'] == []:
+            self.data['chip'] = [-1 for _ in range(6)]
+
+        dic = json.load(open('data/chip.json', 'r'))
+        chip_data = self.data['chip_data']
+        for str_id, value in dic.items():
+            i = int(str_id)
+            if i in chip_data:
+                chip_data[i].update(value)
+                continue
+            chip_data[i] = value
+            chip_data[i]['num'] = self.cheat * value['own_max']
         
     def data_check(self):
         for key, cast in data_key.items():
@@ -163,12 +177,15 @@ class Main(pygame.sprite.Sprite):
                 self.data[key] = cast()
         self._check_gun()
         self._check_equip()
+        self._check_chip()
 
         # versionを最新に更新する
         self.data['version'] = version
 
     def exit(self):
         self.data["play_time"] += pygame.time.get_ticks()
+        print('-'*50)
+        print(self.data)
         db.save(self.data, self.cheat)
         pygame.quit()
         sys.exit()
