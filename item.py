@@ -7,9 +7,9 @@ from timer import Timer
 class Item(pygame.sprite.Sprite):
     """アイテム処理の基底となるクラス。継承するクラスは、メソッドeffect(self, machine)を定義する。
     effectメソッドでは、アイテムを取得した機体machineに対して、そのアイテムに応じた処理を行うよう記述する。"""
-    def __init__(self, x, y, img, machine):
+    def __init__(self, x, y, image_path, machine):
         pygame.sprite.Sprite.__init__(self, self.containers)
-        self.image = img
+        self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect()
         self.machine = machine                      # アイテムの効果対象
         self.speed = -1                             # アイテムの移動速度
@@ -34,7 +34,7 @@ class Item(pygame.sprite.Sprite):
 class Recovery(Item):
     """取得した機体の体力を1回復するアイテム"""
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/item/recovery.png").convert_alpha()
+        image = "img/item/recovery.png"
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
@@ -83,15 +83,16 @@ class Shield(pygame.sprite.Sprite):
 class ShieldItem(Item):
     """取得した機体にシールドを与えるアイテム"""
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/item/item_shield.png").convert_alpha()
+        image = "img/item/item_shield.png"
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
         Shield(3, machine)          # 堅さ3のシールドを生成
 
 class SpeedDownItem(Item):
+    """一定時間スピードが落ちるアイテム"""
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/item/weight.png").convert_alpha()
+        image = "img/item/weight.png"
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
@@ -101,7 +102,7 @@ class SpeedDownItem(Item):
 class ScoreGetItem(Item):
     # CPU側が取得しても効果はない
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/item/scoreget.png").convert_alpha()
+        image = "img/item/scoreget.png"
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
@@ -109,10 +110,26 @@ class ScoreGetItem(Item):
             opp_machine.score.add_score(5)      # 画面内にいる相手の数だけスコアを獲得
 
 class MeteoriteItem(Item):
-
+    """取得すると敵に隕石を落とすアイテム"""
     def __init__(self, x, y, machine):
-        image = pygame.image.load("img/item/meteorite_item.png").convert_alpha()
+        image = "img/item/meteorite_item.png"
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
         machine.fall_meteorite(machine.machines, 5, 1500)
+
+class PoisonItem(Item):
+    """一定時間ごとに体力が減るアイテム。ただし、このアイテムの効果で体力がゼロになることはない"""
+    def __init__(self, x, y, machine):
+        image = "img/item/recovery.png"
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        Timer(500, self.damage, 5)
+
+    def damage(self, count):
+        if self.machine.hp <= 1 or count == 0:
+            count = 0
+        else:
+            self.machine.hp -= 0.5
+            Timer(1000, self.damage, count-1)
