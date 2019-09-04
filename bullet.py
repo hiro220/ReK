@@ -433,6 +433,10 @@ class Bit_Manage(Bullet):
                     self.bitA = Bit(self.machines, self.principal, 0)
                     self.bitB = Bit(self.machines, self.principal, 1)
                     self.current_laser_flag = True
+    
+        if self.principal.hp.hp <= 0:
+            self.bitA.killed()
+            self.bitB.killed() 
 
     def first_move(self):
         key_list = {0: K_a, 1: K_s, 2: K_d}
