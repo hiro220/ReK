@@ -117,7 +117,7 @@ class Stage2_sub(Boss):
         self.move(self.dx,self.dy)
 
         #print(self.shoot_flag)
-        print(self.move_timer)
+        #print(self.move_timer)
         
         
     def move_select(self, select_number):
@@ -175,8 +175,7 @@ class Stage2_sub(Boss):
         elif number == 3:
             self.move_timer.append(Timer(2000, self.change_number, 10))
             self.move_timer.append(Timer(3000, self.change_number, 18))
-        elif number == 4:
-            print("第二形態")
+
 class Move_Pack:
     def __init__(self, principal):
         self.sub = principal
@@ -353,6 +352,7 @@ class Move_pack18(Move_Pack):
         self.p_point = [None,None]
         self.change_flag = True
         self.angle = None
+        self.player = self.sub.machines.sprites()[0]
     def move(self):
         if self.change_flag:
             self.p_set()
@@ -364,7 +364,7 @@ class Move_pack18(Move_Pack):
             self.change_flag = True
     
     def p_set(self):
-        self.p_point[0],self.p_point[1] = self.sub.machines.sprites()[0].rect.centerx, self.sub.machines.sprites()[0].rect.centery
+        self.p_point[0],self.p_point[1] = self.player.rect.centerx, self.player.rect.centery
 
     def move_set(self):
         self.sub.dx,self.sub.dy = int(-30*math.cos(self.angle)), int(-30*math.sin(self.angle))
