@@ -125,11 +125,12 @@ class PoisonItem(Item):
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
+        self.effect_machine = machine
         Timer(500, self.damage, 5)
 
     def damage(self, count):
-        if self.machine.hp <= 1 or count == 0:
+        if self.effect_machine.hp <= 1 or count == 0:
             count = 0
         else:
-            self.machine.hp -= 0.5
+            self.effect_machine.hp -= 0.5
             Timer(1000, self.damage, count-1)
