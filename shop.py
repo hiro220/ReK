@@ -25,8 +25,11 @@ class Shop:
         self.listbox = ListBox(self.screen, 80, 150, 300, 250, texts, font_size=40, target=True)
         self.listbox.set_selectable([data["own"]==1 for data in self.gun_data.values()])
 
+        self.clock = pygame.time.Clock()
+
     def do(self):
         while True:
+            self.clock.tick(30)
             request = self.process()
             self.draw()
             if request != CONTINUE:
