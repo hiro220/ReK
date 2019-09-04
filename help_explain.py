@@ -9,7 +9,7 @@ class Help_a:
         self.select_num = 0
         self.back_num = 0
         pygame.font.init()
-        explain_font = pygame.font.Font("freesansbold.ttf", 25)
+        explain_font = pygame.font.Font("font/freesansbold.ttf", 25)
         
         with open('testa/test.txt', 'r', encoding="utf-8") as fp:   # ファイルを読み取り専用で開く]
             self.dic_data = [0, 1, 2, 3, 4, 5, 6]

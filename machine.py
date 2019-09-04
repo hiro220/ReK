@@ -38,6 +38,8 @@ class Machine(pygame.sprite.Sprite):
         self.reload_flag = True
         self.cop_flag = 0
         self.flagtimer = FlagTimer(lambda x:x, 0)
+        self.reload_time = 1000
+        self.invincible_time = 1500
 
         self.dx = self.dy = 0
         self.score = score
@@ -58,8 +60,8 @@ class Machine(pygame.sprite.Sprite):
             bullet_num = self.gun.num
             bullet_num /= self.gun.max/10
             self.gun.num = 0
-            Timer(1000+bullet_num*500, self.gun.reload)
-            Timer(1500+bullet_num*500, self.change_flag)
+            Timer(self.reload_time+bullet_num*500, self.gun.reload)
+            Timer(self.reload_time+500+bullet_num*500, self.change_flag)
     
     def BulletZero(self):
         self.gun.BulletZero()
@@ -81,7 +83,7 @@ class Machine(pygame.sprite.Sprite):
         else:
             # ダメージを受けたが、破壊されていないなら、一定時間無敵になる
             if len(self.flagtimer.groups()) == 0:
-                self.flagtimer = FlagTimer(self.invincible, 1500, flag=lasting)
+                self.flagtimer = FlagTimer(self.invincible, self.invincible_time, flag=lasting)
             else:
                 self.flagtimer.flag = lasting
 

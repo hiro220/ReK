@@ -4,8 +4,8 @@ import unicodedata
 
 class TextBox:
     def __init__(self, screen, x, y, width, height, text='', bg=(255,255,255), text_color=(0,0,0), font_size=20, \
-                 outline_color=(150,150,150), outline_size=3, full_font="", half_font='freesansbold.ttf', \
-                 align=('left', 'top')):
+                 outline_color=(150,150,150), outline_size=3, full_font="font/ShipporiMincho-TTF-Regular.ttf", \
+                 half_font='font/freesansbold.ttf', align=('left', 'top')):
         self.screen = screen
         self.rect = Rect(x, y, width, height)
         self.bg = bg
@@ -79,11 +79,11 @@ class TextBox:
             # フォント設定
             font = pygame.font.Font(full_font*char_type or half_font, self.font_size)
             # 一文字ごとに描画テキストを作成
-            for char in text:
-                char = font.render(char, True, self.text_color)
+            for _char in text:
+                char = font.render(_char * (_char != '\n'), True, self.text_color)
                 size = char.get_rect().right
                 width += size
-                if width <= frame_width:
+                if width <= frame_width and _char != '\n':
                     # 枠内に収まる
                     one_line.append(char)
                 else:

@@ -26,7 +26,7 @@ Stage2 = "Stage2.txt"
 Stage3 = "Stage3.txt" 
 
 # 各ステージにおけるプレイヤー機体の初期位置
-PLAYER_X = INFO_WIDTH + 100
+PLAYER_X = INFO_WIDTH
 PLAYER_Y = HEIGHT // 2
 
 # stageにおける処理結果
@@ -80,4 +80,5 @@ STAR = "STAR"
 R_time = ReK_time()
 
 data_key = {"money":int, "stage_progress":int, "version":str, "death":int, "kill":int, \
-            "sum_money":int, "play_time":float, "gun_data":dict, "equip":list}
+            "sum_money":int, "play_time":float, "gun_data":dict, "equip":list, "chip_data":dict, \
+            "chip":list}
