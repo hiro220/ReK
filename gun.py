@@ -153,14 +153,17 @@ class Missile_Gun(Gun):
 
     def __init__(self, machines, principal, max):
         super().__init__(machines, principal, max)
+        self.gun_flag = 0
 
     def shoot(self, x, y):
-        if self.principal.cop_flag == 1 and R_time.get_ticks() - self.gun_start >= 1000:
+        if self.principal.cop_flag == 1 and R_time.get_ticks() - self.gun_start >= 1000 or self.gun_flag == 0:
             Missile_Bullet(x, y, self.dx*-1, self.dy, self.machines, 1)
             self.gun_start = R_time.get_ticks()
+            self.gun_flag = 1
+            self.num -= 1
         elif self.principal.cop_flag == 0:
             Missile_Bullet(x, y, self.dx, self.dy, self.machines, 0)
-        self.num -= 1
+            self.num -= 1
         
         
 class Fluffy_Gun(Gun):
@@ -179,4 +182,27 @@ class Thunder_Gun(Gun):
 
     def shoot(self, x, y):
         Thunder_Bullet(x, y, self.dx*-2, self.dy, self.machines)
+        self.num -= 1
+
+class fire_Gun(Gun):
+
+    def __init__(self, machines, principal, max):
+        super().__init__(machines, principal, max)
+
+    def shoot(self, x, y):
+        fire_Bullet(x, y, self.dx*-2, self.dy, self.machines)
+        self.num -= 1
+
+class Laser_Gun(Gun):
+
+    def __init__(self, machines, principal, max):
+        super().__init__(machines, principal, max)
+        self.bit = Bit_Manage(machines, principal)
+
+    def shoot(self, x, y):
+        Laser_Bullet(self.principal.rect.right, self.principal.rect.centery, 10, 0, self.machines, self.principal)
+        if self.bit.bitA.break_flag == 0:
+            Laser_Bullet(self.bit.bitA.rect.right, self.bit.bitA.rect.centery, 10, 0, self.machines, self.principal)
+        if self.bit.bitB.break_flag == 0:    
+            Laser_Bullet(self.bit.bitB.rect.right, self.bit.bitB.rect.centery, 10, 0, self.machines, self.principal)
         self.num -= 1
