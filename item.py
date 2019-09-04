@@ -134,3 +134,21 @@ class PoisonItem(Item):
         else:
             self.effect_machine.hp -= 0.5
             Timer(1000, self.damage, count-1)
+
+class InvisibleItem(Item):
+
+    def __init__(self, x, y, machine):
+        image = "img/item/weight.png"
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        alpha = 255
+        tmp_image = machine.image.copy()
+        machine.image.fill((255, 255, 255, alpha), None, pygame.BLEND_RGBA_MULT)       # 指定の透明度に設定する
+        Timer(2000, self.reset, tmp_image, machine)
+
+    def reset(self, tmp_image, machine):
+        if len(machine.groups()) != 3:
+            Timer(100, self.reset, tmp_image, machine)
+            return
+        machine.image = tmp_image
