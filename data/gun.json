@@ -5,5 +5,7 @@
     "Beam_Gun": {"bullet_size": 3, "reload_size": 4},
     "Missile_Gun": {"bullet_size": 2, "reload_size": 5},
     "Fluffy_Gun": {"bullet_size":3, "reload_size": 3},
-    "Thunder_Gun": {"bullet_size":3, "reload_size": 5}
+    "Thunder_Gun": {"bullet_size":3, "reload_size": 5},
+    "Fire_Gun": {"bullet_size":5, "reload_size": 5},
+    "Laser_Gun": {"bullet_size":5, "reload_size": 5}
 }
