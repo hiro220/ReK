@@ -116,9 +116,9 @@ class Menu:
             self.option_listbox()
         # ステージ選択のとき、上下キーでステージ選択の移動
         if event.key == K_UP:
-            self.stage_num += (self.select_num==1)
-        elif event.key == K_DOWN:
             self.stage_num -= (self.select_num==1)
+        elif event.key == K_DOWN:
+            self.stage_num += (self.select_num==1)
         stage_size = len(self.stage_text)
         self.stage_num = (self.stage_num+stage_size) % stage_size
     
