@@ -22,6 +22,14 @@ class Hp:
         if self.hp > self.maxhp:
             self.hp = self.maxhp
 
+    def __isub__(self, damage):
+        self.hp -= damage
+        return self
+
+    def __iadd__(self, num):
+        self.recover(num)
+        return self
+
 class Machine(pygame.sprite.Sprite):
 
     def __init__(self, hp, x, y, img, machines, score, money):
