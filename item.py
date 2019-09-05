@@ -129,7 +129,7 @@ class PoisonItem(Item):
         Timer(500, self.damage, 5)
 
     def damage(self, count):
-        if self.effect_machine.hp <= 1 or count == 0:
+        if self.effect_machine.hp.hp <= 1 or count == 0:
             count = 0
         else:
             self.effect_machine.hp -= 0.5
