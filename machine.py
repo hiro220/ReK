@@ -103,19 +103,17 @@ class Machine(pygame.sprite.Sprite):
         self.hp.recover(num)        # 引数で指定した値だけ体力が回復する。
 
     def speedDown(self, dx, dy):
-        if self.dx - dx <= 0:
-            dx = 0
-        if self.dy - dy <= 0:
-            dy = 0
+        dx = (self.dx > dx) * dx
+        dy = (self.dy > dy) * dy
         self.dx -= dx
         self.dy -= dy
         return dx, dy
 
     def speedUp(self, dx, dy):
-        if self.dx != 0:
-            self.dy += dx
-        if self.dy != 0:
-            self.dx += dy
+        dx = (self.dx != 0) * dx
+        dy = (self.dy != 0) * dy
+        self.dx += dx
+        self.dy += dy
         return dx, dy
     
     def set_image(self, image):

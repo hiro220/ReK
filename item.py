@@ -99,6 +99,17 @@ class SpeedDownItem(Item):
         dx, dy = machine.speedDown(1, 1)             # 獲得した機体のスピードを下げる
         Timer(3000, machine.speedUp, dx, dy)    # 一定時間経過後、スピードを上げる
 
+class SpeedUpItem(Item):
+    
+    def __init__(self, x, y, machine):
+        image = "img/item/weight.png"
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        dx, dy = machine.speedUp(1, 1)
+        Timer(3000, machine.speedDown, dx, dy)
+
+
 class ScoreGetItem(Item):
     # CPU側が取得しても効果はない
     def __init__(self, x, y, machine):
