@@ -265,7 +265,7 @@ class Stage:
 
         # アイテムの種類を指す辞書
         item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SCOREGET:ScoreGetItem, \
-                    METEORITE:MeteoriteItem}
+                    METEORITE:MeteoriteItem, POISON:PoisonItem, INVISIBLE:InvisibleItem}
         sub = name.split('_')
 
         if sub[0] == 'CPU' and sub[1] in item_dic:      # CPU_〇〇という呼ばれ方をしたアイテムか
