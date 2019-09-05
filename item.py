@@ -142,7 +142,7 @@ class InvisibleItem(Item):
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
-        alpha = 255
+        alpha = 0
         tmp_image = machine.image.copy()
         machine.image.fill((255, 255, 255, alpha), None, pygame.BLEND_RGBA_MULT)       # 指定の透明度に設定する
         Timer(2000, self.reset, tmp_image, machine)
