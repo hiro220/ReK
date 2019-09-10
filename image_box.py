@@ -44,7 +44,8 @@ class ImageBox:
                 text = pygame.font.Font("font/freesansbold.ttf", 80).render(str(data), True, (0,0,0))
                 rect = text.get_rect()
                 width, height = rect.right, rect.bottom
-                self.screen.blit(text, [x+self.image_width/2-width/2, y+self.image_height/2-height/2])
+                tx, ty = x+self.image_width/2-width/2, y+self.image_height/2-height*3/7
+                self.screen.blit(text, [tx, ty])
             # 枠の描画
             color = (0,)*3 * (self.select != i) or (255,0,0)
             size = 2 + (self.select==i) * 2
