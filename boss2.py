@@ -22,6 +22,7 @@ class Stage2_boss(Boss):
         #self.sub_move = True
         self.natural = [True,True,True,True,True,True]
         self.move_dic = {1:self.phase1_move, 2:self.phase2_move, 2.1:self.phase2_1_move, 3:self.phase3_move}
+        self.phase2_count = R_time.get_ticks()
         #self.load_count = True
 
         self.sub1 = Stage2_sub(self.rect.centerx,self.rect.centery-100, players, self.score, 0, self, self.money)
@@ -40,7 +41,7 @@ class Stage2_boss(Boss):
         if self.lord_flag:
             self.lord_sub()
             self.lord_flag = None
-        print(self.phase_flag)
+        #print(self.rect)
     
     def lord_sub(self):
         for number in range(3,7):
@@ -65,10 +66,22 @@ class Stage2_boss(Boss):
         if self.sub1.sel_number == 99 and self.sub2.sel_number == 99:
             self.phase_flag += 0.1
             Timer(1200,self.phase_change, 2.1)
-            Timer(2400,self.phase_change, 3)
+            Timer(10000,self.phase_change, 3)
             self.phase_flag = None
     def phase2_1_move(self):
-        self.dy = -2
+        if self.rect.top <= mg2.top + 50:
+            self.dy = 2
+            self.phase2_count = R_time.get_ticks()
+        elif self.rect.bottom >= mg2.bottom - 50:
+            self.dy = -2
+            self.phase2_count = R_time.get_ticks()
+        elif R_time.get_ticks() - self.phase2_count >= 600:
+            boolean = random.randint(0,1)
+            self.phase2_count = R_time.get_ticks()
+            if boolean:
+                self.dy = -2
+            else:
+                self.dy = 2
         print("phase2")
         
     def phase3_move(self):
@@ -117,7 +130,7 @@ class Stage2_sub(Boss):
         self.move(self.dx,self.dy)
 
         #print(self.shoot_flag)
-        print(self.move_timer)
+        #print(self.move_timer)
         
         
     def move_select(self, select_number):
@@ -175,8 +188,6 @@ class Stage2_sub(Boss):
         elif number == 3:
             self.move_timer.append(Timer(2000, self.change_number, 10))
             self.move_timer.append(Timer(3000, self.change_number, 18))
-        elif number == 4:
-            print("第二形態")
 class Move_Pack:
     def __init__(self, principal):
         self.sub = principal
