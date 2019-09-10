@@ -31,6 +31,7 @@ class Equipment:
         self.listboxes = [equip_listbox, chip_listbox]
         self.listbox = self.listboxes[self.change_id]
         self.gun_image_box = ImageBox(screen, 700, 450, 90, 90, 3)
+        self.chip_image_box = ImageBox(screen, 500, 450, 90, 90, 6)
         self.clock = pygame.time.Clock()
         self.count = 0
     
@@ -49,6 +50,7 @@ class Equipment:
                     + [self.chip[self.change_chip]!=-1, self.chip!=[-1]*6]
         self.listboxes[1].set_selectable(select)
         self.gun_image_box.target = self.change_id==0
+        self.chip_image_box.target = self.change_id==1
         for event in pygame.event.get():
             select = self.listbox.process(event)
             if select != None:
@@ -63,7 +65,8 @@ class Equipment:
                     self.gun_image_box.process(event.key)
                     self.change_gun = self.gun_image_box.select
                 else:
-                    self.chip_key(event.key)
+                    self.chip_image_box.process(event.key)
+                    self.change_chip = self.chip_image_box.select
                 if event.key == K_q:
                     return BACK
                 elif event.key == K_c:
@@ -71,14 +74,7 @@ class Equipment:
                     self.listbox = self.listboxes[self.change_id]
         self.count = (self.count + 3) * (self.count+3 < 69)
         return CONTINUE
-
-    def chip_key(self, key):
-        if key == K_RIGHT:
-            self.change_chip += 1
-        elif key == K_LEFT:
-            self.change_chip -= 1
-        self.change_chip = (self.change_chip + 6) % 6
-
+        
     def draw(self):
         # 画面描画
         self.screen.fill((0,0,0))
@@ -118,6 +114,9 @@ class Equipment:
 
     def draw_chip(self):
         pygame.draw.rect(self.screen, (255,255,255), Rect(500, HEIGHT-150, 625, 100))
+        self.chip_image_box.set_image([None if data==-1 else data for data in self.chip])
+        self.chip_image_box.draw()
+        return
         for i, data, in enumerate(self.chip):
             color = (255,0,0) * (i == self.change_chip) or (0,)*3
             pygame.draw.rect(self.screen, color, [530+95*i, HEIGHT-145, 90, 90], 2+(i==self.change_chip))
