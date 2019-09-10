@@ -13,8 +13,8 @@ class TextBox:
         self.font_size = font_size
         self.outline_size = outline_size
         self.outline_color = outline_color
-        texts = self.separate_text(text)
-        self.texts = self.create_text(texts, full_font, half_font)
+        self.full_font, self.half_font = full_font, half_font
+        self.set_text(text)
         assert align[0] in ('left', 'center', 'right'), "選択できる横向きのalign属性('left', 'center', 'right')"
         assert align[1] in ('top', 'center', 'bottom'), "選択できる縦向きのalign属性('top', 'center', 'buttom')"
         self.align = align
@@ -48,8 +48,15 @@ class TextBox:
                 self.screen.blit(text, [x, y])
                 x += rect.right
 
+    def set_text(self, text):
+        texts = self.separate_text(text)
+        self.texts = self.create_text(texts)
+
+
     def separate_text(self, text):
         """入力したテキストを、全角部分と半角部分で分割し、順番はそのままにリストにする。"""
+        if text == '':
+            return text
         texts = []
         one_text = ''
         char_type = self.isfull_size(text[0])
@@ -66,7 +73,7 @@ class TextBox:
         texts.append([char_type, one_text])
         return texts
 
-    def create_text(self, texts, full_font, half_font):
+    def create_text(self, texts):
         """枠内に収まるサイズになるよう、全角、半角それぞれのテキストを画像化してリスト(二次元)に格納し、返却する。
         リストは各要素が一行に表示する文字列の画像で、要素の一つ一つが全角、半角ごとでリストにされている。"""
         # 枠内判定に用いるテキストの幅と枠の幅
@@ -77,7 +84,7 @@ class TextBox:
         # 全角半角ごとに分割したテキスト全てを描画形式に変換
         for char_type, text in texts:
             # フォント設定
-            font = pygame.font.Font(full_font*char_type or half_font, self.font_size)
+            font = pygame.font.Font(self.full_font*char_type or self.half_font, self.font_size)
             # 一文字ごとに描画テキストを作成
             for _char in text:
                 char = font.render(_char * (_char != '\n'), True, self.text_color)
