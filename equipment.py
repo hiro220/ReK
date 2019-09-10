@@ -4,6 +4,7 @@ from define import *
 from listbox import ListBox
 from popupwindow import PopupWindow
 from image_box import ImageBox
+from textbox import TextBox
 
 class Equipment:
 
@@ -41,6 +42,8 @@ class Equipment:
         # 現在の装備状況を描画するイメージボックスの作成
         self.gun_image_box = ImageBox(screen, 700, 450, 90, 90, 3)
         self.chip_image_box = ImageBox(screen, 500, 450, 90, 90, 6)
+        
+        self.text_box = TextBox(screen, 550, 200, 550, 200, font_size=30)
         # 時間管理
         self.clock = pygame.time.Clock()
 
@@ -111,6 +114,18 @@ class Equipment:
             self.listbox.set_color(self.equipment, (105,105,255))
         # リストボックスの描画
         self.listbox.draw()
+
+        # 選択中の情報表示
+        if self.change_id == 1:
+            select = self.listbox.selected
+            if select == len(self.listbox)-1:
+                text = '装備している全てのチップを外す。'
+            elif select == len(self.listbox)-2:
+                text = '選択している装備済みのチップを外す。'
+            else:
+                text = self.chip_data[select]['info']
+            self.text_box.set_text(text)
+            self.text_box.draw()
 
         # 装備情報の描画
         if self.change_id == 0:
