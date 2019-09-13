@@ -20,35 +20,38 @@ class PlayerMachine(Machine):
         self.gun_data = data["gun_data"]
         self.gun_base()
         self.gun = self.gun_file[0]
+        self.key = {'UP':K_UP, 'DOWN':K_DOWN, 'LEFT':K_LEFT, 'RIGHT':K_RIGHT, \
+                    'shoot':K_x, 'reload':K_v, 'gun1':K_a, 'gun2':K_s, 'gun3':K_d}
         
     def move(self):
         if self.wait_flag == 0:
             self.firstmove()
         else:
             key = pygame.key.get_pressed()      # 押されたキーを受け取る
-            if key[K_UP]:                       # 矢印キー上が押されているとき(長押し)
+            up, down, right, left = self.key['UP'], self.key['DOWN'], self.key['RIGHT'], self.key['LEFT']
+            if key[up]:                       # 矢印キー上が押されているとき(長押し)
                 super().move(0, -self.dy)
-            if key[K_DOWN]:                     # 矢印キー下が押されているとき(長押し)
+            if key[down]:                     # 矢印キー下が押されているとき(長押し)
                 super().move(0, self.dy)
-            if key[K_RIGHT]:                    # 矢印キー右が押されているとき(長押し)
+            if key[right]:                    # 矢印キー右が押されているとき(長押し)
                 super().move(self.dx, 0)
-            if key[K_LEFT]:                     # 矢印キー左が押されているとき(長押し)
+            if key[left]:                     # 矢印キー左が押されているとき(長押し)
                 super().move(-self.dx, 0)
         self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))       # 画面外に出たとき、画面内に収まるよう移動
 
     def shoot(self, key):
         if self.wait_flag == 0:
             return
-        if key == K_x:              # ｘキーが押されたとき弾を発射
+        if key == self.key['shoot']:              # ｘキーが押されたとき弾を発射
             x, y = self.rect.midright
             super().shoot(x, y)
-        elif key == K_v:
+        elif key == self.key['reload']:
             super().reload()
 
     def change(self, key):
         if self.wait_flag == 0:
             return
-        gun_number = 1 * (key==K_a) or 2 * (key==K_s) or 3 * (key==K_d)
+        gun_number = 1 * (key==self.key['gun1']) or 2 * (key==self.key['gun2']) or 3 * (key==self.key['gun3'])
         if gun_number == 0 or self.gun_file[gun_number - 1] == None:
             return
         self.gun = self.gun_file[gun_number - 1]
