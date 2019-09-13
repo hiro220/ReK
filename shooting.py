@@ -138,7 +138,7 @@ class Main(pygame.sprite.Sprite):
                 pos += 1
             
     def _check_gun(self):
-        dic = json.load(open("data/gun.json", "r"))
+        dic = json.load(open("data/gun.json", "r", encoding='utf-8'))
         i = 0
         for name, data in dic.items():
             if i in self.data['gun_data']:
@@ -161,7 +161,7 @@ class Main(pygame.sprite.Sprite):
         if self.data['chip'] == []:
             self.data['chip'] = [-1 for _ in range(6)]
 
-        dic = json.load(open('data/chip.json', 'r'))
+        dic = json.load(open('data/chip.json', 'r', encoding='utf-8'))
         chip_data = self.data['chip_data']
         for str_id, value in dic.items():
             i = int(str_id)
