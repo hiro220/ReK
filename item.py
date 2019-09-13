@@ -163,3 +163,20 @@ class InvisibleItem(Item):
             Timer(100, self.reset, tmp_image, machine)
             return
         machine.image = tmp_image
+
+class RotateItem(Item):
+
+    def __init__(self, x, y, machine):
+        image = "img/item/recovery.png"
+        super().__init__(x, y, image, machine)
+
+    def effect(self, machine):
+        up, left, down, right = machine.key['UP'], machine.key['LEFT'], machine.key['DOWN'], machine.key['RIGHT']
+        self.set_key(machine, right, up, left, down)
+        Timer(3000, self.set_key, machine, up, left, down, right)
+
+    def set_key(self, machine, up, left, down, right):
+        machine.key['UP'] = up
+        machine.key['LEFT'] = left
+        machine.key['DOWN'] = down
+        machine.key['RIGHT'] = right
