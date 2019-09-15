@@ -67,12 +67,20 @@ class Stage4_Boss(Boss):
         pass
 
     def move2straight(self, x, y):
+        # 引数で指定した座標に向かうdx, dyに設定
+        # x, yに到達するときTrueが返る
+        isArrive = False
         nowx, nowy = self.rect.center
         x = x - nowx
         y = y - nowy
         d = self.dx+self.dy
+        if x+y < d:
+            self.dx = x
+            self.dy = y
+            isArrive = True
         self.dx = d * x / (x+y)
         self.dy = d * y / (x+y)
+        return isArrive
 
     def action_cancel(self):
         # 今実行中の動作をキャンセルする。
