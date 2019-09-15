@@ -39,6 +39,7 @@ class Stage4_Boss(Boss):
         self.dx, self.dy = -2, 0
         # 動作の実行中にTrueになる。Falseのときはどの動作も実行していない。
         self.action_flag = False
+        self.shield = Shield(30, self)
 
     def update(self):
         # 動作を選択する
@@ -50,11 +51,16 @@ class Stage4_Boss(Boss):
 
     def select_actions(self):
         # 現在の状況などから、行動の選択、移動(self.dx, self.dy)の変更を行う
+        if self.action_flag:
+            action = None
+            return action
         action = None
         return action
 
     def action(self, select):
         # select_actionで選択された動作を実行する。
+        if select == None:
+            return
         pass
 
     def create_item(self):
@@ -74,7 +80,7 @@ class Stage4_Boss(Boss):
         pass
 
 class CancelItem(Item):
-
+    """bossの行動をキャンセルする"""
     def __init__(self, x, y, machine, boss):
         image = 'img/item/recovery.png'
         super().__init__(x, y, image, machine)
@@ -82,3 +88,14 @@ class CancelItem(Item):
 
     def effect(self, machine):
         self.boss.action_cancel()
+
+class ShieldBreakItem(Item):
+    """bossのシールドにダメージを与える"""
+    def __init__(self, x, y, machine, boss):
+        image = 'img/item/recovery.png'
+        super().__init__(x, y, image, machine)
+        self.boss = boss
+
+    def effect(self, machine):
+        if self.boss.shield != None:
+            self.boss.shield.hit(10)
