@@ -37,8 +37,6 @@ class Stage2_boss(Boss):
                         8:Circle_Gun(self.machines, self, -1, 500),9:Twist_Gun(self.machines,self,-1)}
     
     def update(self):
-        if self.rect.centerx <= 1000:
-            self.dx = 0
         self.move(self.dx,self.dy)
         if False not in self.natural: 
             self.sub_rutin = random.randint(0,3)
@@ -51,7 +49,7 @@ class Stage2_boss(Boss):
             self.lord_flag = None
         
         if self.shoot_flag:
-            super.shoot(self.rect.left, self.rect.top)
+            super().shoot(self.rect.left, self.rect.top)
         #print(self.rect)
     
     def lord_sub(self):
@@ -73,22 +71,22 @@ class Stage2_boss(Boss):
         self.phase1_count = R_time.get_ticks()
 
     def phase1_move(self):
-        phase1_dic = {0:rect(500,0,500,500),1:rect(500,0,500,500),2:rect(500,0,500,500),3:rect(500,0,500,500)}
-        if self.rect.top <= phase1_dic.top or self.rect.bottom >= phase1_dic.bottom:
+        phase1_dic = {0:Rect(500,0,660,600),1:Rect(500,0,660,600),2:Rect(500,0,660,600),3:Rect(500,0,660,600)}
+        if self.rect.top <= phase1_dic[self.sub_rutin].top or self.rect.bottom >= phase1_dic[self.sub_rutin].bottom:
             self.dy *= -1  
-        elif self.rect.left <= phase1_dic.left or self.rect.right >= phase1_dic.right:
+        elif self.rect.left <= phase1_dic[self.sub_rutin].left or self.rect.right >= phase1_dic[self.sub_rutin].right:
             self.dx *= -1
         elif R_time.get_ticks() - self.phase1_count <= 1200:
             self.dx,self.dy = 0,0
-            self.move_pose = True 
+            self.move_pose = True
+            print("phase1_pose") 
         elif self.move_pose:
-            if random.randint(0,1):
-                self.dx *= -1
-            if random.randint(0,1):
-                self.dy *= -1
+            self.dx,self.dy = random.choice([0,-2,2]), random.choice([0,-2,2])
             self.move_pose = False
-            Timer(600,self.in_count)
+            Timer(30000,self.in_count) 
         self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))
+        print(self.dx,self.dy)
+        
 
     def phase2_move(self):
         self.natural = [False,False,False,False,False]
