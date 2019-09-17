@@ -19,14 +19,22 @@ class Stage2_boss(Boss):
         self.lord_flag = False
         self.move_point = random.randint(0,1)
         self.phase_flag = 1
+        self.sub_rutin = None
         #self.sub_move = True
         self.natural = [True,True,True,True,True,True]
         self.move_dic = {1:self.phase1_move, 2:self.phase2_move, 2.1:self.phase2_1_move, 3:self.phase3_move}
         self.phase2_count = R_time.get_ticks()
+        self.phase1_count = R_time.get_ticks()
+        self.move_pose = True
+        self.shoot_flag = True
         #self.load_count = True
 
         self.sub1 = Stage2_sub(self.rect.centerx,self.rect.centery-100, players, self.score, 0, self, self.money)
         self.sub2 = Stage2_sub(self.rect.centerx,self.rect.centery+100, players, self.score, 1, self, self.money)
+
+        self.gun_dic = {0:Beam_Gun(self.machines,self, -1 ,90),1:Beam_Gun(self.machines,self, -1 ,270),2:Beam_Gun(self.machines,self, -1 ,0),3:Beam_Gun(self.machines,self, -1 ,180),\
+                        4:Obot_Gun(self.machines,self, -1,90,500),5:Obot_Gun(self.machines,self,-1,270,500),6:Division_Gun(self.machines,self, -1,1200,True),7:Division_Gun(self.machines,self, -1,1500, True),\
+                        8:Circle_Gun(self.machines, self, -1, 500),9:Twist_Gun(self.machines,self,-1)}
     
     def update(self):
         if self.rect.centerx <= 1000:
@@ -41,6 +49,9 @@ class Stage2_boss(Boss):
         if self.lord_flag:
             self.lord_sub()
             self.lord_flag = None
+        
+        if self.shoot_flag:
+            super.shoot(self.rect.left, self.rect.top)
         #print(self.rect)
     
     def lord_sub(self):
@@ -57,16 +68,34 @@ class Stage2_boss(Boss):
     
     def phase_change(self, number):
         self.phase_flag = number
-    
+        
+    def in_count(self):
+        self.phase1_count = R_time.get_ticks()
+
     def phase1_move(self):
-        print("phase1")
-    
+        phase1_dic = {0:rect(500,0,500,500),1:rect(500,0,500,500),2:rect(500,0,500,500),3:rect(500,0,500,500)}
+        if self.rect.top <= phase1_dic.top or self.rect.bottom >= phase1_dic.bottom:
+            self.dy *= -1  
+        elif self.rect.left <= phase1_dic.left or self.rect.right >= phase1_dic.right:
+            self.dx *= -1
+        elif R_time.get_ticks() - self.phase1_count <= 1200:
+            self.dx,self.dy = 0,0
+            self.move_pose = True 
+        elif self.move_pose:
+            if random.randint(0,1):
+                self.dx *= -1
+            if random.randint(0,1):
+                self.dy *= -1
+            self.move_pose = False
+            Timer(600,self.in_count)
+        self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))
+
     def phase2_move(self):
         self.natural = [False,False,False,False,False]
         if self.sub1.sel_number == 99 and self.sub2.sel_number == 99:
             self.phase_flag += 0.1
             Timer(1200,self.phase_change, 2.1)
-            Timer(10000,self.phase_change, 3)
+            Timer(12000,self.phase_change, 3)
             self.phase_flag = None
     def phase2_1_move(self):
         if self.rect.top <= mg2.top + 50:
@@ -92,7 +121,7 @@ class Stage2_boss(Boss):
         self.sub2.del_timer()
         self.natural = [True,True,True,True,True,True]
         self.phase_flag += 0.1
-
+    
 class Stage2_sub(Boss):
     def __init__(self, x, y, players, score, sub_number, boss, money):              
         image = pygame.image.load(img_path+"bot.png").convert_alpha()
@@ -107,9 +136,6 @@ class Stage2_sub(Boss):
         self.move_dic = {0:Move_pack0(self),1:Move_pack1(self), 3:Move_pack3(self), 8:Move_pack8(self),10:Move_pack10(self), 11:Move_pack11(self), 12:Move_pack12(self),\
                         13:Move_pack13(self,self.boss.move_point),16:Move_pack16(self), 17:Move_pack17(self,self.boss.move_point),\
                         18:Move_pack18(self), 99:Move_phase2(self), 100:Move_flesh(self)}
-        self.gun_dic = {0:Beam_Gun(self.machines,self, -1 ,90),1:Beam_Gun(self.machines,self, -1 ,270),2:Beam_Gun(self.machines,self, -1 ,0),3:Beam_Gun(self.machines,self, -1 ,180),\
-                        4:Obot_Gun(self.machines,self, -1,90,500),5:Obot_Gun(self.machines,self,-1,270,500),6:Division_Gun(self.machines,self, -1,1200,True),7:Division_Gun(self.machines,self, -1,1500, True),\
-                        8:Circle_Gun(self.machines, self, -1, 500)}
 
     def update(self):
         if self.boss.natural[self.number] and len(self.move_timer) == 0:
@@ -152,9 +178,9 @@ class Stage2_sub(Boss):
     
     def change_gun(self, number): #最終的にfor文で回す
         if self.number == 0 and number[0] != None:
-            self.gun = self.gun_dic[number[0]]
+            self.gun = self.boss.gun_dic[number[0]]
         if self.number == 1 and number[1] != None:
-            self.gun = self.gun_dic[number[1]]
+            self.gun = self.boss.gun_dic[number[1]]
 
     def del_timer(self, number=0):
         if number == 0:
