@@ -35,11 +35,13 @@ class Stage4_Boss(Boss):
 
     def __init__(self, x, y, players, score, money):
         image = pygame.image.load(img_path+"cpu.png").convert_alpha() #イメージ画像をロードする
-        super().__init__(10, x, 300, image, players, score, money)         #superクラス(Boss)を呼び出す
-        self.dx, self.dy = -2, 0
+        super().__init__(10, x, 287, image, players, score, money)         #superクラス(Boss)を呼び出す
+        self.speed = 4
         # 動作の実行中にTrueになる。Falseのときはどの動作も実行していない。
-        self.action_flag = False
-        self.shield = Shield(30, self)
+        self.isaction = lambda ver:False
+        self.isaction_var = [None]
+        self.section = 0
+        self.shield = Shield(90, self)
 
     def update(self):
         # 動作を選択する
@@ -51,41 +53,57 @@ class Stage4_Boss(Boss):
 
     def select_actions(self):
         # 現在の状況などから、行動の選択、移動(self.dx, self.dy)の変更を行う
-        if self.action_flag:
-            action = None
-            return action
-        action = None
+        if self.isaction(*self.isaction_var):
+            return None
+        self.section += 1
+        if self.section == 1:
+            action = 0
+        else:
+            action = -1
         return action
 
     def action(self, select):
         # select_actionで選択された動作を実行する。
         if select == None:
             return
-        pass
+        if select == -1:
+            self.dx, self.dy = 0, 0
+        elif select == 0:
+            self.move2straight(900, 300)
+            self.isaction = self._not_arrived
+            self.isaction_var = [900, 300]
+            Timer(6000, self.create_item, PoisonItem)
 
-    def create_item(self):
-        pass
+    def create_item(self, item, flag=False):
+        x, y = self.rect.left, self.rect.centery
+        if flag:
+            item(x, y, self.machines, self)
+        else:
+            item(x, y, self.machines)
 
     def move2straight(self, x, y):
         # 引数で指定した座標に向かうdx, dyに設定
-        # x, yに到達するときTrueが返る
-        isArrive = False
         nowx, nowy = self.rect.center
-        x = x - nowx
-        y = y - nowy
-        d = self.dx+self.dy
-        if x+y < d:
-            self.dx = x
-            self.dy = y
-            isArrive = True
-        self.dx = d * x / (x+y)
-        self.dy = d * y / (x+y)
-        return isArrive
+        dx = x - nowx
+        dy = y - nowy
+        d = abs(dx)+abs(dy)
+        if d == 0:
+            return
+        self.dx = self.speed * dx / d
+        self.dy = self.speed * dy / d
+        
+    def _not_arrived(self, x, y):
+        nx, ny = self.rect.center
+        dx, dy = nx - x, ny - y
+        if abs(dx)+abs(dy) < self.speed:
+            return False
+        return True
 
     def action_cancel(self):
         # 今実行中の動作をキャンセルする。
         # 一定時間行動しない
         pass
+
 
 class CancelItem(Item):
     """bossの行動をキャンセルする"""
@@ -106,4 +124,4 @@ class ShieldBreakItem(Item):
 
     def effect(self, machine):
         if self.boss.shield != None:
-            self.boss.shield.hit(10)
+            self.boss.shield.hit(30)
