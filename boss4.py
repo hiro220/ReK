@@ -72,7 +72,6 @@ class Stage4_Boss(Boss):
             self.move2straight(900, 300)
             self.isaction = self._not_arrived
             self.isaction_var = [900, 300]
-            Timer(6000, self.create_item, PoisonItem)
 
     def create_item(self, item, flag=False):
         x, y = self.rect.left, self.rect.centery
