@@ -14,6 +14,7 @@ from timer import Timer
 from score import Score
 from boss import Stage1_boss
 from boss2 import *
+from boss4 import Stage4_Boss
 from money import Money
 import pygame.mixer
 
@@ -275,7 +276,7 @@ class Stage:
 
         # CPUの種類を指す辞書
         cpu_dic = {CPU1:cpu, CPU2:cpu2, CPU3:cpu3, CPU4:cpu4, CPU5:cpu5, CPU6:cpu6, CPU7:cpu7, CPU8:cpu8, \
-                   CPU9:cpu9, CPU10:cpu10, CPU0:cpu0, BOSS1:Stage1_boss, BOSS2:Stage2_boss}
+                   CPU9:cpu9, CPU10:cpu10, CPU0:cpu0, BOSS1:Stage1_boss, BOSS2:Stage2_boss, BOSS4:Stage4_Boss}
 
         # アイテムの種類を指す辞書
         item_dic = {RECOVERY:Recovery, SHIELD:ShieldItem, SPEEDDOWN:SpeedDownItem, SPEEDUP:SpeedUpItem, \
