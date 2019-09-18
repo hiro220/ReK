@@ -111,6 +111,7 @@ class SpeedUpItem(Item):
 
 
 class ScoreGetItem(Item):
+    """画面内の敵機x5のスコアを獲得する"""
     # CPU側が取得しても効果はない
     def __init__(self, x, y, machine):
         image = "img/item/scoreget.png"
@@ -147,7 +148,7 @@ class PoisonItem(Item):
             Timer(1000, self.damage, count-1)
 
 class InvisibleItem(Item):
-
+    """取得した機体が4000ミリ秒透明になる。当たり判定はある。"""
     def __init__(self, x, y, machine):
         image = "img/item/weight.png"
         super().__init__(x, y, image, machine)
@@ -165,7 +166,7 @@ class InvisibleItem(Item):
         machine.image = tmp_image
 
 class RotateItem(Item):
-
+    """プレイヤーの移動のキー入力が3000ミリ秒の間、反時計周りにずれる"""
     def __init__(self, x, y, machine):
         image = "img/item/recovery.png"
         super().__init__(x, y, image, machine)
@@ -180,3 +181,12 @@ class RotateItem(Item):
         machine.key['LEFT'] = left
         machine.key['DOWN'] = down
         machine.key['RIGHT'] = right
+
+class InvincibleItem(Item):
+    """取得した機体が3000ミリ秒の間、無敵状態になる"""
+    def __init__(self, x, y, machines):
+        image = "img/item/item_shield.png"
+        super().__init__(x, y, image, machines)
+
+    def effect(self, machine):
+        machine.invincible(3000)
