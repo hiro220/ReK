@@ -41,6 +41,7 @@ class Stage4_Boss(Boss):
         self.isaction = lambda ver:False
         self.isaction_var = [None]
         self.section = 0
+        self.tmp_section = self.section
         self.shield = Shield(90, self)
 
     def update(self):
@@ -56,6 +57,8 @@ class Stage4_Boss(Boss):
         if self.isaction(*self.isaction_var):
             return None
         self.section += 1
+        if self.section == 0:
+            action = -1
         if self.section == 1:
             action = 0
         else:
@@ -101,7 +104,10 @@ class Stage4_Boss(Boss):
     def action_cancel(self):
         # 今実行中の動作をキャンセルする。
         # 一定時間行動しない
-        pass
+        self.isaction = lambda ver:False
+        self.isaction_var = [None]
+        self.tmp_section = self.section
+        self.section = -1
 
 
 class CancelItem(Item):
