@@ -38,7 +38,7 @@ class Stage4_Boss(Boss):
         super().__init__(10, x, 287, image, players, score, money)         #superクラス(Boss)を呼び出す
         self.speed = 4
         # 動作の実行中にTrueになる。Falseのときはどの動作も実行していない。
-        self.isaction = lambda ver:False
+        self.isaction = lambda var:False
         self.isaction_var = [None]
         self.section = 0
         self.tmp_section = self.section
@@ -56,11 +56,9 @@ class Stage4_Boss(Boss):
             return
         self.section += 1
         if self.section == 0:
-            self.dx, self.dy = 0, 0
+            self._stop(5000)
         elif self.section == 1:
-            self.move2straight(900, 300)
-            self.isaction = self._not_arrived
-            self.isaction_var = [900, 300]
+            self._first_move()
 
     def create_item(self, item, flag=False):
         x, y = self.rect.left, self.rect.centery
@@ -81,6 +79,7 @@ class Stage4_Boss(Boss):
         self.dy = self.speed * dy / d
         
     def _not_arrived(self, x, y):
+        # (x, y)に到達していないならTrueが返る
         nx, ny = self.rect.center
         dx, dy = nx - x, ny - y
         if abs(dx)+abs(dy) < self.speed:
@@ -90,11 +89,25 @@ class Stage4_Boss(Boss):
     def action_cancel(self):
         # 今実行中の動作をキャンセルする。
         # 一定時間行動しない
-        self.isaction = lambda ver:False
-        self.isaction_var = [None]
         self.tmp_section = self.section
         self.section = -1
 
+    def _first_move(self):
+        self.move2straight(900, 300)
+        self.isaction = self._not_arrived
+        self.isaction_var = [900, 300]
+
+    def _stop(self, millisecond):
+        # アクションを一時停止し、millisecondaミリ秒後アクションを再開する。
+        self.dx, self.dy = 0, 0
+        self.isaction = lambda var:False
+        self.isaction_var = [None]
+        Timer(millisecond, self._action_start)
+
+    def _action_start(self):
+        # 次のアクションを強制的に開始する
+        self.isaction = lambda var:True
+        self.isaction_var = [None]
 
 class CancelItem(Item):
     """bossの行動をキャンセルする"""
