@@ -45,33 +45,19 @@ class Stage4_Boss(Boss):
         self.shield = Shield(90, self)
 
     def update(self):
-        # 動作を選択する
-        select = self.select_actions()
-        # 選択された動作を実行
-        self.action(select)
+        # 現在の状況などから動作を実行
+        self.action()
         # 移動する
         self.move(self.dx, self.dy)
 
-    def select_actions(self):
-        # 現在の状況などから、行動の選択、移動(self.dx, self.dy)の変更を行う
+    def action(self):
+        # 動作を実行する。
         if self.isaction(*self.isaction_var):
-            return None
+            return
         self.section += 1
         if self.section == 0:
-            action = -1
-        if self.section == 1:
-            action = 0
-        else:
-            action = -1
-        return action
-
-    def action(self, select):
-        # select_actionで選択された動作を実行する。
-        if select == None:
-            return
-        if select == -1:
             self.dx, self.dy = 0, 0
-        elif select == 0:
+        elif self.section == 1:
             self.move2straight(900, 300)
             self.isaction = self._not_arrived
             self.isaction_var = [900, 300]
