@@ -133,7 +133,7 @@ class MeteoriteItem(Item):
 class PoisonItem(Item):
     """一定時間ごとに体力が減るアイテム。ただし、このアイテムの効果で体力がゼロになることはない"""
     def __init__(self, x, y, machine):
-        image = "img/item/recovery.png"
+        image = "img/item/posion.png"
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
