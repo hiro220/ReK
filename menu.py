@@ -18,6 +18,11 @@ class Menu:
         self.select_num = 0
         self.option_num = 0
         self.path = glob('stage/*/')
+        self.new_path = []
+        print(self.path)
+
+        #for i in range(len(self.path)):
+            #self.new_path[i] = self.path[i].strip('stage/') 
 
         StageSelect_font = pygame.font.Font("font/freesansbold.ttf", 55)
         Arrow_font = pygame.font.Font("font/freesansbold.ttf", 100)
@@ -80,6 +85,7 @@ class Menu:
                     self.select_num += 1
                     # file_listboxからターゲットを外す
                     self.file_listbox.process(event)
+                    self.stage_num = 0
 
                 if option_num != None:
                     # オプションが選択されたとき
