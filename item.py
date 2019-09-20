@@ -168,7 +168,7 @@ class InvisibleItem(Item):
 class RotateItem(Item):
     """プレイヤーの移動のキー入力が3000ミリ秒の間、反時計周りにずれる"""
     def __init__(self, x, y, machine):
-        image = "img/item/recovery.png"
+        image = "img/item/rotate.png"
         super().__init__(x, y, image, machine)
 
     def effect(self, machine):
