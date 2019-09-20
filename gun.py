@@ -157,7 +157,7 @@ class Missile_Gun(Gun):
 
     def shoot(self, x, y):
         if self.principal.cop_flag == 1 and R_time.get_ticks() - self.gun_start >= 1000 or self.gun_flag == 0:
-            Missile_Bullet(x, y, self.dx*-1, self.dy, self.machines, 1)
+            Missile_Bullet(x, y, self.dx*-1, self.dy, self.machines, self.principal, 1)
             self.gun_start = R_time.get_ticks()
             self.gun_flag = 1
             self.num -= 1
