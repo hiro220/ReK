@@ -1,8 +1,14 @@
 {
-    "0": {"name": "HP_UP", "equip_size": 1, "own_max": 10, "equip_max": 4},
-    "1": {"name": "CONTINUE", "equip_size": 3, "own_max": 2, "equip_max": 2},
-    "2": {"name": "SPEEDUP", "equip_size":1, "own_max": 8, "equip_max": 3},
-    "3": {"name": "SHORT_RELOAD", "equip_size": 2, "own_max": 8, "equip_max":3},
-    "4": {"name": "SHIELD", "equip_size":2, "own_max":4, "equip_max":1},
-    "5": {"name": "LONG_INVISIBLE", "equip_size": 2, "own_max": 4, "equip_max": 3}
+    "0": {"name": "HP_UP", "equip_size": 1, "own_max": 10, "equip_max": 4, 
+        "info":"最大HPが上がる\n枠:1\n装備上限:4"},
+    "1": {"name": "CONTINUE", "equip_size": 3, "own_max": 2, "equip_max": 2, 
+        "info":"コンティニューできる回数が増える\n枠:3\n装備上限:2"},
+    "2": {"name": "SPEEDUP", "equip_size":1, "own_max": 8, "equip_max": 3, 
+        "info":"スピードが上がる\n枠:1\n装備上限:3"},
+    "3": {"name": "SHORT_RELOAD", "equip_size": 2, "own_max": 8, "equip_max":3, 
+        "info":"リロード時間の短縮\n枠:2\n装備上限:3"},
+    "4": {"name": "SHIELD", "equip_size":2, "own_max":4, "equip_max":1, 
+        "info":"シールド状態で開始\n枠:2\n装備上限:1"},
+    "5": {"name": "LONG_INVISIBLE", "equip_size": 2, "own_max": 4, "equip_max": 3, 
+        "info":"無敵時間の延長\n枠:2\n装備上限:3"}
 }

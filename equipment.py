@@ -4,36 +4,49 @@ from define import *
 from listbox import ListBox
 from popupwindow import PopupWindow
 from image_box import ImageBox
+from textbox import TextBox
 
 class Equipment:
 
     def __init__(self, screen, data):
+        # データを保持
         self.gun_data = data["gun_data"]
         self.equipment = data["equip"]
         self.chip_data = data["chip_data"]
         self.chip = data["chip"]
+        # スクリーンの保持
         self.screen = screen
+        # 選択の初期値
         self.change_gun = 0             # 現在選択している装備場所
         self.change_chip = 0
+        self.change_id = 0
         self.back = False               # 一つ前の画面にもどるか
+        # 操作の表記
         self.screen_info = pygame.font.Font("font/freesansbold.ttf" ,70).render("Equip", True, (255,255,255))
         self.back_info = pygame.font.Font("font/ShipporiMincho-TTF-Regular.ttf" ,50).render("'Q' : 戻る", True, (255,255,255))
         self.change_info = pygame.font.Font("font/ShipporiMincho-TTF-Regular.ttf" ,50).render("'C' : 切り替え", True, (255,255,255))
-        self.change_id = 0
+        # リストボックスの作成
+        # Gun
         texts = [data["name"] for data in self.gun_data.values()]
         equip_listbox = ListBox(self.screen, 80, 200, 300, 250, texts, font_size=40, target=True,\
                                      title="Gun", title_size=60)
         equip_listbox.set_selectable([data["own"]==1 for data in self.gun_data.values()])
+        # Chip
         texts = [data['name'] for data in self.chip_data.values()]
         chip_listbox = ListBox(self.screen, 80, 200, 300, 250, texts, font_size=40, target=True,\
                                      title="Chip", title_size=60)
         chip_listbox += ['remove', 'remove ALL']
+        # 両方をリストに格納し、選択された方を描画
         self.listboxes = [equip_listbox, chip_listbox]
         self.listbox = self.listboxes[self.change_id]
+        # 現在の装備状況を描画するイメージボックスの作成
         self.gun_image_box = ImageBox(screen, 700, 450, 90, 90, 3)
+        self.chip_image_box = ImageBox(screen, 500, 450, 90, 90, 6)
+        
+        self.text_box = TextBox(screen, 550, 200, 550, 200, font_size=30)
+        # 時間管理
         self.clock = pygame.time.Clock()
-        self.count = 0
-    
+
     def do(self):
         while True:
             self.clock.tick(30)
@@ -45,39 +58,48 @@ class Equipment:
 
     def process(self):
         # 内部処理
+        # チップのリストボックスで、選択の可否を設定
         select = [data["num"] > 0 for data in self.chip_data.values()] \
                     + [self.chip[self.change_chip]!=-1, self.chip!=[-1]*6]
         self.listboxes[1].set_selectable(select)
+        # 装備状況のターゲット選択
         self.gun_image_box.target = self.change_id==0
+        self.chip_image_box.target = self.change_id==1
+
+        # ユーザー入力
         for event in pygame.event.get():
             select = self.listbox.process(event)
+
+            # リストボックスからアイテムが選択された
             if select != None:
                 if self.change_id == 0:
                     self.equip(select)
                 else:
                     self.set_chip(select)
+
+            # 閉じるボタンが選択された
             if event.type == QUIT:
+                # ゲーム終了のコードを返却する
                 return EXIT
+
+            # その他のキー入力が行われた
             if event.type == KEYDOWN:
+                # イメージボックスの入力処理
                 if self.change_id == 0:
                     self.gun_image_box.process(event.key)
                     self.change_gun = self.gun_image_box.select
                 else:
-                    self.chip_key(event.key)
+                    self.chip_image_box.process(event.key)
+                    self.change_chip = self.chip_image_box.select
+                # Qキーが入力された
                 if event.key == K_q:
+                    # 一つ前の画面に戻る
                     return BACK
+                # Cキーが入力された
                 elif event.key == K_c:
                     self.change_id ^= 1
                     self.listbox = self.listboxes[self.change_id]
-        self.count = (self.count + 3) * (self.count+3 < 69)
         return CONTINUE
-
-    def chip_key(self, key):
-        if key == K_RIGHT:
-            self.change_chip += 1
-        elif key == K_LEFT:
-            self.change_chip -= 1
-        self.change_chip = (self.change_chip + 6) % 6
 
     def draw(self):
         # 画面描画
@@ -86,16 +108,31 @@ class Equipment:
         self.screen.blit(self.back_info, [850, 20])
         self.screen.blit(self.change_info, [850, 90])
         
+        # リストボックスのカラー設定
         self.listbox.color_reset()
         if self.change_id == 0:
             self.listbox.set_color(self.equipment, (105,105,255))
+        # リストボックスの描画
         self.listbox.draw()
 
+        # 選択中の情報表示
+        if self.change_id == 1:
+            select = self.listbox.selected
+            if select == len(self.listbox)-1:
+                text = '装備している全てのチップを外す。'
+            elif select == len(self.listbox)-2:
+                text = '選択している装備済みのチップを外す。'
+            else:
+                text = self.chip_data[select]['info']
+            self.text_box.set_text(text)
+            self.text_box.draw()
+
+        # 装備情報の描画
         if self.change_id == 0:
             self.draw_equip()
         else:
             self.draw_chip()
-
+        # 画面更新
         pygame.display.update()
 
     def draw_equip(self):
@@ -103,12 +140,15 @@ class Equipment:
         data_list = []
         id_list = []
         for data in self.equipment:
+            # 装備していない
             if data == -1:
                 data_list.append(None)
                 id_list.append(0)
+            # 画像がある
             elif data == 0:
                 data_list.append('img/gun_icon/'+str(data)+'/')
                 id_list.append(3)
+            # 画像がない
             else:
                 data_list.append(data)
                 id_list.append(0)
@@ -117,37 +157,44 @@ class Equipment:
                 
 
     def draw_chip(self):
+        # チップのIDを描画
         pygame.draw.rect(self.screen, (255,255,255), Rect(500, HEIGHT-150, 625, 100))
-        for i, data, in enumerate(self.chip):
-            color = (255,0,0) * (i == self.change_chip) or (0,)*3
-            pygame.draw.rect(self.screen, color, [530+95*i, HEIGHT-145, 90, 90], 2+(i==self.change_chip))
-            if data == -1:
-                continue
-            text = pygame.font.Font("font/freesansbold.ttf", 80).render(str(data), True, (0,0,0))
-            self.screen.blit(text, [555+95*i, HEIGHT-135])
+        self.chip_image_box.set_image([None if data==-1 else data for data in self.chip])
+        self.chip_image_box.draw()
 
+    def equip(self, select):
+        # 選択した銃を装備する。
+        if self.check(select):
+            equipment = self.equipment
+            equipment[self.change_gun] = select
 
     def check(self, select):
         # 装備変更確認
         for i, gun in enumerate(self.equipment):
+            # 選択した銃がすでに装備済み
             if gun == select:
+                # その場所が1番目(リストでの0番目)
                 if i == 0:
                     PopupWindow(self.screen, "1番目に装備されています。\n場所の変更ができません。", ["OK"]).loop()
                     return False
+                # その位置に選択した銃がすでに装備されている
                 if i == self.change_gun:
                     return False
+                # 変更可能な位置に装備している
                 while True:
                     if PopupWindow(self.screen, "すでに装備しています。\n場所を変更しますか？", \
                                    ["変更する", "変更しない"]).loop() == 0:
                         break
                     else:
                         return False
+                # 装備していた銃を外す
                 self.equipment[i] = -1
         return True
 
-    def _set_chip(self, select, size):
-        i = self.change_chip
+    def _set_chip(self, i, select, size):
+        # チップ装備処理
         self.chip_data[select]['num'] -= 1
+        # チップが要するサイズ分セット
         for j in range(size):
             self.chip[i+j] = select
         
@@ -157,21 +204,18 @@ class Equipment:
             chip = self.chip[j]
             if chip == -1:
                 continue
+            # 外したチップの情報
             data = self.chip_data[chip]
             chip_size = data['equip_size']
+            # 所持数を1増やす
             data['num'] += 1
+            # チップを装備から外す
             j -= chip_id_list[j]
             for k in range(j, j+chip_size):
                 self.chip[k] = -1
 
-    def equip(self, select):
-        # 選択した銃を装備する。
-        if self.check(select):
-            equipment = self.equipment
-            equipment[self.change_gun] = select
-
     def set_chip(self, select):
-        # チップの枠がサイズ何番目が保存されているのかを保持
+        # チップが要する枠のサイズごとに番号をつける(3枠のチップなら、[0,1,2]と番号をつける)
         chip_id_list = []
         i = 0
         while i < 6:
@@ -215,6 +259,7 @@ class Equipment:
         if count != size:
             if PopupWindow(self.screen, "必要な枠に装備されているチップをすべて外し、装備します。", ['OK', 'NO']).loop() == 1:
                 return
+        # 装備する場所にすでに装備されているチップを外す
         self._remove_chip(i, size, chip_id_list)
         # チップを装備する
-        self._set_chip(select, size)
+        self._set_chip(i, select, size)

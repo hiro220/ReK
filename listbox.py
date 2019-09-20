@@ -27,7 +27,7 @@ class ListBox:
         self.font_size = font_size
         self.font = pygame.font.Font("font/freesansbold.ttf", font_size)
         self.title_size = title_size
-        self.title = pygame.font.Font("font/freesansbold.ttf", title_size).render(title, True, (255,255,255))
+        self.title = pygame.font.Font("font/freesansbold.ttf", title_size).render(title, True, (0,0,0))
         # 一度に描画する要素数
         self.draw_num = height // (font_size+10)
         # 要素の保持
@@ -43,8 +43,13 @@ class ListBox:
         # 枠線を描画
         pygame.draw.rect(self.screen, self.outline_color, self.rect, self.outline)
         # titleの描画
-        x, y = self.rect.left, self.rect.top - self.title_size
-        self.screen.blit(self.title, [x, y])
+        title_width = self.title.get_rect().right
+        if title_width != 0:
+            x, y = self.rect.left, self.rect.top - self.title_size
+            # 枠線の描画
+            pygame.draw.rect(self.screen, self.bg, Rect(x, y, title_width+6, self.title_size))
+            pygame.draw.rect(self.screen, self.outline_color, Rect(x, y, title_width+6, self.title_size), self.outline)
+            self.screen.blit(self.title, [x+3, y])
         if scroll:
             # スクロールバーの枠を描画
             rect = Rect(self.rect.right-18, self.rect.top+3, 15, self.rect.bottom-self.rect.top-6)

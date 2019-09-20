@@ -176,8 +176,8 @@ def circle(velx, vely, cycle, count):
     count += 1
     return dx, dy, count
 
-def acceleration(dx, acceleNum):
-    return dx - acceleNum
+def acceleration(dx, dy, acceleNum):
+    return dx * acceleNum, dy * acceleNum
 
 def random_move(dx,dy, count, move_count):
     if count == move_count:
