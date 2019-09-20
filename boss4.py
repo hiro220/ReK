@@ -132,7 +132,7 @@ class CancelItem(Item):
 class ShieldBreakItem(Item):
     """bossのシールドにダメージを与える"""
     def __init__(self, x, y, machine, boss):
-        image = 'img/item/recovery.png'
+        image = 'img/item/shield_break.png'
         super().__init__(x, y, image, machine)
         self.boss = boss
 
