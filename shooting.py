@@ -67,7 +67,7 @@ class Main(pygame.sprite.Sprite):
                 self.exit()
 
     def Stage_draw(self, stage_id, stageTxt):
-        stage_file = "stage/" + stageTxt
+        stage_file = stageTxt
         stage = Stage(self.screen, stage_file, self.data)
         pygame.mixer.music.load("sound/sound1.mp3")     # 音楽ファイルの読み込み
         pygame.mixer.music.play(-1)                     # 音楽の再生回数(ループ再生)

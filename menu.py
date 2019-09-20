@@ -6,6 +6,7 @@ from shop import Shop
 from listbox import ListBox
 from popupwindow import PopupWindow
 from messagebox import MessageBox
+from glob import glob
 
 class Menu:
     
@@ -123,5 +124,7 @@ class Menu:
         self.stage_num = (self.stage_num+stage_size) % stage_size
     
     def Return_Stage(self):
-        stage = [Stage1, Stage2, Stage3]
-        return self.stage_num, stage[self.stage_num-1]
+        stage = [1, 2, 3]
+        a = glob('stage/*')
+        print(a)
+        return self.stage_num, a[0] + str(stage[self.stage_num-1])
