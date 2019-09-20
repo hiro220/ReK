@@ -59,6 +59,9 @@ class Stage4_Boss(Boss):
             self._stop(5000)
         elif self.section == 1:
             self._first_move()
+        else:
+            self._stop(5000)
+            self.section = -1
 
     def create_item(self, item, flag=False):
         x, y = self.rect.left, self.rect.centery
@@ -100,13 +103,13 @@ class Stage4_Boss(Boss):
     def _stop(self, millisecond):
         # アクションを一時停止し、millisecondaミリ秒後アクションを再開する。
         self.dx, self.dy = 0, 0
-        self.isaction = lambda var:False
+        self.isaction = lambda var:True
         self.isaction_var = [None]
         Timer(millisecond, self._action_start)
 
     def _action_start(self):
         # 次のアクションを強制的に開始する
-        self.isaction = lambda var:True
+        self.isaction = lambda var:False
         self.isaction_var = [None]
 
 class CancelItem(Item):
