@@ -2,16 +2,5 @@ size    300
 rule    NORMAL
 bg      STAR
 
-loop 3
 0
-CPU1 100
-CPU2 200 300
-CPU3 400
-
-endloop 50
-
-300
-CPU3 300
-
-400
-BOSS1 450
+BOSS4 0
