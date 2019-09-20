@@ -40,6 +40,7 @@ class Stage4_Boss(Boss):
         # 動作の実行中にTrueになる。Falseのときはどの動作も実行していない。
         self.isaction = lambda var:False
         self.isaction_var = [None]
+        self.timer_list = []
         self.section = 0
         self.tmp_section = self.section
         self.shield = Shield(90, self)
@@ -55,16 +56,16 @@ class Stage4_Boss(Boss):
         if self.isaction(*self.isaction_var):
             return
         self.section += 1
-        if self.section == 0:
-            self._stop(5000)
-        elif self.section == 1:
+        if self.section == 1:
             self._first_move()
+        elif self.section == 2:
+            self._item_creation()
         else:
             self._stop(5000)
-            self.section = -1
+            self.section = 1
 
     def create_item(self, item, flag=False):
-        x, y = self.rect.left, self.rect.centery
+        x, y = self.rect.left-10, self.rect.centery
         if flag:
             item(x, y, self.machines, self)
         else:
@@ -92,8 +93,8 @@ class Stage4_Boss(Boss):
     def action_cancel(self):
         # 今実行中の動作をキャンセルする。
         # 一定時間行動しない
-        self.tmp_section = self.section
-        self.section = -1
+        self.timer_list.clear()
+        self._stop(5000)
 
     def _first_move(self):
         self.move2straight(900, 300)
@@ -111,6 +112,12 @@ class Stage4_Boss(Boss):
         # 次のアクションを強制的に開始する
         self.isaction = lambda var:False
         self.isaction_var = [None]
+
+    def _item_creation(self):
+        self._stop(5000)
+        self.create_item(Recovery)
+        self.timer_list.append(Timer(1000, self.create_item, ShieldBreakItem, True))
+        self.timer_list.append(Timer(4000, self.create_item, ShieldBreakItem, True))
 
 class CancelItem(Item):
     """bossの行動をキャンセルする"""
