@@ -103,6 +103,11 @@ class Stage4_Boss(Boss):
         self.move2straight(900, 300)
         self.isaction = self._not_arrived
         self.isaction_var = [900, 300]
+        Timer(5000, self.create_item, CancelItem, INFO_WIDTH, 0, True, 0)
+        Timer(5000, self.create_item, CancelItem, INFO_WIDTH, HEIGHT-25, True, 0)
+        Timer(5000, self.create_item, CancelItem, WIDTH-25, HEIGHT-25, True, 0)
+        Timer(5000, self.create_item, CancelItem, WIDTH-25, 0, True, 0)
+        
 
     def _stop(self, millisecond):
         # アクションを一時停止し、millisecondaミリ秒後アクションを再開する。
@@ -147,8 +152,15 @@ class Stage4_Boss(Boss):
 
     def _call_cpu(self):
         self._stop(6000)
-        for _ in range(2):
-            self.call_one_cpu(cpu3, WIDTH, random.randrange(100, 500))
+        for i in range(2):
+            self.call_one_cpu(cpu3, WIDTH, random.randrange(100+300*i, 250+300*i))
+        for _ in range(3):
+            self.timer_list.append(Timer(2000, self.create_item, SpeedDownItem, random.randrange(100, 500), \
+                                         random.randrange(50, 550), False, -2))
+        for _ in range(3):
+            self.timer_list.append(Timer(4000, self.create_item, SpeedUpItem, random.randrange(600, 900), \
+                                         random.randrange(50, 550), False, 2))
+        
 
     def _meteorite(self):
         x, y = self.rect.center
