@@ -3,6 +3,7 @@ import pygame
 from define import *
 from item import *
 from gun import *
+from cpu import *
 from timer import Timer
 
 img_path = "img/cpu/"
@@ -36,7 +37,7 @@ class Stage4_Boss(Boss):
     def __init__(self, x, y, players, score, money):
         image = pygame.image.load(img_path+"cpu.png").convert_alpha() #イメージ画像をロードする
         super().__init__(10, x, 287, image, players, score, money)         #superクラス(Boss)を呼び出す
-        self.speed = 4
+        self.speed = 2
         # 動作の実行中にTrueになる。Falseのときはどの動作も実行していない。
         self.isaction = lambda var:False
         self.isaction_var = [None]
@@ -64,13 +65,17 @@ class Stage4_Boss(Boss):
             self._stop(5000)
             self.section = 1
 
-    def create_item(self, item, flag=False):
-        x, y = self.rect.left-10, self.rect.centery
+    def create_item(self, item, x, y, flag=False, speed=-1):
         if flag:
-            item(x, y, self.machines, self)
+            item = item(x, y, self.machines, self)
         else:
-            item(x, y, self.machines)
+            item = item(x, y, self.machines)
+        item.speed = speed
 
+    def create_item_front(self, item, flag=False, speed=-1):
+        x, y = self.rect.left-15, self.rect.centery-10
+        self.create_item(item, x, y, flag, speed)
+        
     def move2straight(self, x, y):
         # 引数で指定した座標に向かうdx, dyに設定
         nowx, nowy = self.rect.center
@@ -115,9 +120,15 @@ class Stage4_Boss(Boss):
 
     def _item_creation(self):
         self._stop(5000)
-        self.create_item(Recovery)
-        self.timer_list.append(Timer(1000, self.create_item, ShieldBreakItem, True))
-        self.timer_list.append(Timer(4000, self.create_item, ShieldBreakItem, True))
+        self.create_item_front(ShieldItem, speed=-2)
+        self.timer_list.append(Timer(1000, self.create_item_front, ShieldBreakItem, True, -2))
+        self.timer_list.append(Timer(2000, self.create_item_front, ShieldItem, False, -2))
+        self.timer_list.append(Timer(3000, self.create_item, PoisonItem, \
+                                     random.randrange(700, 1000), random.randrange(100, 200), False, -3))
+        self.timer_list.append(Timer(3000, self.create_item, PoisonItem, \
+                                     random.randrange(700, 1000), random.randrange(250, 350), False, -3))
+        self.timer_list.append(Timer(3000, self.create_item, PoisonItem, \
+                                     random.randrange(700, 1000), random.randrange(400, 500), False, -3))
 
 class CancelItem(Item):
     """bossの行動をキャンセルする"""
