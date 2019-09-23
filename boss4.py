@@ -133,6 +133,9 @@ class Stage4_Boss(Boss):
                                      random.randrange(700, 1000), random.randrange(250, 350), False, -3))
         self.timer_list.append(Timer(3000, self.create_item, PoisonItem, \
                                      random.randrange(700, 1000), random.randrange(400, 500), False, -3))
+        if random.random() < 0.3:
+            self.timer_list.append(Timer(4000, self.create_item, Recovery, random.randrange(700, 1100), \
+                                         random.randrange(150, 450), False, -5))
     
     def _meteorite(self):
         x, y = self.rect.center
