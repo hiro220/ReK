@@ -19,10 +19,10 @@ class Menu:
         self.option_num = 0
         self.path = glob('stage/*/')
         self.new_path = []
-        print(self.path)
+        self.stage_select_path = []
 
-        #for i in range(len(self.path)):
-            #self.new_path[i] = self.path[i].strip('stage/') 
+        for i in range(len(self.path)):
+            self.new_path.append(self.path[i].strip('stage\/'))
 
         StageSelect_font = pygame.font.Font("font/freesansbold.ttf", 55)
         Arrow_font = pygame.font.Font("font/freesansbold.ttf", 100)
@@ -42,7 +42,7 @@ class Menu:
         # リストボックスの設定
         self.option_listbox = ListBox(self.screen, 50, 80, 250, 200, ['Back', 'Shop', 'Equip'], font_size=55, title="Menu")
         self.option_listbox.set_selectable([True, True, True])
-        self.file_listbox = ListBox(self.screen, 940, 80, 120, 400, self.path, title="File")
+        self.file_listbox = ListBox(self.screen, 940, 80, 120, 400, self.new_path, title="File")
     
         self.file_listbox.set_selectable([True, True])
         self.file_listbox()
@@ -71,17 +71,18 @@ class Menu:
                 if event.type == KEYDOWN:
                     self.Key_Event(event)       #押されたキーによって異なる処理
                     if event.key == K_RETURN and self.select_num == 1 and self.file_id != None:
-                        return self.Return_Stage(self.a[self.stage_num])
+                        return self.Return_Stage(self.stage_path[self.stage_num])
                 if event.type == QUIT:
                     return EXIT, None
 
                 if file_id != None:
                     # ファイルが選択されたとき
                     self.file_id = file_id
-                    self.a = glob(self.path[self.file_id] + '/*')
-                    print(self.a)
-                    self.stage_text = self.a
+                    self.stage_path = glob(self.path[self.file_id] + '/*')
+                    self.stage_select_path = self.stage_path.copy()
                     
+                    print(self.stage_text)
+
                     self.select_num += 1
                     # file_listboxからターゲットを外す
                     self.file_listbox.process(event)
@@ -136,7 +137,5 @@ class Menu:
         stage_size = len(self.stage_text)
         self.stage_num = (self.stage_num+stage_size) % stage_size
     
-    def Return_Stage(self, x):
-        stage = [1, 2, 3]
-
-        return self.stage_num, x
+    def Return_Stage(self, path):
+        return self.stage_num, path
