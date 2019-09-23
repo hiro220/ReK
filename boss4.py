@@ -3,7 +3,6 @@ import pygame
 from define import *
 from item import *
 from gun import *
-from cpu import *
 from timer import Timer
 
 img_path = "img/cpu/"
@@ -43,6 +42,7 @@ class Stage4_Boss(Boss):
         self.isaction_var = [None]
         self.timer_list = []
         self.section = 0
+        self.meteo_flag = True
         self.tmp_section = self.section
         self.shield = Shield(90, self)
 
@@ -54,6 +54,10 @@ class Stage4_Boss(Boss):
 
     def action(self):
         # 動作を実行する。
+        if self.hp.hp <= 5 and self.meteo_flag:
+            for _ in range(3):
+                self._meteorite()
+            self.meteo_flag = False
         if self.isaction(*self.isaction_var):
             return
         self.section += 1
@@ -129,6 +133,11 @@ class Stage4_Boss(Boss):
                                      random.randrange(700, 1000), random.randrange(250, 350), False, -3))
         self.timer_list.append(Timer(3000, self.create_item, PoisonItem, \
                                      random.randrange(700, 1000), random.randrange(400, 500), False, -3))
+    
+    def _meteorite(self):
+        x, y = self.rect.center
+        MeteoriteItem(x, y, self.groups()[1])
+        Timer(8500, self._meteorite)
 
 class CancelItem(Item):
     """bossの行動をキャンセルする"""
