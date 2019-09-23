@@ -3,6 +3,7 @@ import pygame
 from define import *
 from item import *
 from gun import *
+from cpumachine import *
 from timer import Timer
 
 img_path = "img/cpu/"
@@ -65,21 +66,12 @@ class Stage4_Boss(Boss):
             self._first_move()
         elif self.section == 2:
             self._item_creation()
+        elif self.section == 3:
+            self._call_cpu()
         else:
             self._stop(5000)
             self.section = 1
 
-    def create_item(self, item, x, y, flag=False, speed=-1):
-        if flag:
-            item = item(x, y, self.machines, self)
-        else:
-            item = item(x, y, self.machines)
-        item.speed = speed
-
-    def create_item_front(self, item, flag=False, speed=-1):
-        x, y = self.rect.left-15, self.rect.centery-10
-        self.create_item(item, x, y, flag, speed)
-        
     def move2straight(self, x, y):
         # 引数で指定した座標に向かうdx, dyに設定
         nowx, nowy = self.rect.center
@@ -102,6 +94,8 @@ class Stage4_Boss(Boss):
     def action_cancel(self):
         # 今実行中の動作をキャンセルする。
         # 一定時間行動しない
+        for timer in self.timer_list:
+            timer.kill()
         self.timer_list.clear()
         self._stop(5000)
 
@@ -122,6 +116,17 @@ class Stage4_Boss(Boss):
         self.isaction = lambda var:False
         self.isaction_var = [None]
 
+    def create_item(self, item, x, y, flag=False, speed=-1):
+        if flag:
+            item = item(x, y, self.machines, self)
+        else:
+            item = item(x, y, self.machines)
+        item.speed = speed
+
+    def create_item_front(self, item, flag=False, speed=-1):
+        x, y = self.rect.left-15, self.rect.centery-10
+        self.create_item(item, x, y, flag, speed)
+        
     def _item_creation(self):
         self._stop(5000)
         self.create_item_front(ShieldItem, speed=-2)
@@ -137,6 +142,14 @@ class Stage4_Boss(Boss):
             self.timer_list.append(Timer(4000, self.create_item, Recovery, random.randrange(700, 1100), \
                                          random.randrange(150, 450), False, -5))
     
+    def call_one_cpu(self, cpu, x, y):
+        cpu(x, y, self.machines, self.score, self.money)
+
+    def _call_cpu(self):
+        self._stop(6000)
+        for _ in range(2):
+            self.call_one_cpu(cpu3, WIDTH, random.randrange(100, 500))
+
     def _meteorite(self):
         x, y = self.rect.center
         MeteoriteItem(x, y, self.groups()[1])
