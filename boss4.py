@@ -152,11 +152,11 @@ class Stage4_Boss(Boss):
 
     def _call_cpu(self):
         self._stop(6000)
-        for i in range(2):
-            self.call_one_cpu(cpu3, WIDTH, random.randrange(100+300*i, 250+300*i))
         for _ in range(3):
             self.timer_list.append(Timer(2000, self.create_item, SpeedDownItem, random.randrange(100, 500), \
                                          random.randrange(50, 550), False, -2))
+        for i in range(2):
+            self.timer_list.append(Timer(3000, self.call_one_cpu, cpu3, WIDTH, random.randrange(100+300*i, 250+300*i)))
         for _ in range(3):
             self.timer_list.append(Timer(4000, self.create_item, SpeedUpItem, random.randrange(600, 900), \
                                          random.randrange(50, 550), False, 2))
