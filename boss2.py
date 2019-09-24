@@ -27,6 +27,7 @@ class Stage2_boss(Boss):
         self.phase1_count = R_time.get_ticks()
         self.move_pose = True
         self.shoot_flag = True
+        self.first_check = True
         #self.load_count = True
 
         self.sub1 = Stage2_sub(self.rect.centerx,self.rect.centery-100, players, self.score, 0, self, self.money)
@@ -38,18 +39,22 @@ class Stage2_boss(Boss):
     
     def update(self):
         self.move(self.dx,self.dy)
+        self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))
         if False not in self.natural: 
             self.sub_rutin = random.randint(0,3)
-        
-        self.phase_check()
-        self.phase_move()
+        if self.first_check != True:
+            self.phase_check()
+            self.phase_move()
 
-        if self.lord_flag:
-            self.lord_sub()
-            self.lord_flag = None
+            if self.lord_flag:
+                self.lord_sub()
+                self.lord_flag = None
         
-        if self.shoot_flag:
-            super().shoot(self.rect.left, self.rect.top)
+            if self.shoot_flag:
+                super().shoot(self.rect.left, self.rect.top)
+        elif self.first_check and self.rect.centerx <= mg2.right - 200:
+            self.first_check = False
+        
         #print(self.rect)
     
     def lord_sub(self):
@@ -71,26 +76,23 @@ class Stage2_boss(Boss):
         self.phase1_count = R_time.get_ticks()
 
     def phase1_move(self):
-        phase1_dic = {0:Rect(500,0,660,600),1:Rect(500,0,660,600),2:Rect(500,0,660,600),3:Rect(500,0,660,600)}
-        if self.rect.top <= phase1_dic[self.sub_rutin].top or self.rect.bottom >= phase1_dic[self.sub_rutin].bottom:
+        phase1_dic = {0:Rect(850,100,210,400),1:Rect(850,100,210,400),2:Rect(850,100,210,400),3:Rect(850,100,210,400)}
+        if self.rect.top <= phase1_dic[0].top or self.rect.bottom >= phase1_dic[0].bottom:
             self.dy *= -1  
-        elif self.rect.left <= phase1_dic[self.sub_rutin].left or self.rect.right >= phase1_dic[self.sub_rutin].right:
+        elif self.rect.left <= phase1_dic[0].left or self.rect.right >= phase1_dic[0].right:
             self.dx *= -1
         elif R_time.get_ticks() - self.phase1_count <= 1200:
             self.dx,self.dy = 0,0
             self.move_pose = True
-            print("phase1_pose") 
         elif self.move_pose:
-            self.dx,self.dy = random.choice([0,-2,2]), random.choice([0,-2,2])
+            self.dx,self.dy = random.choice([0,-3,2]), random.choice([0,-3,2])
             self.move_pose = False
-            Timer(30000,self.in_count) 
-        self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))
-        print(self.dx,self.dy)
+            Timer(3000,self.in_count)
         
-
     def phase2_move(self):
         self.natural = [False,False,False,False,False]
         if self.sub1.sel_number == 99 and self.sub2.sel_number == 99:
+            self.dx,selfdy = 0,0
             self.phase_flag += 0.1
             Timer(1200,self.phase_change, 2.1)
             Timer(12000,self.phase_change, 3)
@@ -109,7 +111,6 @@ class Stage2_boss(Boss):
                 self.dy = -2
             else:
                 self.dy = 2
-        print("phase2")
         
     def phase3_move(self):
         self.dy = 0
@@ -145,7 +146,7 @@ class Stage2_sub(Boss):
             self.del_timer()
             self.sel_number = 99
             self.move_timer.append(Timer(1200, self.change_number, 99, True, -1,[8,8]))
-        
+            
         if self.shoot_flag and self.shoot_times != 0:
             super().shoot(self.rect.left, self.rect.top)
             self.shoot_times -= 1
@@ -153,7 +154,6 @@ class Stage2_sub(Boss):
         self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))
         self.move(self.dx,self.dy)
 
-        #print(self.shoot_flag)
         #print(self.move_timer)
         
         
@@ -174,11 +174,11 @@ class Stage2_sub(Boss):
         if option[0]:
             self.move_dic[self.sel_number].change_option(option)
     
-    def change_gun(self, number): #最終的にfor文で回す
-        if self.number == 0 and number[0] != None:
-            self.gun = self.boss.gun_dic[number[0]]
-        if self.number == 1 and number[1] != None:
-            self.gun = self.boss.gun_dic[number[1]]
+    def change_gun(self, gun_number): #最終的にfor文で回す
+        if self.number == 0 and gun_number[0] != None:
+            self.gun = self.boss.gun_dic[gun_number[0]]
+        if self.number == 1 and gun_number[1] != None:
+            self.gun = self.boss.gun_dic[gun_number[1]]
 
     def del_timer(self, number=0):
         if number == 0:
