@@ -35,7 +35,7 @@ class Stage2_boss(Boss):
 
         self.gun_dic = {0:Beam_Gun(self.machines,self, -1 ,90),1:Beam_Gun(self.machines,self, -1 ,270),2:Beam_Gun(self.machines,self, -1 ,0),3:Beam_Gun(self.machines,self, -1 ,180),\
                         4:Obot_Gun(self.machines,self, -1,90,500),5:Obot_Gun(self.machines,self,-1,270,500),6:Division_Gun(self.machines,self, -1,1200,True),7:Division_Gun(self.machines,self, -1,1500, True),\
-                        8:Circle_Gun(self.machines, self, -1, 500),9:Twist_Gun(self.machines,self,-1)}
+                        8:Circle_Gun(self.machines, self, -1, 500),9:Circle_Gun(self.machines, self, -1, 500),10:Twist_Gun(self.machines,self,-1)}
     
     def update(self):
         self.move(self.dx,self.dy)
@@ -145,7 +145,7 @@ class Stage2_sub(Boss):
         if self.boss.hp.hp <= 5 and self.boss.phase_flag == 2:
             self.del_timer()
             self.sel_number = 99
-            self.move_timer.append(Timer(1200, self.change_number, 99, True, -1,[8,8]))
+            self.move_timer.append(Timer(1200, self.change_number, 99, True, -1,[8,9]))
             
         if self.shoot_flag and self.shoot_times != 0:
             super().shoot(self.rect.left, self.rect.top)
