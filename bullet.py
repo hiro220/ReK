@@ -239,7 +239,7 @@ class Thunder_Bullet(Bullet):
     def __init__(self, x, y, dx, dy, machines):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.img_path = "img/bullet/thunder/"
-        self.image = pygame.image.load(self.img_path+"Thunder11.png").convert_alpha()
+        self.image = pygame.image.load(self.img_path+"Thunder11.jpg").convert_alpha()
         self.image = pygame.transform.smoothscale(self.image, (50,22))
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
         self.rect2 = self.rect
@@ -255,11 +255,11 @@ class Thunder_Bullet(Bullet):
     def move(self):
         if self.flag == 0:
             if self.image_flag == 0:
-                self.image = pygame.image.load(self.img_path+"Thunder11.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Thunder11.jpg").convert_alpha()
                 self.image = pygame.transform.smoothscale(self.image, (50,22))
                 self.image_flag = 1
             elif self.image_flag == 1:
-                self.image = pygame.image.load(self.img_path+"Thunder12.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Thunder12.jpg").convert_alpha()
                 self.image = pygame.transform.smoothscale(self.image, (50,22))
                 self.image_flag = 0
 
@@ -275,11 +275,11 @@ class Thunder_Bullet(Bullet):
                     machine.hit(0.5)
         elif self.flag == 1:
             if self.image_flag == 0:
-                self.image = pygame.image.load(self.img_path+"Thunder21.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Thunder21.jpg").convert_alpha()
                 self.image = pygame.transform.smoothscale(self.image, (22,50))
                 self.image_flag = 1
             elif self.image_flag == 1:
-                self.image = pygame.image.load(self.img_path+"Thunder22.png").convert_alpha()
+                self.image = pygame.image.load(self.img_path+"Thunder22.jpg").convert_alpha()
                 self.image = pygame.transform.smoothscale(self.image, (22,50))
                 self.image_flag = 0
 
@@ -299,7 +299,7 @@ class subThunder_Bullet(Bullet):
     def __init__(self, x, y, dx, dy, machines):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.img_path = "img/bullet/thunder/"
-        self.image = pygame.image.load(self.img_path+"Thunder31.png").convert_alpha()
+        self.image = pygame.image.load(self.img_path+"Thunder31.jpg").convert_alpha()
         self.image = pygame.transform.smoothscale(self.image, (22,50))
         self.rect = self.image.get_rect()   # 画像からrectを読み取る
         self.rect.move_ip(x, y)             # 引数で指定された位置に移動させる
@@ -313,11 +313,11 @@ class subThunder_Bullet(Bullet):
 
     def move(self):
         if self.image_flag == 0:
-            self.image = pygame.image.load(self.img_path+"Thunder31.png").convert_alpha()
+            self.image = pygame.image.load(self.img_path+"Thunder31.jpg").convert_alpha()
             self.image = pygame.transform.smoothscale(self.image, (22,50))
             self.image_flag = 1
         elif self.image_flag == 1:
-            self.image = pygame.image.load(self.img_path+"Thunder32.png").convert_alpha()
+            self.image = pygame.image.load(self.img_path+"Thunder32.jpg").convert_alpha()
             self.image = pygame.transform.smoothscale(self.image, (22,50))
             self.image_flag = 0
 
