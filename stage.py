@@ -80,6 +80,7 @@ class Stage:
         while True:
             self.clock.tick(30)         # フレームレート(30fps)
             result = self.process()
+            print(self.bullets)
             self.draw()
             pygame.display.update()     # 画面更新
             if not result == CONTINUE:
@@ -131,7 +132,8 @@ class Stage:
                     self.process, self.draw = self.pause_process, self.pause_draw
                 if event.key == K_x or event.key == K_v:
                     self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
-                self.player.change(event.key)
+                if event.key == K_a or event.key == K_s or event.key == K_d:
+                    self.player.change(event.key)
         return CONTINUE
 
     def moveStage(self):
@@ -304,10 +306,10 @@ class Stage:
     
     def creatRange2(self):
         """ここでは範囲外を判定するための範囲を作成する"""
-        Range2(INFO_WIDTH-WIDTH,-80,10,HEIGHT+160)
-        Range2(INFO_WIDTH-WIDTH+10,-80,WIDTH*3-INFO_WIDTH,10)
-        Range2(INFO_WIDTH-10,HEIGHT+80,WIDTH*3-INFO_WIDTH,10)
-        Range2(WIDTH*2,-80,10,HEIGHT+160)
+        Range2(INFO_WIDTH-WIDTH,-80,50,HEIGHT+160)
+        Range2(INFO_WIDTH-WIDTH+10,-80,WIDTH*3-INFO_WIDTH,50)
+        Range2(INFO_WIDTH-WIDTH+10,HEIGHT+80,WIDTH*3-INFO_WIDTH,50)
+        Range2(WIDTH*2,-80,50,HEIGHT+160)
 
     def set_background(self, image_id):
         dic = {SKY:"sky.jpg", STAR:"star.jpg"}

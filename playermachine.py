@@ -19,9 +19,11 @@ class PlayerMachine(Machine):
         self.equip = data["equip"]
         self.gun_data = data["gun_data"]
         self.gun_base()
+        self.reload_data()
         self.gun = self.gun_file[0]
         self.key = {'UP':K_UP, 'DOWN':K_DOWN, 'LEFT':K_LEFT, 'RIGHT':K_RIGHT, \
                     'shoot':K_x, 'reload':K_v, 'gun1':K_a, 'gun2':K_s, 'gun3':K_d}
+        self.gun_number = 1
         
     def move(self):
         if self.wait_flag == 0:
@@ -46,25 +48,26 @@ class PlayerMachine(Machine):
             x, y = self.rect.midright
             super().shoot(x, y)
         elif key == self.key['reload']:
-            super().reload()
+            super().reload(self.gun_number - 1)
 
     def change(self, key):
         if self.wait_flag == 0:
             return
         gun_number = 1 * (key==self.key['gun1']) or 2 * (key==self.key['gun2']) or 3 * (key==self.key['gun3'])
-        if gun_number == 0 or self.gun_file[gun_number - 1] == None:
+        if self.gun_file[gun_number - 1] == None:
             return
-        self.gun = self.gun_file[gun_number - 1]
+        self.gun_number = gun_number
+        self.gun = self.gun_file[self.gun_number - 1]
         
     def gun_base(self):
         self.gun_file = []   
         for i in range(3):
-            gun_num = self.equip[i]
-            if gun_num == -1:
+            self.gun_num = self.equip[i]
+            if self.gun_num == -1:
                 self.gun_file.append(None)
             else:
-                class_name = self.gun_data[gun_num]['name']
-                bullet_count = self.gun_data[gun_num]['bullet_size']
+                class_name = self.gun_data[self.gun_num]['name']
+                bullet_count = self.gun_data[self.gun_num]['bullet_size']
                 exec("self.gun_file.append(" + class_name + "(self.machines, self,"  + str(bullet_count) + "))") 
     
     def gun_search(self, class_name):
@@ -88,3 +91,14 @@ class PlayerMachine(Machine):
 
     def death(self):
         PlayerMachine.killed_count += 1
+
+    def reload_data(self):
+        self.reload_file = []
+        for i in range(3):
+            equip = self.equip[i]
+            if equip == -1:
+                self.reload_file.append(0)
+                continue
+            self.reload_file.append(self.gun_data[equip]['reload_size'])        
+        super().reload_base(self.reload_file)
+        

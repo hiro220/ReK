@@ -6,7 +6,7 @@ import math
 from pygame.locals import K_x, K_a, K_s, K_d, RLEACCEL
 from define import R_time, INFO_WIDTH, WIDTH, HEIGHT
 from timer import Timer
-from cpumove import circle
+from cpumove import circle, acceleration
 
 class Bullet(pygame.sprite.Sprite):
 
@@ -62,11 +62,15 @@ class Reflection_Bullet(Bullet):
 
 class Missile_Bullet(Bullet):
 
-    def __init__(self, x, y, dx, dy, machines, flag):
+    def __init__(self, x, y, dx, dy, machines, principal, flag):
         super().__init__(x, y, dx, dy, machines)
         self.gun_start = R_time.get_ticks()
+        self.principal = principal
         self.cop_flag = flag
-        self.tracking_flag = 0
+        self.target_flag = 0
+        self.dx ,self.dy = 3, 0
+        self.vely = 3
+        
 
         if self.cop_flag:
             self.image = pygame.image.load(self.img_path+"Pmissile.png").convert_alpha()
@@ -75,6 +79,17 @@ class Missile_Bullet(Bullet):
 
         self.rect = self.image.get_rect()
         self.rect.move_ip(x, y)
+
+        play_list = self.machines.sprites()
+        self.target = None
+        mindistance = 1000
+        for play in play_list:
+            distance = math.sqrt((play.rect.centerx - x)**2 + (play.rect.centery - y)**2)
+            if distance < mindistance and play.rect.left > self.rect.centerx:
+                mindistance = distance
+                self.target = play
+
+        Timer(2000, self.kill)
 
     def move(self):
         if self.cop_flag == 0:
@@ -95,34 +110,37 @@ class Missile_Bullet(Bullet):
                     break
         else:
             self.rect.move_ip(self.dx, self.dy)
-            play_list = self.machines.sprites()
-            x, y = self.rect.center
+            self.dx, self.dy = acceleration(self.dx, self.dy, 1.1)
 
-            mindistance = 1000
-            for play in play_list:
-                    distance = math.sqrt((play.rect.centerx - x)**2 + (play.rect.centery - y)**2)
-                    if distance < mindistance:
-                        mindistance = distance
-                        target = play
-            try:
-                distance = math.sqrt((target.rect.centerx - x)**2 + (target.rect.centery - y)**2)
-            except:
+            if self.target_flag == 1:
+                collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+                if collide_list:                        # リストがあるか
+                    self.kill()                         # このスプライトを所属するすべてのグループから削除
+                    for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                        machine.hit(1)
+
+            if self.target == None:
+                self.target_flag = 1
                 return
-            if distance >= 150:
-                self.image = pygame.image.load(self.img_path+"Pmissile.png").convert_alpha()
-                distance2 = distance / 4
-                angle = math.degrees(math.atan2(y - target.rect.centery, target.rect.centerx - x))
-                self.dx, self.dy = (target.rect.centerx - x) / distance2, (target.rect.centery - y) / distance2
-                self.rect.move_ip(self.dx, self.dy)
-                self.image = pygame.transform.rotate(self.image, angle)
-            else:
-                self.rect.move_ip(self.dx, self.dy)
-                        
-        collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
-        if collide_list:                        # リストがあるか
-            self.kill()                         # このスプライトを所属するすべてのグループから削除
-            for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
-                machine.hit(1)
+            if not self.target.alive() or self.rect.centerx > self.target.rect.left:
+                self.target_flag = 1
+                return
+
+            x, y = self.rect.center
+            distance = math.sqrt((self.target.rect.centerx - x)**2 + (self.target.rect.centery - y)**2)
+            self.dy = ((self.target.rect.centery - y) / distance) * self.vely
+            self.vely *= 1.08
+            self.image = pygame.image.load(self.img_path+"Pmissile.png").convert_alpha()
+            angle = math.degrees(math.atan2(y - self.target.rect.centery, self.target.rect.centerx - x))
+            self.image = pygame.transform.rotate(self.image, angle / 2)
+
+            collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
+            if collide_list:                        # リストがあるか
+                self.kill()                         # このスプライトを所属するすべてのグループから削除
+                for machine in collide_list:        # この弾に当たったすべての機体に対してダメージを与える
+                    machine.hit(1)
+
+
 
 class Fluffy_Bullet(Bullet):
     

@@ -62,14 +62,17 @@ class Machine(pygame.sprite.Sprite):
         if not self.gun.isBulletZero():     # 残弾数が0でないなら弾を発射する
             self.gun.shoot(x, y)
 
-    def reload(self):
-        if self.reload_flag:
-            self.reload_flag = False
-            bullet_num = self.gun.num
-            bullet_num /= self.gun.max/10
-            self.gun.num = 0
-            Timer(self.reload_time+bullet_num*500, self.gun.reload)
-            Timer(self.reload_time+500+bullet_num*500, self.change_flag)
+    def reload(self, count):
+        reload_count = self.reload_num[count]
+        if reload_count != 0:
+            if self.reload_flag:
+                self.reload_flag = False
+                bullet_num = self.gun.num
+                bullet_num /= self.gun.max/10
+                self.gun.num = 0
+                self.reload_num[count] -= 1
+                Timer(self.reload_time+bullet_num*500, self.gun.reload)
+                Timer(self.reload_time+500+bullet_num*500, self.change_flag)
     
     def BulletZero(self):
         self.gun.BulletZero()
@@ -145,3 +148,7 @@ class Machine(pygame.sprite.Sprite):
         if num-1 == 0:
             return
         Timer(millisecond, self.fall_meteorite, machines, num-1, millisecond)
+
+    def reload_base(self, data):
+        self.reload_num = data
+        print(self.reload_num)

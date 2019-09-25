@@ -20,11 +20,6 @@ Help = 1                #Helpを選択した時
 End = 2
 BACK = 3
 
-# メニュー画面におけるステージ名
-Stage1 = "Stage1.txt"
-Stage2 = "Stage2.txt"
-Stage3 = "Stage3.txt" 
-
 # 各ステージにおけるプレイヤー機体の初期位置
 PLAYER_X = INFO_WIDTH
 PLAYER_Y = HEIGHT // 2

@@ -2,9 +2,11 @@ import pygame
 from pygame.locals import *
 from define import *
 from equipment import Equipment
+from shop import Shop
 from listbox import ListBox
 from popupwindow import PopupWindow
 from messagebox import MessageBox
+from glob import glob
 
 class Menu:
     
@@ -15,10 +17,15 @@ class Menu:
         self.stage_num = 1
         self.select_num = 0
         self.option_num = 0
-        
+        self.path = glob('stage/*/')
+        self.new_path = []
+
+        for i in range(len(self.path)):
+            self.new_path.append(self.path[i].strip('stage\/'))
+
         StageSelect_font = pygame.font.Font("font/freesansbold.ttf", 55)
         Arrow_font = pygame.font.Font("font/freesansbold.ttf", 100)
-        Stage_font = pygame.font.Font("font/freesansbold.ttf", 45)
+        self.Stage_font = pygame.font.Font("font/freesansbold.ttf", 45)
 
         self.StageSelect_text = StageSelect_font.render("Stage Select", True, (255,255,255)) 
         self.RightArrow_text = Arrow_font.render(">", True, (255,255,255))
@@ -26,16 +33,17 @@ class Menu:
         self.RightArrow_text = pygame.transform.rotate(self.RightArrow_text, 90)
         self.LeftArrow_text = pygame.transform.rotate(self.LeftArrow_text, 90)
         # ステージのテキスト情報をリストにする
-        self.stage_text = []
-        for i in range(3):
+        self.stage_text = [None]
+        '''for i in range(3):
             text = "Stage" + str(i+1)
             self.stage_text.append(Stage_font.render(text, True, (255,255,255)))
-
+'''
         # リストボックスの設定
         self.option_listbox = ListBox(self.screen, 50, 80, 250, 200, ['Back', 'Shop', 'Equip'], font_size=55, title="Menu")
         self.option_listbox.set_selectable([True, True, True])
-        self.file_listbox = ListBox(self.screen, 950, 80, 100, 400, ["Stage1"], title="File")
-        self.file_listbox.set_selectable([True])
+        self.file_listbox = ListBox(self.screen, 940, 80, 120, 400, self.new_path, title="File")
+    
+        self.file_listbox.set_selectable([True, True])
         self.file_listbox()
         self.file_id = None
 
@@ -62,23 +70,33 @@ class Menu:
                 if event.type == KEYDOWN:
                     self.Key_Event(event)       #押されたキーによって異なる処理
                     if event.key == K_RETURN and self.select_num == 1 and self.file_id != None:
-                        return self.Return_Stage()
+                        return self.Return_Stage(self.stage_path[self.stage_num])
                 if event.type == QUIT:
                     return EXIT, None
 
                 if file_id != None:
                     # ファイルが選択されたとき
                     self.file_id = file_id
+                    self.stage_path = glob(self.path[self.file_id] + '/*')
+                    
+                    self.stage_text = self.stage_path
+                    self.stage_said_text = []
+
+                    for i, _ in enumerate(self.stage_text):
+                        self.stage_said_text.append("Stage" + str(i+1))
+
                     self.select_num += 1
                     # file_listboxからターゲットを外す
                     self.file_listbox.process(event)
+                    self.stage_num = 0
 
                 if option_num != None:
                     # オプションが選択されたとき
                     if option_num == 0:
                         return None, '0'
                     elif option_num == 1:
-                        return None, '1'
+                        Shop(self.screen, self.data).do()
+                        break
                     elif option_num == 2:
                         if Equipment(self.screen, self.data).do() == EXIT:
                             return EXIT, None
@@ -95,7 +113,8 @@ class Menu:
         # ステージファイルが選択されていないとき、ステージを表示しない
         if file_id != None:
             color = [(0,0,255),(0,255,0), (255,0,0)]
-            self.screen.blit(self.stage_text[self.stage_num-1], [410, 190])
+            text = self.Stage_font.render(self.stage_said_text[self.stage_num], True, (255,)*3)
+            self.screen.blit(text, [410, 190])
             pygame.draw.rect(self.screen,color[self.stage_num-1],Rect(400,180,450,250),5)
             self.screen.blit(self.RightArrow_text, [575, 120])  #テキスト ＞ を描画
             self.screen.blit(self.LeftArrow_text, [575, 430])     #テキスト ＞ を描画
@@ -114,12 +133,11 @@ class Menu:
             self.option_listbox()
         # ステージ選択のとき、上下キーでステージ選択の移動
         if event.key == K_UP:
-            self.stage_num += (self.select_num==1)
-        elif event.key == K_DOWN:
             self.stage_num -= (self.select_num==1)
+        elif event.key == K_DOWN:
+            self.stage_num += (self.select_num==1)
         stage_size = len(self.stage_text)
         self.stage_num = (self.stage_num+stage_size) % stage_size
     
-    def Return_Stage(self):
-        stage = [Stage1, Stage2, Stage3]
-        return self.stage_num, stage[self.stage_num-1]
+    def Return_Stage(self, path):
+        return self.stage_num, path
