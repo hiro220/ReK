@@ -19,7 +19,6 @@ class Menu:
         self.option_num = 0
         self.path = glob('stage/*/')
         self.new_path = []
-        self.stage_select_path = []
 
         for i in range(len(self.path)):
             self.new_path.append(self.path[i].strip('stage\/'))
@@ -79,9 +78,12 @@ class Menu:
                     # ファイルが選択されたとき
                     self.file_id = file_id
                     self.stage_path = glob(self.path[self.file_id] + '/*')
-                    self.stage_select_path = self.stage_path.copy()
                     
-                    print(self.stage_text)
+                    self.stage_text = self.stage_path
+                    self.stage_said_text = []
+
+                    for i, _ in enumerate(self.stage_text):
+                        self.stage_said_text.append("Stage" + str(i+1))
 
                     self.select_num += 1
                     # file_listboxからターゲットを外す
@@ -111,7 +113,7 @@ class Menu:
         # ステージファイルが選択されていないとき、ステージを表示しない
         if file_id != None:
             color = [(0,0,255),(0,255,0), (255,0,0)]
-            text = self.Stage_font.render(self.stage_text[self.stage_num], True, (255,)*3)
+            text = self.Stage_font.render(self.stage_said_text[self.stage_num], True, (255,)*3)
             self.screen.blit(text, [410, 190])
             pygame.draw.rect(self.screen,color[self.stage_num-1],Rect(400,180,450,250),5)
             self.screen.blit(self.RightArrow_text, [575, 120])  #テキスト ＞ を描画
