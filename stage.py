@@ -132,7 +132,8 @@ class Stage:
                     self.process, self.draw = self.pause_process, self.pause_draw
                 if event.key == K_x or event.key == K_v:
                     self.player.shoot(event.key)    # 押したキーに応じて弾を発射する
-                self.player.change(event.key)
+                if event.key == K_a or event.key == K_s or event.key == K_d:
+                    self.player.change(event.key)
         return CONTINUE
 
     def moveStage(self):
