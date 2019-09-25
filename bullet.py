@@ -336,7 +336,7 @@ class fire_Bullet(Bullet):
         """引数は初期位置(x, y)、移動量(dx, dy)、弾の当たり判定を行う対象の機体グループ"""
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.img_path = "img/bullet/fire/"
-        self.image = pygame.image.load(self.img_path + "fireball1.png").convert()
+        self.image = pygame.image.load(self.img_path + "fire.png").convert()
         self.image = pygame.transform.smoothscale(self.image, (25,25))
         self.image.set_alpha(120)
         colorkey = self.image.get_at((0,0))
@@ -369,10 +369,10 @@ class fire_Bullet(Bullet):
                 self.shot_pos = self.rect
         elif self.shot_flag == 1:
             if self.burning_count <= 40:
-                text = self.img_path + "fireball{}.png"
-                self.image = pygame.image.load(text.format(self.image_num)).convert()
+                text = self.img_path + "fire.png"
+                self.image = pygame.image.load(text).convert()
                 self.image = pygame.transform.smoothscale(self.image, (25,25))
-                self.image.set_alpha(255)
+                self.image.set_alpha(150)
                 colorkey = self.image.get_at((0,0))
                 self.image.set_colorkey(colorkey, RLEACCEL)
                 self.image_num += 1
@@ -380,15 +380,15 @@ class fire_Bullet(Bullet):
                     self.image_num = 1
             elif self.burning_count == 41:
                 self.image_num = 1
-                text = self.img_path + "fire{}.png"
-                self.image = pygame.image.load(text.format(self.image_num)).convert_alpha()
+                text = self.img_path + "fire.png"
+                self.image = pygame.image.load(text).convert_alpha()
                 self.image = pygame.transform.smoothscale(self.image, (25, 25))
                 self.rect = self.image.get_rect()
                 self.rect.move_ip(self.shot_pos.left - 5, self.shot_pos.top -5)
                 self.image_num += 1
             elif self.burning_count <= 100:
-                text = self.img_path + "fire{}.png"
-                self.image = pygame.image.load(text.format(self.image_num)).convert_alpha()
+                text = self.img_path + "fire.png"
+                self.image = pygame.image.load(text).convert_alpha()
                 self.image = pygame.transform.smoothscale(self.image, (30,30))
                 self.image_num += 1
                 if self.image_num == 6:
@@ -397,7 +397,7 @@ class fire_Bullet(Bullet):
                 collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
                 if collide_list:
                     for machine in collide_list:  
-                        machine.hit(0.1, lasting=True)
+                        machine.hit(0.05, lasting=True)
 
         self.rect.move_ip(self.dx, self.dy)
         self.burning_count += 1
