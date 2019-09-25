@@ -180,7 +180,7 @@ class Fluffy_Bullet(Bullet):
                 self.collide_flag = 1
                 self.dx, self.dy = self.rect.center
                 for machine in collide_list:  
-                    machine.hit(0.5)
+                    machine.hit(0.3)
         elif self.collide_flag ==  1:
             if self.swap_count == 0:
                 self.image = pygame.image.load(self.img_path+"Fluffy.png").convert_alpha()
@@ -225,7 +225,7 @@ class Fluffy_Bullet(Bullet):
             collide_list = pygame.sprite.spritecollide(self, self.machines, False)  
             if collide_list:
                 for machine in collide_list:  
-                    machine.hit(0.1, lasting=True)
+                    machine.hit(0.02, lasting=True)
             if self.swap_count == 9:
                 self.swap_count = 0
             else:
