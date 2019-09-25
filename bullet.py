@@ -397,7 +397,7 @@ class fire_Bullet(Bullet):
                 collide_list = pygame.sprite.spritecollide(self, self.machines, False)      # グループmachinesからこの弾に当たったスプライトをリストでとる
                 if collide_list:
                     for machine in collide_list:  
-                        machine.hit(0.05, lasting=True)
+                        machine.hit(0.07, lasting=True)
 
         self.rect.move_ip(self.dx, self.dy)
         self.burning_count += 1
