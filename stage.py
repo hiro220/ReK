@@ -80,7 +80,6 @@ class Stage:
         while True:
             self.clock.tick(30)         # フレームレート(30fps)
             result = self.process()
-            print(self.bullets)
             self.draw()
             pygame.display.update()     # 画面更新
             if not result == CONTINUE:
