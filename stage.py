@@ -153,21 +153,21 @@ class Stage:
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         self.bullets.draw(self.screen)
         self.draw_info()
-        self.score.draw(self.screen)
-        self.money.draw(self.screen)
 
     def draw_info(self):
-        pygame.draw.rect(self.screen, (0,0,0),Rect(0,0,INFO_WIDTH, HEIGHT))     # infoエリアの描画
-        # HPバーの割合計算および描画
-        maxhp, hp = self.player.hp.maxhp, self.player.hp.hp
-        length = 300 * (hp/maxhp)
-        pygame.draw.rect(self.screen, (255,0,0), Rect(40, HEIGHT-80-length, 30, length)) # HPバー
-        pygame.draw.rect(self.screen, (255,255,255), Rect(40, HEIGHT-380, 30, 300), 3)   # 枠線
-        # Bulletバーの割合計算および描画
-        maxbullet, bullet = self.player.gun.max, self.player.gun.num
-        length = 300 * (bullet/maxbullet)
-        pygame.draw.rect(self.screen, (100, 0, 150), Rect(120, HEIGHT-80-length, 30, length))   # Bulletバー
-        pygame.draw.rect(self.screen, (255, 255, 255), Rect(120, HEIGHT-380, 30, 300), 3)       # 枠線
+        # infoエリアの作成
+        pygame.draw.rect(self.screen, (60,60,60),Rect(0,0,INFO_WIDTH, HEIGHT))
+        # 枠線描画
+        pygame.draw.rect(self.screen, (255,255,255), Rect(0,0,INFO_WIDTH, HEIGHT), 5)
+        # 各エリアを分割
+        pygame.draw.line(self.screen, (255,255,255), (0,85), (INFO_WIDTH,85))   # scoreエリア:80
+        pygame.draw.line(self.screen, (255,255,255), (0,285), (INFO_WIDTH,285)) # HPエリア:200
+        pygame.draw.line(self.screen, (255,255,255), (0,535), (INFO_WIDTH,535)) # bulletエリア:250, itemエリア:60
+
+        # scoreエリアに獲得スコアと獲得金額の描画
+        self.score.draw(self.screen)
+        self.money.draw(self.screen)
+        
 
     def select_continued(self):
         self.draw()
