@@ -101,7 +101,7 @@ class Main(pygame.sprite.Sprite):
             db.insert_score(stage_id, score, self.cheat)
             self.draw_ranking(db.load_ranking(stage_id, self.cheat))
         elif result == GAMEOVER:
-            image = pygame.image.load("img/gameover.jpg").convert_alpha()
+            image = pygame.image.load("img/gameover.png").convert_alpha()
             self.screen.blit(image, [270, 10])
 
         while True:
