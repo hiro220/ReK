@@ -2,6 +2,7 @@
 # coding:utf-8
 
 import pygame
+from pygame import gfxdraw
 from pygame.locals import *
 from bullet import Bullet
 from beam import Beam
@@ -156,7 +157,8 @@ class Stage:
 
     def draw_info(self):
         # infoエリアの作成
-        pygame.draw.rect(self.screen, (60,60,60),Rect(0,0,INFO_WIDTH, HEIGHT))
+        bg = (60, 60, 60)
+        pygame.draw.rect(self.screen, bg, Rect(0,0,INFO_WIDTH, HEIGHT))
         # 枠線描画
         pygame.draw.rect(self.screen, (255,255,255), Rect(0,0,INFO_WIDTH, HEIGHT), 5)
         # 各エリアを分割
@@ -167,7 +169,37 @@ class Stage:
         # scoreエリアに獲得スコアと獲得金額の描画
         self.score.draw(self.screen)
         self.money.draw(self.screen)
-        
+
+        # HPエリアの描画
+        # HPゲージ
+        hp_color = (0, 255, 0)
+        pygame.draw.circle(self.screen, hp_color, (110, 210), 70, 30)
+        # 体力ゲージの表示割合計算
+        par = self.player.hp.hp / self.player.hp.maxhp
+        rad = (math.pi * 5/4) - par * math.pi * 3/2
+        x, y = math.cos(rad)*70+110, -math.sin(rad)*70+210
+        # 円が内接する四角形の左下座標から右下座標まで、角の座標
+        pol_list = [(40,280), (40, 140), (180, 140), (180, 280)]
+        # 体力の割合に応じて、必要のない座標をリストから取り除く
+        pos = int(par * 6+1) // 2
+        del pol_list[:pos]
+        # リストに円の中心座標、体力ゲージの表示する部分までの座標を追加
+        pol_list.insert(0, (110, 210))
+        pol_list.insert(1, (x, y))
+        # ポリゴンで、残HPに応じて円に背景色を上書きする
+        pygame.draw.polygon(self.screen, bg, pol_list)
+        # HPゲージの枠を描画
+        outline = (255, 255, 255)
+        pygame.draw.circle(self.screen, outline, (110, 210), 70, 3)
+        pygame.draw.circle(self.screen, outline, (110, 210), 40, 3)
+        pygame.draw.polygon(self.screen, bg, [(110,210), (180, 280), (40, 280)])
+        l_rad, r_rad = math.pi * 5/4, -math.pi / 4
+        for rad in (l_rad, r_rad):
+            pygame.draw.line(self.screen, outline, (math.cos(rad)*67+110, -math.sin(rad)*67+210), \
+                                                   (math.cos(rad)*37+110, -math.sin(rad)*37+210), 4)
+        # 飛行機のシルエット描画
+        image = pygame.image.load("img/machine_icon.png").convert_alpha()
+        self.screen.blit(image, (10, 90))
 
     def select_continued(self):
         self.draw()
