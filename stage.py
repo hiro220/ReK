@@ -172,12 +172,14 @@ class Stage:
 
         # HPエリアの描画
         # 体力ゲージの表示割合計算
-        par = self.player.hp.hp / self.player.hp.maxhp
+        hp, maxhp = self.player.hp.hp, self.player.hp.maxhp
+        par = hp / maxhp
         rad = (math.pi * 5/4) - par * math.pi * 3/2
         x, y = math.cos(rad)*70+110, -math.sin(rad)*70+210
         # HPゲージ
         r = 255*(par<0.5) or int(255*(1-par)*2)
         g = 255*(par>0.5) or int(255*par*2)
+        print(r, g)
         pygame.draw.circle(self.screen, (r,g,0), (110, 210), 70, 30)
         # 円が内接する四角形の左下座標から右下座標まで、角の座標
         pol_list = [(40,280), (40, 140), (180, 140), (180, 280)]
@@ -198,6 +200,12 @@ class Stage:
         for rad in (l_rad, r_rad):
             pygame.draw.line(self.screen, outline, (math.cos(rad)*67+110, -math.sin(rad)*67+210), \
                                                    (math.cos(rad)*37+110, -math.sin(rad)*37+210), 4)
+        # HP量のメモリ表示
+        for i in range(int(maxhp+0.5)):
+            rad = (((maxhp-i)/maxhp) * (3/2) - 1/4) * math.pi
+            pygame.draw.line(self.screen, outline, (math.cos(rad)*45+110, -math.sin(rad)*45+210), \
+                                                   (math.cos(rad)*37+110, -math.sin(rad)*37+210), 3)
+            
         # 飛行機のシルエット描画
         image = pygame.image.load("img/machine_icon.png").convert_alpha()
         self.screen.blit(image, (10, 90))
