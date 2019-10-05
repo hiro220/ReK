@@ -171,13 +171,14 @@ class Stage:
         self.money.draw(self.screen)
 
         # HPエリアの描画
-        # HPゲージ
-        hp_color = (0, 255, 0)
-        pygame.draw.circle(self.screen, hp_color, (110, 210), 70, 30)
         # 体力ゲージの表示割合計算
         par = self.player.hp.hp / self.player.hp.maxhp
         rad = (math.pi * 5/4) - par * math.pi * 3/2
         x, y = math.cos(rad)*70+110, -math.sin(rad)*70+210
+        # HPゲージ
+        r = 255*(par<0.5) or int(255*(1-par)*2)
+        g = 255*(par>0.5) or int(255*par*2)
+        pygame.draw.circle(self.screen, (r,g,0), (110, 210), 70, 30)
         # 円が内接する四角形の左下座標から右下座標まで、角の座標
         pol_list = [(40,280), (40, 140), (180, 140), (180, 280)]
         # 体力の割合に応じて、必要のない座標をリストから取り除く
