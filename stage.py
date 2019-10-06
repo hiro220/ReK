@@ -171,40 +171,40 @@ class Stage:
         self.money.draw(self.screen)
 
         # HPエリアの描画
+        cx, cy = 100, 210
         # 体力ゲージの表示割合計算
         hp, maxhp = self.player.hp.hp, self.player.hp.maxhp
         par = hp / maxhp
         rad = (math.pi * 5/4) - par * math.pi * 3/2
-        x, y = math.cos(rad)*70+110, -math.sin(rad)*70+210
+        x, y = math.cos(rad)*70+cx, -math.sin(rad)*70+cy
         # HPゲージ
         r = 255*(par<0.5) or int(255*(1-par)*2)
         g = 255*(par>0.5) or int(255*par*2)
-        print(r, g)
-        pygame.draw.circle(self.screen, (r,g,0), (110, 210), 70, 30)
+        pygame.draw.circle(self.screen, (r,g,0), (cx, cy), 70, 30)
         # 円が内接する四角形の左下座標から右下座標まで、角の座標
-        pol_list = [(40,280), (40, 140), (180, 140), (180, 280)]
+        pol_list = [(cx-70,cy+70), (cx-70, cy-70), (cx+70, cy-70), (cx+70, cy+70)]
         # 体力の割合に応じて、必要のない座標をリストから取り除く
         pos = int(par * 6+1) // 2
         del pol_list[:pos]
         # リストに円の中心座標、体力ゲージの表示する部分までの座標を追加
-        pol_list.insert(0, (110, 210))
+        pol_list.insert(0, (cx, cy))
         pol_list.insert(1, (x, y))
         # ポリゴンで、残HPに応じて円に背景色を上書きする
         pygame.draw.polygon(self.screen, bg, pol_list)
         # HPゲージの枠を描画
         outline = (255, 255, 255)
-        pygame.draw.circle(self.screen, outline, (110, 210), 70, 3)
-        pygame.draw.circle(self.screen, outline, (110, 210), 40, 3)
-        pygame.draw.polygon(self.screen, bg, [(110,210), (180, 280), (40, 280)])
+        pygame.draw.circle(self.screen, outline, (cx, cy), 70, 3)
+        pygame.draw.circle(self.screen, outline, (cx, cy), 40, 3)
+        pygame.draw.polygon(self.screen, bg, [(cx,cy), (cx+70, cy+70), (cx-70, cy+70)])
         l_rad, r_rad = math.pi * 5/4, -math.pi / 4
         for rad in (l_rad, r_rad):
-            pygame.draw.line(self.screen, outline, (math.cos(rad)*67+110, -math.sin(rad)*67+210), \
-                                                   (math.cos(rad)*37+110, -math.sin(rad)*37+210), 4)
+            pygame.draw.line(self.screen, outline, (math.cos(rad)*67+cx, -math.sin(rad)*67+cy), \
+                                                   (math.cos(rad)*37+cx, -math.sin(rad)*37+cy), 4)
         # HP量のメモリ表示
         for i in range(int(maxhp+0.5)):
             rad = (((maxhp-i)/maxhp) * (3/2) - 1/4) * math.pi
-            pygame.draw.line(self.screen, outline, (math.cos(rad)*45+110, -math.sin(rad)*45+210), \
-                                                   (math.cos(rad)*37+110, -math.sin(rad)*37+210), 3)
+            pygame.draw.line(self.screen, outline, (math.cos(rad)*45+cx, -math.sin(rad)*45+cy), \
+                                                   (math.cos(rad)*37+cx, -math.sin(rad)*37+cy), 3)
             
         # 飛行機のシルエット描画
         image = pygame.image.load("img/machine_icon.png").convert_alpha()
