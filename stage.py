@@ -205,10 +205,26 @@ class Stage:
             rad = (((maxhp-i)/maxhp) * (3/2) - 1/4) * math.pi
             pygame.draw.line(self.screen, outline, (math.cos(rad)*45+cx, -math.sin(rad)*45+cy), \
                                                    (math.cos(rad)*37+cx, -math.sin(rad)*37+cy), 3)
-            
         # 飛行機のシルエット描画
         image = pygame.image.load("img/machine_icon.png").convert_alpha()
         self.screen.blit(image, (10, 90))
+
+        # bulletエリア
+        for i in range(3):
+            gun = self.player.gun_file[i]
+            r_num, max_rnum = self.player.reload_num[i], self.player.reload_max[i]
+            if gun == None:
+                num, maxnum = 0, 1
+            else:
+                num, maxnum = gun.num, gun.max
+            # 残弾数描画
+            par = num / maxnum
+            pygame.draw.rect(self.screen, (0,0,255), Rect(15, 340+60*i, 150*par, 20))
+            pygame.draw.rect(self.screen, (255,255,255), Rect(15, 340+60*i, 150, 20), 3)
+            # 残リロード数描画
+            par = r_num / (max_rnum or 1)
+            pygame.draw.rect(self.screen, (255,0,0), Rect(25, 360+60*i, 135*par, 10))
+            pygame.draw.rect(self.screen, (255,255,255), Rect(25, 360+60*i, 135, 10), 3)
 
     def select_continued(self):
         self.draw()
