@@ -146,4 +146,4 @@ class Machine(pygame.sprite.Sprite):
 
     def reload_base(self, data):
         self.reload_num = data
-        print(self.reload_num)
+        self.reload_max = [num for num in data]
