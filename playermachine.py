@@ -36,7 +36,7 @@ class PlayerMachine(Machine):
                 super().move(self.dx, 0)
             if key[K_LEFT]:                     # 矢印キー左が押されているとき(長押し)
                 super().move(-self.dx, 0)
-        self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))       # 画面外に出たとき、画面内に収まるよう移動
+            self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))       # 画面外に出たとき、画面内に収まるよう移動
 
     def shoot(self, key):
         if self.wait_flag == 0:
@@ -79,7 +79,7 @@ class PlayerMachine(Machine):
 
     def firstmove(self):
         super().BulletZero()   
-        super().move(5, 0)                
+        super().move(7, 0)                
         pygame.display.update()
         self.count += 1
         if self.count == 20:
@@ -90,12 +90,12 @@ class PlayerMachine(Machine):
         PlayerMachine.killed_count += 1
 
     def reload_data(self):
-        self.reload_file = []
+        reload_file = []
         for i in range(3):
             equip = self.equip[i]
             if equip == -1:
-                self.reload_file.append(0)
+                reload_file.append(0)
                 continue
-            self.reload_file.append(self.gun_data[equip]['reload_size'])        
-        super().reload_base(self.reload_file)
+            reload_file.append(self.gun_data[equip]['reload_size'])        
+        super().reload_base(reload_file)
         
