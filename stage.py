@@ -212,6 +212,7 @@ class Stage:
         # bulletエリア
         for i in range(3):
             gun = self.player.gun_file[i]
+            istarget = (self.player.gun_number-1 == i)
             r_num, max_rnum = self.player.reload_num[i], self.player.reload_max[i]
             if gun == None:
                 num, maxnum = 0, 1
@@ -219,12 +220,18 @@ class Stage:
                 num, maxnum = gun.num, gun.max
             # 残弾数描画
             par = num / maxnum
-            pygame.draw.rect(self.screen, (0,0,255), Rect(15, 340+60*i, 150*par, 20))
-            pygame.draw.rect(self.screen, (255,255,255), Rect(15, 340+60*i, 150, 20), 3)
+            pygame.draw.rect(self.screen, (0,0,155+100*istarget), Rect(15, 340+60*i, 150*par, 20))
+            pygame.draw.rect(self.screen, (205+50*istarget,)*3, Rect(15, 340+60*i, 150, 20), 3*istarget or 2)
+            for j in range(maxnum):
+                x = 15+150*j/maxnum
+                pygame.draw.line(self.screen, (205+50*istarget,)*3, (x, 340+60*i), (x, 360+60*i))
             # 残リロード数描画
             par = r_num / (max_rnum or 1)
-            pygame.draw.rect(self.screen, (255,0,0), Rect(25, 360+60*i, 135*par, 10))
-            pygame.draw.rect(self.screen, (255,255,255), Rect(25, 360+60*i, 135, 10), 3)
+            pygame.draw.rect(self.screen, (155+100*istarget,0,0), Rect(15, 360+60*i, 140*par, 10))
+            pygame.draw.rect(self.screen, (205+50*istarget,)*3, Rect(15, 360+60*i, 140, 10), 2)
+            for j in range(max_rnum):
+                x = 15+140*j/max_rnum
+                pygame.draw.line(self.screen, (205+50*istarget,)*3, (x, 360+60*i), (x, 370+60*i))
 
     def select_continued(self):
         self.draw()
