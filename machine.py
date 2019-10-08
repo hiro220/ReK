@@ -41,6 +41,7 @@ class Machine(pygame.sprite.Sprite):
         self.flagtimer = FlagTimer(lambda x:x, 0)
         self.reload_time = 1000
         self.invincible_time = 1500
+        self.item_list = []
 
         self.dx = self.dy = 0
         self.score = score

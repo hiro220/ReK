@@ -232,7 +232,7 @@ class Stage:
             for j in range(max_rnum):
                 x = 15+140*j/max_rnum
                 pygame.draw.line(self.screen, (205+50*istarget,)*3, (x, 360+60*i), (x, 370+60*i))
-            # リロード時間
+            # リロード中か描画
             time = R_time.get_ticks()//100
             for j in range(12):
                 if self.player.reload_flag or self.player.reload_id != i or num != 0:
@@ -245,6 +245,17 @@ class Stage:
                 rad = math.pi * j / 6
                 pygame.draw.line(self.screen, color, (cx+12*math.cos(rad), cy-12*math.sin(rad)),\
                                                      (cx+5*math.cos(rad), cy-5*math.sin(rad)))
+
+        # アイテムエリア
+        items = self.player.item_list
+        for i, image_path in enumerate(items):
+            image = pygame.image.load(image_path).convert_alpha()
+            if i == 14:
+                break
+            j = i // 7
+            i = i % 7
+            self.screen.blit(image, (6+27*i, 538+29*j))
+
 
     def select_continued(self):
         self.draw()
