@@ -232,6 +232,19 @@ class Stage:
             for j in range(max_rnum):
                 x = 15+140*j/max_rnum
                 pygame.draw.line(self.screen, (205+50*istarget,)*3, (x, 360+60*i), (x, 370+60*i))
+            # リロード時間
+            time = R_time.get_ticks()//100
+            for j in range(12):
+                if self.player.reload_flag or self.player.reload_id != i or num != 0:
+                    color = (100,100,100)
+                elif time % 12 == j:
+                    color = (255,0,0)
+                else:
+                    color = (255,255,255)
+                cx, cy = (182, 355+60*i)
+                rad = math.pi * j / 6
+                pygame.draw.line(self.screen, color, (cx+12*math.cos(rad), cy-12*math.sin(rad)),\
+                                                     (cx+5*math.cos(rad), cy-5*math.sin(rad)))
 
     def select_continued(self):
         self.draw()
