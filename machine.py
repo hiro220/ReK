@@ -66,9 +66,6 @@ class Machine(pygame.sprite.Sprite):
                 self.reload_num[count] -= 1
                 Timer(self.reload_time+bullet_num*500, self.gun.reload)
                 Timer(self.reload_time+500+bullet_num*500, self.change_flag)
-    
-    def BulletZero(self):
-        self.gun.BulletZero()
 
     def change_flag(self):
         self.reload_flag = True

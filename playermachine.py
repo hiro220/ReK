@@ -21,7 +21,7 @@ class PlayerMachine(Machine):
         self.gun_base()
         self.reload_data()
         self.gun = self.gun_file[0]
-        self.gun_number = 1
+        self.gun_number = 0
         
     def move(self):
         if self.wait_flag == 0:
@@ -78,12 +78,11 @@ class PlayerMachine(Machine):
         return not self.alive()
 
     def firstmove(self):
-        super().BulletZero()   
         super().move(7, 0)                
         pygame.display.update()
         self.count += 1
         if self.count == 20:
-            self.gun.reload()
+            self.gun_number = 1
             self.wait_flag = 1
 
     def death(self):
