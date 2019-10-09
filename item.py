@@ -76,6 +76,9 @@ class Shield(pygame.sprite.Sprite):
 
     def hit(self, attack, lasting=False):
         if self.hp.damage(attack):                  # ダメージ計算
+            path = "img/item/item_shield.png"
+            if path in self.machine.item_list:
+                self.machine.item_list.remove(path)
             self.kill()
             if self.flag:
                 self.machine.add(self.group)
@@ -96,6 +99,9 @@ class ShieldItem(Item):
 
     def effect(self, machine):
         Shield(3, machine)          # 堅さ3のシールドを生成
+
+    def addlist(self, machine):
+        machine.item_list.append("img/item/item_shield.png")
 
 class SpeedDownItem(Item):
     def __init__(self, x, y, machine):
