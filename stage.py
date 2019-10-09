@@ -250,12 +250,17 @@ class Stage:
         items = self.player.item_list
         for i, image_path in enumerate(items):
             image = pygame.image.load(image_path).convert_alpha()
-            if i == 14:
+            y = i // 7
+            x = i % 7
+            self.screen.blit(image, (6+27*x, 538+29*y))
+            if i == 13:
+                if len(items) > 14:
+                    pygame.draw.rect(self.screen, bg, Rect(6+27*x, 538+29*y, 25, 25))
+                    pygame.draw.rect(self.screen, (255,)*3, Rect(6+27*x+3, 538+29*y+10, 20, 5))
+                    pygame.draw.rect(self.screen, (255,)*3, Rect(6+27*x+10, 538+29*y+3, 5, 20))
                 break
-            j = i // 7
-            i = i % 7
-            self.screen.blit(image, (6+27*i, 538+29*j))
 
+                
 
     def select_continued(self):
         self.draw()
