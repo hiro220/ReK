@@ -21,7 +21,7 @@ End = 2
 BACK = 3
 
 # 各ステージにおけるプレイヤー機体の初期位置
-PLAYER_X = INFO_WIDTH
+PLAYER_X = INFO_WIDTH - 75
 PLAYER_Y = HEIGHT // 2
 
 # stageにおける処理結果

@@ -2,6 +2,7 @@
 # coding:utf-8
 
 import pygame
+from pygame import gfxdraw
 from pygame.locals import *
 from bullet import Bullet
 from beam import Beam
@@ -80,7 +81,6 @@ class Stage:
         while True:
             self.clock.tick(30)         # フレームレート(30fps)
             result = self.process()
-            print(self.bullets)
             self.draw()
             pygame.display.update()     # 画面更新
             if not result == CONTINUE:
@@ -154,21 +154,113 @@ class Stage:
         self.group.draw(self.screen)        # groupに割り当てられたすべてのスプライトを描画する(スプライトにself.imageがないとエラーが発生する)
         self.bullets.draw(self.screen)
         self.draw_info()
+
+    def draw_info(self):
+        # infoエリアの作成
+        bg = (60, 60, 60)
+        pygame.draw.rect(self.screen, bg, Rect(0,0,INFO_WIDTH, HEIGHT))
+        # 枠線描画
+        pygame.draw.rect(self.screen, (255,255,255), Rect(0,0,INFO_WIDTH, HEIGHT), 5)
+        # 各エリアを分割
+        pygame.draw.line(self.screen, (255,255,255), (0,85), (INFO_WIDTH,85))   # scoreエリア:80
+        pygame.draw.line(self.screen, (255,255,255), (0,285), (INFO_WIDTH,285)) # HPエリア:200
+        pygame.draw.line(self.screen, (255,255,255), (0,535), (INFO_WIDTH,535)) # bulletエリア:250, itemエリア:60
+
+        # scoreエリアに獲得スコアと獲得金額の描画
         self.score.draw(self.screen)
         self.money.draw(self.screen)
 
-    def draw_info(self):
-        pygame.draw.rect(self.screen, (0,0,0),Rect(0,0,INFO_WIDTH, HEIGHT))     # infoエリアの描画
-        # HPバーの割合計算および描画
-        maxhp, hp = self.player.hp.maxhp, self.player.hp.hp
-        length = 300 * (hp/maxhp)
-        pygame.draw.rect(self.screen, (255,0,0), Rect(40, HEIGHT-80-length, 30, length)) # HPバー
-        pygame.draw.rect(self.screen, (255,255,255), Rect(40, HEIGHT-380, 30, 300), 3)   # 枠線
-        # Bulletバーの割合計算および描画
-        maxbullet, bullet = self.player.gun.max, self.player.gun.num
-        length = 300 * (bullet/maxbullet)
-        pygame.draw.rect(self.screen, (100, 0, 150), Rect(120, HEIGHT-80-length, 30, length))   # Bulletバー
-        pygame.draw.rect(self.screen, (255, 255, 255), Rect(120, HEIGHT-380, 30, 300), 3)       # 枠線
+        # HPエリアの描画
+        cx, cy = 100, 210
+        # 体力ゲージの表示割合計算
+        hp, maxhp = self.player.hp.hp, self.player.hp.maxhp
+        par = hp / maxhp
+        rad = (math.pi * 5/4) - par * math.pi * 3/2
+        x, y = math.cos(rad)*70+cx, -math.sin(rad)*70+cy
+        # HPゲージ
+        r = 255*(par<0.5) or int(255*(1-par)*2)
+        g = 255*(par>0.5) or int(255*par*2)
+        pygame.draw.circle(self.screen, (r,g,0), (cx, cy), 70, 30)
+        # 円が内接する四角形の左下座標から右下座標まで、角の座標
+        pol_list = [(cx-70,cy+70), (cx-70, cy-70), (cx+70, cy-70), (cx+70, cy+70)]
+        # 体力の割合に応じて、必要のない座標をリストから取り除く
+        pos = int(par * 6+1) // 2
+        del pol_list[:pos]
+        # リストに円の中心座標、体力ゲージの表示する部分までの座標を追加
+        pol_list.insert(0, (cx, cy))
+        pol_list.insert(1, (x, y))
+        # ポリゴンで、残HPに応じて円に背景色を上書きする
+        pygame.draw.polygon(self.screen, bg, pol_list)
+        # HPゲージの枠を描画
+        outline = (255, 255, 255)
+        pygame.draw.circle(self.screen, outline, (cx, cy), 70, 3)
+        pygame.draw.circle(self.screen, outline, (cx, cy), 40, 3)
+        pygame.draw.polygon(self.screen, bg, [(cx,cy), (cx+70, cy+70), (cx-70, cy+70)])
+        l_rad, r_rad = math.pi * 5/4, -math.pi / 4
+        for rad in (l_rad, r_rad):
+            pygame.draw.line(self.screen, outline, (math.cos(rad)*67+cx, -math.sin(rad)*67+cy), \
+                                                   (math.cos(rad)*37+cx, -math.sin(rad)*37+cy), 4)
+        # HP量のメモリ表示
+        for i in range(int(maxhp+0.5)):
+            rad = (((maxhp-i)/maxhp) * (3/2) - 1/4) * math.pi
+            pygame.draw.line(self.screen, outline, (math.cos(rad)*45+cx, -math.sin(rad)*45+cy), \
+                                                   (math.cos(rad)*37+cx, -math.sin(rad)*37+cy), 3)
+        # 飛行機のシルエット描画
+        image = pygame.image.load("img/machine_icon.png").convert_alpha()
+        self.screen.blit(image, (10, 90))
+
+        # bulletエリア
+        for i in range(3):
+            gun = self.player.gun_file[i]
+            istarget = (self.player.gun_number-1 == i)
+            r_num, max_rnum = self.player.reload_num[i], self.player.reload_max[i]
+            if gun == None:
+                num, maxnum = 0, 1
+            else:
+                num, maxnum = gun.num, gun.max
+            # 残弾数描画
+            par = num / maxnum
+            pygame.draw.rect(self.screen, (0,0,155+100*istarget), Rect(15, 340+60*i, 150*par, 20))
+            pygame.draw.rect(self.screen, (205+50*istarget,)*3, Rect(15, 340+60*i, 150, 20), 3*istarget or 2)
+            for j in range(maxnum):
+                x = 15+150*j/maxnum
+                pygame.draw.line(self.screen, (205+50*istarget,)*3, (x, 340+60*i), (x, 360+60*i))
+            # 残リロード数描画
+            par = r_num / (max_rnum or 1)
+            pygame.draw.rect(self.screen, (155+100*istarget,0,0), Rect(15, 360+60*i, 140*par, 10))
+            pygame.draw.rect(self.screen, (205+50*istarget,)*3, Rect(15, 360+60*i, 140, 10), 2)
+            for j in range(max_rnum):
+                x = 15+140*j/max_rnum
+                pygame.draw.line(self.screen, (205+50*istarget,)*3, (x, 360+60*i), (x, 370+60*i))
+            # リロード中か描画
+            time = R_time.get_ticks()//100
+            for j in range(12):
+                if self.player.reload_flag or self.player.reload_id != i or num != 0:
+                    color = (100,100,100)
+                elif time % 12 == j:
+                    color = (255,0,0)
+                else:
+                    color = (255,255,255)
+                cx, cy = (182, 355+60*i)
+                rad = math.pi * j / 6
+                pygame.draw.line(self.screen, color, (cx+12*math.cos(rad), cy-12*math.sin(rad)),\
+                                                     (cx+5*math.cos(rad), cy-5*math.sin(rad)))
+
+        # アイテムエリア
+        items = self.player.item_list
+        for i, image_path in enumerate(items):
+            image = pygame.image.load(image_path).convert_alpha()
+            y = i // 7
+            x = i % 7
+            self.screen.blit(image, (6+27*x, 538+29*y))
+            if i == 13:
+                if len(items) > 14:
+                    pygame.draw.rect(self.screen, bg, Rect(6+27*x, 538+29*y, 25, 25))
+                    pygame.draw.rect(self.screen, (255,)*3, Rect(6+27*x+3, 538+29*y+10, 20, 5))
+                    pygame.draw.rect(self.screen, (255,)*3, Rect(6+27*x+10, 538+29*y+3, 5, 20))
+                break
+
+                
 
     def select_continued(self):
         self.draw()

@@ -21,7 +21,8 @@ class PlayerMachine(Machine):
         self.gun_base()
         self.reload_data()
         self.gun = self.gun_file[0]
-        self.gun_number = 1
+        self.gun_number = 0
+        self.reload_id = 0
         
     def move(self):
         if self.wait_flag == 0:
@@ -36,7 +37,7 @@ class PlayerMachine(Machine):
                 super().move(self.dx, 0)
             if key[K_LEFT]:                     # 矢印キー左が押されているとき(長押し)
                 super().move(-self.dx, 0)
-        self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))       # 画面外に出たとき、画面内に収まるよう移動
+            self.rect.clamp_ip(Rect(INFO_WIDTH, 0, WIDTH-INFO_WIDTH, HEIGHT))       # 画面外に出たとき、画面内に収まるよう移動
 
     def shoot(self, key):
         if self.wait_flag == 0:
@@ -46,6 +47,7 @@ class PlayerMachine(Machine):
             super().shoot(x, y)
         elif key == K_v:
             super().reload(self.gun_number - 1)
+            self.reload_id = self.gun_number-1
 
     def change(self, key):
         if self.wait_flag == 0:
@@ -78,24 +80,23 @@ class PlayerMachine(Machine):
         return not self.alive()
 
     def firstmove(self):
-        super().BulletZero()   
-        super().move(5, 0)                
+        super().move(7, 0)                
         pygame.display.update()
         self.count += 1
         if self.count == 20:
-            self.gun.reload()
+            self.gun_number = 1
             self.wait_flag = 1
 
     def death(self):
         PlayerMachine.killed_count += 1
 
     def reload_data(self):
-        self.reload_file = []
+        reload_file = []
         for i in range(3):
             equip = self.equip[i]
             if equip == -1:
-                self.reload_file.append(0)
+                reload_file.append(0)
                 continue
-            self.reload_file.append(self.gun_data[equip]['reload_size'])        
-        super().reload_base(self.reload_file)
+            reload_file.append(self.gun_data[equip]['reload_size'])        
+        super().reload_base(reload_file)
         

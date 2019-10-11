@@ -14,6 +14,7 @@ class Item(pygame.sprite.Sprite):
         self.machine = machine                      # アイテムの効果対象
         self.speed = -1                             # アイテムの移動速度
         self.rect.move_ip(x, y)                     # 引数で指定された初期位置に移動させる
+        self.path = None
 
     def update(self):
         self.rect.move_ip(self.speed, 0)            # 移動
@@ -23,6 +24,7 @@ class Item(pygame.sprite.Sprite):
             for machine in collide_list:
                 if machine.isMachine():             # 当たったのが機体か。シールドなどのアイテムには効果がないから。
                     self.effect(machine)            # アイテムを取得した機体に対して、アイテムに応じた効果を与える
+                    self.addlist(machine)
 
     def checkMachine(self, collide_list):
         """引数collide_listのリスト中に機体があればTrueが返る。ない場合はFalse"""
@@ -30,6 +32,12 @@ class Item(pygame.sprite.Sprite):
             if x.isMachine():
                 return True
         return False
+
+    def addlist(self, machine):
+        if self.path == None:
+            return
+        machine.item_list.append(self.path)
+        Timer(self.time, lambda machine:machine.item_list.remove(self.path), machine)
 
 class Recovery(Item):
     """取得した機体の体力を1回復するアイテム"""
@@ -68,6 +76,9 @@ class Shield(pygame.sprite.Sprite):
 
     def hit(self, attack, lasting=False):
         if self.hp.damage(attack):                  # ダメージ計算
+            path = "img/item/item_shield.png"
+            if path in self.machine.item_list:
+                self.machine.item_list.remove(path)
             self.kill()
             if self.flag:
                 self.machine.add(self.group)
@@ -89,14 +100,19 @@ class ShieldItem(Item):
     def effect(self, machine):
         Shield(3, machine)          # 堅さ3のシールドを生成
 
+    def addlist(self, machine):
+        machine.item_list.append("img/item/item_shield.png")
+
 class SpeedDownItem(Item):
     def __init__(self, x, y, machine):
         image = pygame.image.load("img/item/weight.png").convert_alpha()
         super().__init__(x, y, image, machine)
+        self.path = "img/item/weight.png"
+        self.time = 3000
 
     def effect(self, machine):
         dx, dy = machine.speedDown(1, 1)             # 獲得した機体のスピードを下げる
-        Timer(3000, machine.speedUp, dx, dy)    # 一定時間経過後、スピードを上げる
+        Timer(self.time, machine.speedUp, dx, dy)    # 一定時間経過後、スピードを上げる
 
 class ScoreGetItem(Item):
     # CPU側が取得しても効果はない
@@ -113,6 +129,8 @@ class MeteoriteItem(Item):
     def __init__(self, x, y, machine):
         image = pygame.image.load("img/item/meteorite_item.png").convert_alpha()
         super().__init__(x, y, image, machine)
+        self.path = "img/item/meteorite_item.png"
+        self.time = 1500*5
 
     def effect(self, machine):
         machine.fall_meteorite(machine.machines, 5, 1500)

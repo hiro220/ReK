@@ -35,9 +35,6 @@ class Gun:
     def reload(self):
         self.num = self.max                     #bulletの玉数を上限に戻す
 
-    def BulletZero(self):    
-        self.num = 0
-    
 class Tracking_Gun(Gun):
     def shoot(self, x, y):
         play_list = self.machines.sprites()    #相手の設定情報を入手

@@ -14,7 +14,8 @@ class Hp:
     def damage(self, attack):
         """引数attack分の体力を減少させ、体力がなくなればTrueが返る"""
         self.hp -= attack
-        return self.hp <= 0
+        self.hp = self.hp * (self.hp>0)
+        return self.hp == 0
 
     def recover(self, num):
         """引数numで指定した値だけ体力を回復する。ただし、体力の上限まで"""
@@ -40,6 +41,7 @@ class Machine(pygame.sprite.Sprite):
         self.flagtimer = FlagTimer(lambda x:x, 0)
         self.reload_time = 1000
         self.invincible_time = 1500
+        self.item_list = []
 
         self.dx = self.dy = 0
         self.score = score
@@ -65,9 +67,6 @@ class Machine(pygame.sprite.Sprite):
                 self.reload_num[count] -= 1
                 Timer(self.reload_time+bullet_num*500, self.gun.reload)
                 Timer(self.reload_time+500+bullet_num*500, self.change_flag)
-    
-    def BulletZero(self):
-        self.gun.BulletZero()
 
     def change_flag(self):
         self.reload_flag = True
@@ -145,4 +144,4 @@ class Machine(pygame.sprite.Sprite):
 
     def reload_base(self, data):
         self.reload_num = data
-        print(self.reload_num)
+        self.reload_max = [num for num in data]
